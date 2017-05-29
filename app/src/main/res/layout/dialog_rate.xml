@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher"
+            android:layout_margin="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Feedback"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:text="Diga-nos o que está achando do aplicativo!"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <Button
+            android:id="@+id/rateButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enviar feedback"/>
+
+        <Button
+            android:id="@+id/remindButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lembrar mais tarde"/>
+
+        <Button
+            android:id="@+id/neverShowButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="NÃO MOSTRAR MAIS"/>
+
+    </LinearLayout>
+
+</LinearLayout>

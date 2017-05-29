@@ -1,0 +1,3 @@
+mutation GetSupplierAccessToken {
+  getSupplierAccessToken
+}

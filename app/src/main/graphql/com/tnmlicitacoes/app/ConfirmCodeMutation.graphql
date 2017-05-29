@@ -1,0 +1,7 @@
+mutation ConfirmCodeMutation($phone: String!, $code: String!, $deviceId: String!) {
+  confirmCode(phone: $phone, code: $code, deviceId: $deviceId) {
+    validCode
+    accessToken
+    refreshToken
+  }
+}

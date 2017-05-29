@@ -1,0 +1,268 @@
+<resources>
+    <!-- Notifications strings -->
+    <string name="notification_news_title">TáNaMão Informa</string>
+    <string name="notification_tips_title">Se liga na dica!</string>
+    <string name="notification_new_bidding_title">Nova Oportunidade!</string>
+    <string name="notification_update_title">Nova versão disponível!</string>
+    <string name="notification_update_message">Uma nova versão do aplicativo está disponível!\nToque aqui para atualizar agora!</string>
+
+    <string name="notification_tips_action1">Curtir</string>
+    <string name="notification_tips_action2">Não curtir</string>
+
+    <!-- Notification Dialog -->
+    <string name="notification_dialog_title">Receber notificações do TáNaMão Licitações?</string>
+    <string name="notification_dialog_message">Notificações sobre notícias, dicas, abertura de novas licitações e mais.</string>
+    <string name="dialog_okay">OK</string>
+    <string name="dialog_no_thanks">Não, obrigado</string>
+
+    <string name="download_starting">Iniciando download</string>
+    <string name="determining_download_time">Determinando tempo de download…</string>
+    <string name="downloading_file">Baixando arquivo</string>
+    <string name="download_finished">Download concluído</string>
+    <string name="download_failed">Falha ao baixar arquivo</string>
+
+    <!-- Trial Dialog -->
+    <string name="go_to_subs">Ir para planos</string>
+    <string name="trial_dialog_title">Período de avaliação gratuito expirado!</string>
+    <string name="trial_dialog_message">Para continuar utilizando dos recursos do aplicativo é necessário efetuar a assinatura de um de nossos planos.\nToque em <b>Ir para planos</b> para mais informações.</string>
+
+    <!-- Update Dialog -->
+    <string name="update_dialog_title">Uma atualização está disponível!</string>
+    <string name="update_dialog_message">Uma nova versão do aplicativo está disponível para download na PlayStore.\nGostaria de fazer o download e atualizar agora?</string>
+    <string name="update_dialog_positive_btn">Atualizar agora</string>
+    <string name="update_dialog_negative_btn">Mais tarde</string>
+
+    <!-- Activity strings -->
+
+    <string name="title_activity_files">Minhas licitações</string>
+
+    <string name="title_activity_about">Sobre</string>
+
+    <!-- Intro Activity -->
+    <string name="introHeader0">TáNaMão Licitações</string>
+    <string name="introHeader1">Encaminhe</string>
+    <string name="introHeader2">Receba</string>
+    <string name="introHeader3">Pesquise</string>
+    <string name="introHeader4">Selecione</string>
+
+    <string name="introText0">Bem-vindo ao nosso aplicativo!</string>
+    <string name="introText1">Envie para seus emails pessoais\nos editais que lhe interessar!</string>
+    <string name="introText2">Seja notificado por novas\nlicitações, dicas e notícias!</string>
+    <string name="introText3">Encontre facilmente\nlicitações por palavras-chave!</string>
+    <string name="introText4">Escolha os segmentos\nimportantes para sua empresa!</string>
+
+    <!-- Edital Activity -->
+    <string name="buscarHint">Buscar&#8230;</string>
+
+    <!-- Details Activity -->
+    <string name="fileFormat">Formato: %1$s</string>
+
+    <!-- Menu Strings -->
+    <string name="menu_details_send_to_email">Enviar para email</string>
+    <string name="menu_details_download">Baixar edital</string>
+    <string name="menu_details_see_online">Visualizar edital</string>
+
+    <!-- Settings Strings -->
+
+    <!-- Navigation Drawer Items -->
+    <string name="drawer_home">Início</string>
+    <string name="drawer_notices">Minhas licitações</string>
+    <string name="drawer_settings">Configurações</string>
+    <string name="drawer_contact">Fale conosco</string>
+    <string name="drawer_about">Sobre</string>
+
+    <!-- Bottom Sheet Menu Items -->
+    <string name="see_details">Ver detalhes</string>
+    <string name="view_online">Visualizar online</string>
+    <string name="send_to_email">Enviar para email</string>
+    <string name="make_download">Baixar</string>
+    <string name="close_menu">Fechar</string>
+
+
+    <!-- Dialog strings -->
+
+    <string name="dialog_close_button">Fechar</string>
+    <string name="dialog_confirm_button">Confirmar</string>
+    <string name="dialog_edit_button">Editar</string>
+
+    <!-- Phone Confirmation Dialog -->
+    <string name="invalid_phone_number">Número de telefone inválido!</string>
+    <string name="invalid_state_code">DDD inválido! Por favor tente novamente.</string>
+
+    <!-- Crash/Errors messages -->
+
+    <!-- Settings strings -->
+    <string name="pref_email_label">E-mail padrão</string>
+    <string name="pref_email_key">email</string>
+    <string name="pref_email_default">seuemail@exemplo.com</string>
+
+    <!-- Notifications -->
+
+    <!-- Folders -->
+
+
+    <string name="no_email_clients_installed">Não há nenhum cliente de email instalado.</string>
+    <string name="send_email_contact">Enviar email via&#8230;</string>
+
+    <string name="about_text">O TáNaMão Licitações surgiu com o propósito de facilitar/agilizar/otimizar o acesso da classe empresarial aos editais e demais informações relevantes aos mesmos, no que se refere a Compras/Licitações Públicas.\n\nTrazendo informações de forma clara e objetiva, alertando sobre novos editais publicados através de notificações, possibilitando o filtro por segmento econômico, “através” de uma interface intuitiva e aproveitando a portabilidade dos aparelhos móveis, com um custo acessível.</string>
+    <string name="about_subtext">Faça do governo o seu melhor cliente!</string>
+    <string name="about_subtext2">A ponte entre você e as compras públicas!</string>
+    <string name="more_information">Mais informações:</string>
+
+    <!-- GCM Stuff -->
+
+    <!-- Subs -->
+    <string name="sub_basic_name">Básico</string>
+    <string name="sub_basic_description">Segmento e capital</string>
+
+    <string name="sub_default_name">Padrão</string>
+    <string name="sub_default_description">Segmentos e capitais</string>
+    <string name="sub_default_quantity">Até %1$d</string>
+
+    <string name="sub_premium_name">Premium</string>
+    <string name="sub_premium_description">Ilimitado</string>
+
+    <string name="sub_feature_one">Seja notificado por novas licitações, dicas e notícias</string>
+    <string name="sub_feature_two">Escolha os segmentos importantes para sua empresa</string>
+    <string name="sub_feature_three">Envie para seus emails pessoais os editais que lhe interessar</string>
+    <string name="sub_feature_four">Encontre facilmente licitações por palavras-chave</string>
+
+    <string name="accountconfiguration_sub_max_selected">Selecionados: %1$d/%2$s</string>
+    <string name="accountconfiguration_advance_btn">AVANÇAR</string>
+    <string name="intro_start_using_text">COMECE A UTILIZAR</string>
+    <string name="dialog_default_email">Email padrão</string>
+    <string name="dialog_filter_modality">Modalidade</string>
+    <string name="dialog_filter_city">Cidade</string>
+    <string name="dialog_filter_open_date">Data de abertura</string>
+    <string name="btn_cancel">Cancelar</string>
+    <string name="verify_number_email_below">Vamos verificar o email e número abaixo:</string>
+    <string name="is_correct_or_edit">Está correto ou gostaria de editar?</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_select_all">Selecionar todos</string>
+    <string name="action_select_none">Selecionar nenhum</string>
+    <string name="btn_change_text">ALTERAR</string>
+    <string name="current_subscription_text">Plano atual</string>
+    <string name="chosen_cities_text">Cidades escolhidas</string>
+    <string name="chosen_categories_text">Segmentos escolhidos</string>
+    <string name="subscription_cancelation_text">Você pode cancelar a sua assinatura a qualquer momento através do aplicativo Google Play.\nNo aplicativo Google Play basta ir na opção <b>Minhas assinaturas</b>, onde terá a listagem de todas as assinaturas feitas na loja, e selecionar a assinatura correspondente ao <b>TáNaMão Licitações</b>.\nTambém é possível cancelar através da página do aplicativo na loja.</string>
+    <string name="menu_refresh">Atualizar</string>
+    <string name="menu_filter">Filtrar</string>
+    <string name="menu_search">Buscar</string>
+    <string name="city_select_text_0">Deseja receber informações de quais cidades?</string>
+    <string name="city_select_text_no_city"><u>Não encontrei minha cidade</u></string>
+    <string name="category_select_text_no_category"><u>Não encontrei meu segmento</u></string>
+    <string name="category_select_text_0">Escolha os segmentos de atuação da sua empresa</string>
+    <string name="new_date_info_label">Nova data</string>
+    <string name="rectified_info_label">Retificado</string>
+    <string name="internet_issue_text">Problema na conexão\n Toque para tentar novamente</string>
+    <string name="email_input_hint">E-mail</string>
+    <string name="phone_input_hint">Telefone</string>
+    <string name="input_email_phone">Entre com o seu e-mail e número de telefone abaixo:</string>
+    <string name="send_sms_text">Vamos enviar uma mensagem SMS para verificar o seu número.</string>
+
+    <string name="fail_download_storage_unavailable">Falha ao baixar arquivo, armazenamento externo indisponível</string>
+    <string name="thanks_feedback">Obrigado pelo feedback!</string>
+
+    <string name="tip">Dica</string>
+    <string name="like_text">Curtir</string>
+    <string name="dislike_text">Não curtir</string>
+
+    <string name="send_notice_email_success">Edital enviado com sucesso!</string>
+    <string name="send_notice_email_error">Ocorreu um erro ao enviar o email, por favor tente novamente mais tarde.</string>
+    <string name="waiting_text">Aguarde…</string>
+    <string name="sending_email">Enviando email…</string>
+
+    <string name="sorry_operation_error_message">Desculpe, não foi possível efetuar esta operação.</string>
+    <string name="category_update_success">Segmentos atualizados.</string>
+    <string name="city_update_success">Cidades atualizadas.</string>
+
+    <string name="bidding_details_error">Desculpe, não foi possível carregar os detalhes desta licitação.</string>
+    <string name="server_error">Ocorreu um problema ao comunicar com o servidor!</string>
+    <string name="server_error_try_later">Ocorreu um problema ao comunicar com o servidor, por favor tente novamente mais tarde!</string>
+    <string name="operation_cancelled">Operação cancelada</string>
+
+    <string name="email_default_summary">Defina um e-mail padrão para receber as licitações desejadas</string>
+
+    <string name="webview_load_error">Problema ao carregar página web!</string>
+    <string name="download_cancel_no_permission_message">Cancelando o download… Sem permissão para salvar o arquivo</string>
+
+    <string name="invalid_code">Código inválido!</string>
+    <string name="removed_message">Removido</string>
+    <string name="web_view_unavailable">Visualização online indisponível!</string>
+
+    <string name="sms_rationale_verification">É preciso permissão de acesso a caixa de mensagens para que a verificação do número seja automática!</string>
+    <string name="storage_rationale_load_files">É preciso permissão de acesso ao armazenamento externo para carregar os arquivos baixados.</string>
+    <string name="storage_rationale_download">É preciso permissão de acesso ao armazenamento externo para baixar os editais.</string>
+    <string name="download_file_not_available">Desculpe, não é possível efetuar o download deste arquivo</string>
+
+    <string name="session_expired">Sessão expirada!</string>
+    <string name="start_download_message">Fazendo o download…</string>
+    <string name="download_fail_messsage">Falha ao baixar %1$s</string>
+    <string name="download_unavailable">Download indisponível</string>
+
+    <string name="database_saved_notice">Salvo em Minhas licitações</string>
+    <string name="database_removed_notice">Removido de Minhas licitações</string>
+
+    <string name="save_notice_text">Salvar</string>
+    <string name="saved_notice_text">Salvo</string>
+
+    <string name="download_finished_with_filename">O download de %1$s foi concluído.</string>
+
+    <string name="preparing_delete_files">Preparando para deletar os arquivos…</string>
+    <string name="load_notices_error">Desculpe, estamos com problemas para carregar os editais!</string>
+
+    <string name="device_not_supported">Dispositivo não suportado.</string>
+    <string name="opening_pdf_file">Abrindo %1$s</string>
+    <string name="no_pdf_apps_message">Nenhum aplicativo disponível para abrir PDFs</string>
+
+    <string name="no_connection_try_again">Sem conexão, por favor conecte e tente novamente</string>
+    <string name="deleting_file_from_total">Deletando arquivo %1$d de %2$d</string>
+    <string name="deleted_files_message">%1$d arquivo(s) deletado(s) com sucesso!</string>
+
+
+    <!-- [START] MuPDF Strings [START] -->
+    <string name="cancel">Cancelar</string>
+    <string name="cannot_open_buffer">Não é possível abrir a memória intermédia</string>
+    <string name="cannot_open_document">Não é possível abrir o documento</string>
+    <string name="cannot_open_document_Reason">Não é possível abrir o documento: %1$s</string>
+    <string name="cannot_open_file_Path">Não é possível abrir o ficheiro: %1$s</string>
+    <string name="choose_value">Escolha um valor</string>
+    <string name="dismiss">Desistir</string>
+    <string name="document_has_changes_save_them_">Há alterações ao documento. Deseja guardá-las?</string>
+    <string name="enter_password">Escrever a palavra-passe</string>
+    <string name="fill_out_text_field">Preencher o campo de texto</string>
+    <string name="no">Não</string>
+    <string name="no_further_occurrences_found">Não foram encontradas mais ocorrências</string>
+    <string name="not_supported">Não suportado</string>
+    <string name="okay">OK</string>
+    <string name="search">Pesquisar</string>
+    <string name="search_backwards">Pesquisar para trás</string>
+    <string name="search_document">Pesquisar no documento</string>
+    <string name="search_forwards">Pesquisar para a frente</string>
+    <string name="searching_">A pesquisar&amp;#8230;</string>
+    <string name="text_not_found">Texto não encontrado</string>
+    <string name="yes">Sim</string>
+    <string name="waiting_sms_toolbar_title">Confirmação de número</string>
+    <string name="input_number_toolbar_title">Verificação de número</string>
+    <string name="mandatory_fields_title">Campos obrigatórios</string>
+    <string name="mandatory_fields_text">É necessário o preenchimento de todos os campos!</string>
+    <string name="invalid_email_text">Por favor, entre com um e-mail válido.</string>
+    <string name="invalid_phone_number_text">Por favor, digite um número de telefone válido!</string>
+    <string name="invalid_state_ddd_text">Por favor, entre com um número de DDD válido.</string>
+    <string name="limit_exceeded_title">Limite excedido!</string>
+    <string name="limit_exceeded_text">Por favor, aguarde alguns minutos para tentar novamente!</string>
+    <string name="server_communication_fail_title">Erro ao comunicar com servidor!</string>
+    <string name="server_communication_fail_text">Ocorreu um erro na comunicação com nossos servidores, por favor tente novamente mais tarde.</string>
+    <string name="wait_a_moment_dialog_text">Aguarde um momento...</string>
+    <string name="code_field_placeholder_text">Código</string>
+    <string name="waiting_sms_text_2">Por favor, digite-o abaixo.</string>
+    <string name="waiting_sms_text_1">Enviamos uma mensagem SMS com um código de confirmação para o número</string>
+    <string name="waiting_sms_text_3">Se em dentro de 5 minutos você não receber a mensagem SMS, por favor toque no botão abaixo.</string>
+    <string name="not_received_button_text">Não recebi o código</string>
+    <string name="action_open">Abrir</string>
+    <string name="action_close">Fechar</string>
+    <string name="action_remove">Excluir</string>
+    <string name="server_communication_error">Houve um problema na comunicação com nossos servidores. Por favor, tente novamente mais tarde.</string>
+    <!-- [END] MuPDF Strings [END] -->
+
+</resources>

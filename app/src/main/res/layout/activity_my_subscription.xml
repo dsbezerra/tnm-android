@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        />
+
+    <ScrollView
+        android:layout_below="@id/toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingBottom="56dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="0dp"
+                android:layout_marginTop="@dimen/spacing_small">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Detalhes do plano"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorAccent"
+                    android:padding="@dimen/spacing_small"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/contentLinearLayout"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="0dp"
+                android:layout_marginTop="@dimen/spacing_small">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cancelamento de assinatura"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorAccent"
+                    android:padding="@dimen/spacing_small"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/spacing_normal"
+                        android:paddingLeft="@dimen/spacing_small"
+                        android:paddingRight="@dimen/spacing_small"
+                        android:paddingBottom="@dimen/spacing_normal"
+                        android:text="@string/subscription_cancelation_text"
+                        />
+
+                    <Button
+                        android:id="@+id/btnAppStore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ir para página do aplicativo"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="@dimen/spacing_tiny"
+                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                        />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+    </ScrollView>
+    <include
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        layout="@layout/main_navigation"
+        />
+</RelativeLayout>

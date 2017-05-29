@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:padding="@dimen/spacing_small">
+
+    <TextView
+        android:id="@+id/itemHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_normal"
+        android:textColor="@color/md_grey_800"/>
+
+    <TextView
+        android:id="@+id/itemName"
+        android:layout_below="@id/itemHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingRight="70dp"
+        android:textSize="@dimen/font_normal"
+        android:textColor="@color/md_grey_500"
+        />
+
+    <Button
+        android:id="@+id/changeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:text="@string/btn_change_text"
+        android:textSize="@dimen/font_small"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
+
+</RelativeLayout>

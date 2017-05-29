@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="bottom"
+    android:background="@color/colorPrimary">
+
+    <RelativeLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/spacing_huge"
+        android:paddingLeft="@dimen/spacing_normal"
+        android:paddingBottom="@dimen/spacing_normal"
+        android:clickable="true"
+        android:background="?attr/selectableItemBackground"
+        >
+
+        <TextView
+            android:id="@+id/subscriptionName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+        />
+
+        <TextView
+            android:layout_below="@id/subscriptionName"
+            android:id="@+id/phoneText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:textColor="@android:color/white"
+            />
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="open_date_array">
+        <item>Todas as datas</item>
+        <item>Hoje</item>
+        <item>Esta semana</item>
+        <item>Este mês</item>
+        <item>Este ano</item>
+    </string-array>
+
+    <string-array name="modality_array">
+        <item>Todas as modalidades</item>
+        <item>Pregão Presencial</item>
+        <item>Pregão Eletrônico</item>
+        <item>Concorrência</item>
+        <item>Convite</item>
+        <item>Concurso</item>
+        <item>Leilão</item>
+    </string-array>
+</resources>

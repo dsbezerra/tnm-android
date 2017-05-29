@@ -1,0 +1,19 @@
+query SegmentsQuery($first: Int, $after: Cursor, $orderBy: SegmentOrder) {
+  segments(first: $first, after: $after, orderBy: $orderBy) {
+    edges {
+      node {
+        id
+        name
+        icon
+        defaultImg
+        mqdefault
+        hqdefault
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}

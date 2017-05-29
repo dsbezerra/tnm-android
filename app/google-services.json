@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "825439289985",
+    "firebase_url": "https://tanamao-licitacoes.firebaseio.com",
+    "project_id": "tanamao-licitacoes",
+    "storage_bucket": "tanamao-licitacoes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:825439289985:android:04e2bbd2d35da5b2",
+        "android_client_info": {
+          "package_name": "com.tnmlicitacoes.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "825439289985-37j6lrnspsc39nqo4kqt3dlaiqhqjr83.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "825439289985-6ada9c07sf73avr6rvfl84qttoejhpu7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLKawsaqaaKoVdaFO1GInYrebmQU5WHAw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-69743909-1"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

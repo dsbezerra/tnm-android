@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/segmentBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="matrix"
+        />
+
+    <View
+        android:id="@+id/segmentGradientEffect"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <TextView
+        android:id="@+id/segmentName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:ellipsize="marquee"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/font_large"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginEnd="@dimen/spacing_huge"
+        android:layout_marginTop="@dimen/spacing_small"
+        />
+
+    <ImageView
+        android:id="@+id/segmentIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        />
+
+</RelativeLayout>

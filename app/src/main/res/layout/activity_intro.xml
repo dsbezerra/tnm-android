@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="88dp"
+            android:layout_gravity="top"
+            >
+
+            <ImageView
+                android:id="@+id/introImage"
+                android:layout_width="@dimen/icon_large"
+                android:layout_height="@dimen/icon_large"
+                android:layout_gravity="center"
+                android:src="@drawable/logo"
+                android:contentDescription="Intro"
+                />
+
+        </FrameLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/introViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <TextView
+            android:id="@+id/startUsingText"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginTop="336dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textSize="16sp"
+            android:text="@string/intro_start_using_text"
+            style="@style/Base.Widget.AppCompat.Button.Colored"
+            />
+
+        <LinearLayout
+            android:id="@+id/botSlidePages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="26dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:orientation="horizontal"
+            >
+
+            <FrameLayout
+                android:layout_width="@dimen/viewpager_circle_size"
+                android:layout_height="@dimen/viewpager_circle_size"
+                android:background="@drawable/inactive_page"
+                />
+
+            <FrameLayout
+                android:layout_width="@dimen/viewpager_circle_size"
+                android:layout_height="@dimen/viewpager_circle_size"
+                android:layout_marginLeft="@dimen/spacing_tiny"
+                android:background="@drawable/inactive_page"
+                />
+
+            <FrameLayout
+                android:layout_width="@dimen/viewpager_circle_size"
+                android:layout_height="@dimen/viewpager_circle_size"
+                android:layout_marginLeft="@dimen/spacing_tiny"
+                android:background="@drawable/inactive_page"
+                />
+
+            <FrameLayout
+                android:layout_width="@dimen/viewpager_circle_size"
+                android:layout_height="@dimen/viewpager_circle_size"
+                android:layout_marginLeft="@dimen/spacing_tiny"
+                android:background="@drawable/inactive_page"
+                />
+
+            <FrameLayout
+                android:layout_width="@dimen/viewpager_circle_size"
+                android:layout_height="@dimen/viewpager_circle_size"
+                android:layout_marginLeft="@dimen/spacing_tiny"
+                android:background="@drawable/inactive_page"
+                />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</ScrollView>

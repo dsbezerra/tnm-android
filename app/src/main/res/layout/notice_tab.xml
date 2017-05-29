@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/noticeRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <ProgressBar
+        android:id="@+id/recyclerProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        style="@style/Widget.AppCompat.ProgressBar"
+        />
+
+    <TextView
+        android:id="@+id/noConnectionView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textColor="@color/darker_grey"
+        android:text="Problema na conexão\n Toque para tentar novamente"
+        />
+
+    <TextView
+        android:id="@+id/notFoundView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:scrollbars="vertical"
+        android:textColor="@color/darker_grey"
+        />
+
+</RelativeLayout>

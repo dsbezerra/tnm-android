@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/md_grey_200">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="4dp"
+            android:padding="10dp"
+            android:elevation="@dimen/cardview_default_elevation"
+            android:background="@color/md_white_1000"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/waiting_sms_text_1"
+                android:textSize="18sp"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_margin="@dimen/spacing_large">
+
+                <TextView
+                    android:id="@+id/phoneText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    />
+
+                <ImageButton
+                    android:id="@+id/editPhone"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_edit"
+                    android:scaleType="fitCenter"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@android:drawable/screen_background_light_transparent"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_normal"
+                android:text="@string/waiting_sms_text_2"
+                android:textSize="18sp"
+                />
+
+            <EditText
+                android:id="@+id/codeField"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height_tall"
+                android:layout_marginTop="@dimen/spacing_normal"
+                android:hint="@string/code_field_placeholder_text"
+                android:textColorHint="#d7d7d7"
+                android:textColor="#535353"
+                android:textSize="18sp"
+                android:maxLength="6"
+                android:padding="@dimen/spacing_tiny"
+                android:inputType="number"
+                style="@style/Widget.AppCompat.EditText"
+                />
+
+            <TextView
+                android:id="@+id/timerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="@dimen/spacing_normal"
+                android:layout_marginLeft="@dimen/spacing_normal"
+                android:layout_marginRight="@dimen/spacing_normal"
+                android:textSize="18sp"
+                android:textColor="@color/md_grey_400"
+                />
+
+            <ProgressBar
+                android:id="@+id/timerBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/spacing_tiny"
+                android:layout_marginRight="@dimen/spacing_tiny"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="4dp"
+            android:padding="10dp"
+            android:elevation="@dimen/cardview_default_elevation"
+            android:background="@color/md_white_1000"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/waiting_sms_text_3"
+                android:textSize="18sp"
+                />
+
+            <Button
+                android:id="@+id/smsNotReceived"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/spacing_normal"
+                android:text="@string/not_received_button_text"
+                android:textColor="@color/md_grey_300"
+                android:enabled="false"
+                style="@style/Widget.AppCompat.Button.Colored"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/toolbar"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="@dimen/spacing_small"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/spacing_normal"
+                android:src="@drawable/about_logo"
+                android:contentDescription="Logo"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/spacing_small"
+                android:textColor="@color/colorDarkGrey"
+                android:text="@string/about_text"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textStyle="italic|bold"
+                android:textSize="18sp"
+                android:text="@string/about_subtext"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/about_subtext2"
+                android:textSize="12sp"
+                android:textStyle="italic|bold"
+                android:layout_marginBottom="@dimen/spacing_small"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/more_information"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:textColor="@color/colorPrimaryText"
+                android:textSize="18sp"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/spacing_small"
+                >
+
+                <ImageView
+                    android:id="@+id/websiteIv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_web"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:clickable="true"
+                    android:contentDescription="Website"
+                    />
+
+                <ImageView
+                    android:id="@+id/emailIv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_mail"
+                    android:layout_marginRight="@dimen/spacing_small"
+                    android:clickable="true"
+                    android:contentDescription="Email"
+                    />
+
+                <ImageView
+                    android:id="@+id/facebookIv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_facebook"
+                    android:clickable="true"
+                    android:contentDescription="Facebook"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

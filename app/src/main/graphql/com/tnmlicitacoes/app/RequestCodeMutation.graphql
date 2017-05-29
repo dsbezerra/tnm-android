@@ -1,0 +1,5 @@
+mutation RequestCodeMutation($phone: String!) {
+  requestCode(phone: $phone) {
+    activeTrial
+  }
+}

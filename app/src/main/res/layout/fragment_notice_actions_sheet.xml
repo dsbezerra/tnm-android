@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    app:layout_behavior="@string/bottom_sheet_behavior">
+
+    <LinearLayout
+        android:id="@+id/seeDetails"
+        style="@style/Widget.TNM.BottomSheetLayout"
+        >
+
+        <ImageView
+            android:src="@drawable/ic_error_outline"
+            style="@style/Widget.TNM.BottomSheetIcon"
+            />
+
+        <TextView
+            android:text="@string/see_details"
+            style="@style/Widget.TNM.BottomSheetText"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/viewOnline"
+        style="@style/Widget.TNM.BottomSheetLayout">
+
+        <ImageView
+            android:src="@drawable/ic_open_in_browser"
+            style="@style/Widget.TNM.BottomSheetIcon"
+            />
+
+        <TextView
+            android:text="@string/view_online"
+            style="@style/Widget.TNM.BottomSheetText"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/sendToEmail"
+        style="@style/Widget.TNM.BottomSheetLayout">
+
+        <ImageView
+            android:src="@drawable/ic_mail"
+            style="@style/Widget.TNM.BottomSheetIcon"
+            />
+
+        <TextView
+            android:text="@string/send_to_email"
+            style="@style/Widget.TNM.BottomSheetText"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/download"
+        style="@style/Widget.TNM.BottomSheetLayout">
+
+        <ImageView
+            android:src="@drawable/ic_file_download"
+            style="@style/Widget.TNM.BottomSheetIcon"
+            />
+
+        <TextView
+            android:text="@string/make_download"
+            style="@style/Widget.TNM.BottomSheetText"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/close"
+        style="@style/Widget.TNM.BottomSheetLayout">
+
+        <ImageView
+            android:src="@drawable/ic_close"
+            style="@style/Widget.TNM.BottomSheetIcon"
+            />
+
+        <TextView
+            android:text="@string/close_menu"
+            style="@style/Widget.TNM.BottomSheetText"
+            />
+    </LinearLayout>
+
+</LinearLayout>

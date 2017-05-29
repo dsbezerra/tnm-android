@@ -1,0 +1,34 @@
+query NoticesQuery($segId: OID, $first: Int, $after: Cursor, $orderBy: NoticeOrder, $active: Boolean) {
+  notices(segId: $segId, first: $first, after: $after, orderBy: $orderBy, active: $active) {
+    edges {
+      node {
+        id
+        modality
+        number
+        object
+        disputeDate
+        amount
+        link
+        exclusive
+        agency {
+          name
+          abbr
+          city {
+            name
+            state
+          }
+        }
+        segment {
+          id
+          name
+          icon
+        }
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}

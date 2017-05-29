@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
+	<ViewAnimator
+		android:id="@+id/switcher"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:layout_centerHorizontal="true" >
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			android:orientation="horizontal"
+			android:background="@color/colorPrimary"
+			>
+
+			<ImageButton
+				android:id="@+id/arrowBack"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_vertical"
+				android:src="@drawable/ic_arrow_back"
+				style="@style/Widget.TNM.ActionButton"
+				/>
+
+			<TextView
+				android:id="@+id/docNameText"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_vertical"
+				android:singleLine="true"
+				android:textColor="#FFFFFF"
+				android:ellipsize="middle"
+				android:layout_weight="1"
+				style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+				/>
+
+			<ImageButton
+				android:id="@+id/searchButton"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_vertical"
+				android:contentDescription="@string/search_document"
+				android:src="@drawable/magnify"
+				style="@style/Widget.TNM.ActionButton"
+			/>
+
+		</LinearLayout>
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			android:background="@color/colorPrimary" >
+
+			<ImageButton
+				android:id="@+id/cancelSearch"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerVertical="true"
+				android:layout_alignParentLeft="true"
+				android:contentDescription="@string/cancel"
+				android:src="@drawable/ic_action_close_white"
+				style="@style/Widget.TNM.ActionButton"
+				/>
+
+			<EditText
+				android:id="@+id/searchText"
+				android:background="@drawable/search"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerVertical="true"
+				android:layout_toRightOf="@+id/cancelSearch"
+				android:layout_toLeftOf="@+id/searchBack"
+				android:inputType="text"
+				android:textSize="14sp"
+				android:textColor="#ffffff"
+				android:hint="@string/search"
+				android:textColorHint="#ffc58d"
+				android:singleLine="true"
+
+				/>
+
+			<ImageButton
+				android:id="@+id/searchBack"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerVertical="true"
+				android:layout_toLeftOf="@+id/searchForward"
+				android:contentDescription="@string/search_backwards"
+				android:src="@drawable/ic_arrow_back"
+				style="@style/Widget.TNM.ActionButton"
+				/>
+
+			<ImageButton
+				android:id="@+id/searchForward"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_centerVertical="true"
+				android:layout_alignParentRight="true"
+				android:contentDescription="@string/search_forwards"
+				android:src="@drawable/ic_arrow_forward"
+				style="@style/Widget.TNM.ActionButton" />
+
+		</RelativeLayout>
+
+	</ViewAnimator>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true" >
+
+
+		<SeekBar
+			android:id="@+id/pageSlider"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentBottom="true"
+			android:layout_centerHorizontal="true"
+			android:layout_margin="0dp"
+			android:thumb="@drawable/seek_thumb"
+			android:progressDrawable="@drawable/seek_progress"
+			android:paddingTop="12dp"
+			android:paddingBottom="8dp"
+			android:background="@android:color/transparent"
+			/>
+
+		<TextView
+			android:id="@+id/pageNumber"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_marginLeft="10dp"
+			android:layout_marginBottom="16dp"
+			android:layout_above="@+id/pageSlider"
+			android:background="@drawable/page_num"
+			android:textColor="#666"
+			android:textSize="12sp"
+			/>
+
+	</RelativeLayout>
+
+</RelativeLayout>

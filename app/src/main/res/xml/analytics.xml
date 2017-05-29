@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Replace placeholder ID with your tracking ID -->
+    <string name="ga_trackingId">UA-69743909-1</string>
+
+    <!-- Enable Activity tracking -->
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <!-- Enable automatic exception tracking -->
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+
+    <!-- Remove the last octet of the IP address -->
+    <bool name="ga_anonymizeIp">true</bool>
+
+    <!-- Screen names for activities -->
+    <screenName name="com.tnmlicitacoes.app.ui.activity.SplashScreenActivity">Tela Splash</screenName>
+
+    <screenName name="com.tnmlicitacoes.app.ui.activity.IntroActivity">Tela de Apresentação</screenName>
+
+    <screenName name="com.tnmlicitacoes.app.ui.activity.VerifyNumberActivity">Tela de Verificação de Número</screenName>
+
+    <screenName name="com.tnmlicitacoes.app.ui.activity.AccountConfigurationActivity">Tela de Configuração Inicial</screenName>
+
+    <screenName name="com.tnmlicitacoes.app.ui.activity.MainActivity">Tela Inicial</screenName>
+
+    <screenName name="com.tnmlicitacoes.app.ui.activity.DetailsActivity">Tela de Detalhes</screenName>
+
+    <screenName name="com.tnmlicitacoes.app.billing.BillingActivity">Tela de Assinatura</screenName>
+
+    <screenName name="com.tnmlicitacoes.app.ui.activity.WebviewActivity">Tela do Webview</screenName>
+
+    <screenName name="com.tnmlicitacoes.app.ui.activity.SettingsActivity">Tela de Configurações</screenName>
+
+    <screenName name="com.tnmlicitacoes.app.ui.activity.AboutActivity">Tela Sobre o Aplicativo</screenName>
+
+</resources>

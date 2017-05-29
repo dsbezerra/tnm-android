@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fafafa"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <TextView
+        android:id="@+id/text0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="@string/city_select_text_0"
+        android:paddingLeft="@dimen/spacing_small"
+        android:paddingRight="@dimen/spacing_small"
+        android:paddingTop="@dimen/spacing_small"
+        />
+
+    <TextView
+        android:id="@+id/text1"
+        android:layout_below="@id/text0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_small"
+        android:textSize="16sp"
+        android:textColor="@color/colorAccent"
+        android:text="@string/city_select_text_no_city"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_below="@id/text1"
+        android:id="@+id/citiesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        style="@style/Widget.AppCompat.ProgressBar"
+        />
+
+
+</RelativeLayout>

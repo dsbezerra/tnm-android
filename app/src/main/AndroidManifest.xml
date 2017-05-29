@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.tnmlicitacoes.app" >
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-sdk xmlns:tools="http://schemas.android.com/tools"
+        tools:overrideLibrary="android.support.v14.preference" />
+
+    <supports-screens
+        android:largeScreens="false"
+        android:normalScreens="true"
+        android:smallScreens="true" />
+
+    <application
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.DefaultTheme"
+        android:name=".TNMApplication"
+        android:allowBackup="false">
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"
+            />
+        <activity
+            android:name=".ui.activity.SplashScreenActivity"
+            android:label="@string/app_name"
+            android:theme="@style/SplashScreenTheme"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activity.IntroActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".verifynumber.VerifyNumberActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.VerifyNumber"
+            android:windowSoftInputMode="adjustResize"
+            />
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:label="@string/app_name">
+        </activity>
+        <activity
+            android:name=".ui.activity.MySubscriptionActivity"
+            android:label="@string/app_name"/>
+        <activity
+            android:name=".ui.activity.AccountConfigurationActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".billing.BillingActivity"
+            android:label="@string/app_name">
+        </activity>
+        <activity android:name=".ui.activity.SettingsActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.activity.ChangeChosenActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".ui.activity.DetailsActivity"
+            android:parentActivityName=".ui.activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tnmlicitacoes.app.ui.activity.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.tnmlicitacoes.app.mupdf.MuPDFActivity"
+            android:label="@string/app_name"/>
+        <activity
+            android:name=".ui.activity.WebviewActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".ui.activity.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName=".ui.activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tnmlicitacoes.app.ui.activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.activity.MyBiddingsActivity"
+            android:label="@string/title_activity_files"/>
+        <receiver android:name=".service.SmsBroadcastListener">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name=".fcm.MyFcmListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.tnmlicitacoes.app.fcm.MyInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.tnmlicitacoes.app.fcm.RegistrationIntentService"
+            android:exported="false"/>
+        <service
+            android:name="com.tnmlicitacoes.app.service.DownloadService"
+            android:exported="false"/>
+        <service
+            android:name="com.tnmlicitacoes.app.service.TipRatingService"
+            android:exported="false"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="c1bc808289d2713a22583621311485de99715e77" />
+    </application>
+
+</manifest>

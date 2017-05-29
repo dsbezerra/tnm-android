@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/abrir"
+        android:title="@string/action_open"
+        android:icon="@drawable/ic_open_in_browser"
+        />
+
+    <item
+        android:id="@+id/delete"
+        android:title="@string/action_remove"
+        android:icon="@drawable/ic_delete"
+        />
+
+    <item android:id="@+id/close"
+        android:title="@string/action_close"
+        android:icon="@drawable/ic_close"
+        />
+
+</menu>

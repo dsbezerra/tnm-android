@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Error;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
@@ -44,7 +45,9 @@ import com.tnmlicitacoes.app.utils.FileUtils;
 import com.tnmlicitacoes.app.utils.NoticeUtils;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.HttpUrl;
 
@@ -71,8 +74,6 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
     private TextView mNoConnectionView;
 
     private TextView mNotFoundView;
-
-    private boolean mIsFirstLoad = true;
 
     /* Indicate whether is loading more or not */
     private boolean mIsLoadingMore = false;
@@ -108,7 +109,7 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mApplication = (TNMApplication) getActivity().getApplication();
         View v = inflater.inflate(R.layout.fragment_notices, container, false);
-        initAdapter();
+        initAdapter(savedInstanceState);
         initViews(v);
         initViewsListeners();
         return v;
@@ -117,7 +118,9 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
     @Override
     public void onStart() {
         super.onStart();
-        fetchNotices(null);
+        if (!TNMApplication.IsRefreshingToken) {
+            fetchNotices(null, false);
+        }
     }
 
     @Override
@@ -133,14 +136,25 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean("FETCH_FROM_STORE", true);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         mNoticeAdapter.setOnClickListener(null);
         mActivity = null;
+        if (mNoticesCall != null) {
+            mNoticesCall.cancel();
+        }
     }
 
-    private void initAdapter() {
+    private void initAdapter(Bundle savedInstanceState) {
         mNoticeAdapter = new NoticeAdapter(getContext());
+        if (savedInstanceState != null) {
+        }
         mNoticeAdapter.setOnClickListener(this);
     }
 
@@ -155,12 +169,13 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
         mNoConnectionView.setVisibility(View.GONE);
 
         mNoticesRecyclerView.setHasFixedSize(true);
-        mNoticesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        mNoticesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false));
         mNoticesRecyclerView.setAdapter(mNoticeAdapter);
 
         mSwipeRefreshLayout.setColorSchemeResources(
+                R.color.colorAccent,
                 R.color.colorPrimary,
-                R.color.colorPrimaryDark,
                 R.color.colorAccent);
     }
 
@@ -178,7 +193,7 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager llm = (LinearLayoutManager) mNoticesRecyclerView.getLayoutManager();
                 if (mNoticeAdapter.getItemCount() == llm.findLastCompletelyVisibleItemPosition() + 1) {
-                    if (!mIsLoadingMore && mPageInfo.hasNextPage()) {
+                    if (!mIsLoadingMore && mPageInfo != null && mPageInfo.hasNextPage()) {
                         mNoticesRecyclerView.post(new Runnable() {
                             @Override
                             public void run() {
@@ -198,38 +213,38 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
         mNoConnectionView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fetchNotices(null);
+                fetchNotices(null, false);
             }
         });
     }
 
-    private void fetchNotices(Object after) {
-        if (mNoticeAdapter.getItemCount() == 0) {
-            mIsFirstLoad = true;
-            mIsLoadingMore = false;
+    public void fetchNotices(Object after, boolean isFetchMore) {
+        if (mNoticeAdapter.getItemCount() == 0 || isFetchMore) {
+            LOG_DEBUG(TAG, "Fetching notices...");
+
             //showProgressBar();
             mSwipeRefreshLayout.setRefreshing(true);
+
+            // Get the segment for this tab
+            String segId = getArguments().getString("segId");
+
+            final NoticeOrder noticeOrder = NoticeOrder.builder()
+                    .field(NoticeOrderField.DISPUTE_DATE)
+                    .order(OrderDirection.DESC)
+                    .build();
+
+            final NoticesQuery citiesQuery = NoticesQuery.builder()
+                    .first(DEFAULT_LIMIT_ITEMS)
+                    .segId(segId)
+                    .after(after)
+                    .orderBy(noticeOrder)
+                    .build();
+
+            mNoticesCall = mApplication.getApolloClient()
+                    .newCall(citiesQuery)
+                    .cacheControl(CacheControl.CACHE_FIRST);
+            mNoticesCall.enqueue(dataCallback);
         }
-
-        // Get the segment for this tab
-        String segId = getArguments().getString("segId");
-
-        final NoticeOrder noticeOrder = NoticeOrder.builder()
-                .field(NoticeOrderField.DISPUTE_DATE)
-                .order(OrderDirection.DESC)
-                .build();
-
-        final NoticesQuery citiesQuery = NoticesQuery.builder()
-                .first(DEFAULT_LIMIT_ITEMS)
-                .segId(segId)
-                .after(after)
-                .orderBy(noticeOrder)
-                .build();
-
-        mNoticesCall = mApplication.getApolloClient()
-                .newCall(citiesQuery)
-                .cacheControl(CacheControl.NETWORK_FIRST);
-        mNoticesCall.enqueue(dataCallback);
     }
 
     private ApolloCall.Callback<NoticesQuery.Data> dataCallback = new ApolloCall.Callback<NoticesQuery.Data>() {
@@ -258,27 +273,34 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
                     });
                 }
 
-                if (mIsFirstLoad) {
-                    mIsFirstLoad = false;
+                LOG_DEBUG(TAG, "NoticesFetched");
+            } else {
+                for (Error e : response.errors()) {
+                    if (e.message().equals("Unauthorized access")) {
+                        MainActivity activity = (MainActivity) getActivity();
+                        activity.refreshToken();
+                    }
+
+                    LOG_DEBUG(TAG, e.message());
                 }
             }
         }
 
         @Override
         public void onFailure(ApolloException e) {
-
+            e.printStackTrace();
         }
     };
 
     private void fetchMore() {
-        if(mIsLoadingMore || mNoticeAdapter.getItemCount() == 0) {
+        if (mIsLoadingMore || mNoticeAdapter.getItemCount() == 0) {
             return;
         }
 
         mIsLoadingMore = true;
         mNoticeAdapter.add(null, mNoticeAdapter.getItemCount());
 
-        fetchNotices(mPageInfo.endCursor());
+        fetchNotices(mPageInfo.endCursor(), true);
     }
 
     @Override
@@ -424,10 +446,11 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
      * Refreshes the fetched data
      */
     public void refreshData() {
-        mIsFirstLoad = true;
+        mPageInfo = null;
         mIsLoadingMore = false;
+        mNoticeAdapter.setItems(new ArrayList<NoticesQuery.Data.Edge>());
         //showProgressBar();
-        fetchNotices(null);
+        fetchNotices(null, false);
     }
 
     @Override
@@ -532,4 +555,5 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
     public void onDownloadClicked() {
         startDownloadProcess();
     }
+
 }

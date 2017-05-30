@@ -38,7 +38,7 @@ public class VerifyNumberActivity extends BaseActivity {
 
         mFragment = getCurrentFragment();
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.add(R.id.verify_number_content, (Fragment) mFragment);
             fragmentTransaction.commit();

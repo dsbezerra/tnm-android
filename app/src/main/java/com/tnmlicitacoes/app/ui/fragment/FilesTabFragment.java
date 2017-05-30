@@ -64,7 +64,6 @@ public class FilesTabFragment extends Fragment implements OnClickListenerRecycle
         if(mFilesAdapter == null) {
             mFilesAdapter = new FileAdapter(activity);
         }
-        mFilesAdapter.setFileViewListener((FileViewListener) activity);
     }
 
     @Override

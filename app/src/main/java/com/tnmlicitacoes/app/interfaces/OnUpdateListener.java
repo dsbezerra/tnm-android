@@ -1,6 +1,5 @@
 package com.tnmlicitacoes.app.interfaces;
 
-public interface GlobalApplicationListener {
-
+public interface OnUpdateListener {
     void onNewUpdate();
 }

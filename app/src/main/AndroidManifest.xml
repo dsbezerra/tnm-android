@@ -54,9 +54,6 @@
             android:label="@string/app_name">
         </activity>
         <activity
-            android:name=".ui.activity.MySubscriptionActivity"
-            android:label="@string/app_name"/>
-        <activity
             android:name=".ui.activity.AccountConfigurationActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"/>
@@ -93,9 +90,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tnmlicitacoes.app.ui.activity.MainActivity" />
         </activity>
-        <activity
-            android:name=".ui.activity.MyBiddingsActivity"
-            android:label="@string/title_activity_files"/>
         <receiver android:name=".service.SmsBroadcastListener">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />

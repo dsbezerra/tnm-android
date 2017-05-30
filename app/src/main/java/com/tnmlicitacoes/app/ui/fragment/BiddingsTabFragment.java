@@ -18,7 +18,6 @@ import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.adapter.MyBiddingsAdapter;
 import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
 import com.tnmlicitacoes.app.tasks.SendEmailTask;
-import com.tnmlicitacoes.app.ui.activity.MyBiddingsActivity;
 import com.tnmlicitacoes.app.ui.activity.WebviewActivity;
 import com.tnmlicitacoes.app.utils.Utils;
 
@@ -111,14 +110,6 @@ public class BiddingsTabFragment extends Fragment implements OnClickListenerRecy
 
         SendEmailTask sendTask = new SendEmailTask(getActivity(), map);
         sendTask.execute();
-    }
-
-    private void hideList(boolean isEmpty) {
-        mRecyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
-        mNoItemsView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-        if(isEmpty) {
-            ((MyBiddingsActivity) getActivity()).expandToolbar(isEmpty);
-        }
     }
 
     private void overridePendingTransition() {

@@ -3,7 +3,6 @@ package com.tnmlicitacoes.app.ui.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -24,9 +23,9 @@ import com.tnmlicitacoes.app.SegmentsQuery;
 import com.tnmlicitacoes.app.interfaces.OnAccountConfigurationListener;
 import com.tnmlicitacoes.app.model.City;
 import com.tnmlicitacoes.app.model.Segment;
-import com.tnmlicitacoes.app.ui.fragment.SegmentSelectFragment;
-import com.tnmlicitacoes.app.ui.fragment.CitySelectFragment;
 import com.tnmlicitacoes.app.ui.fragment.AccountConfigurationFragment;
+import com.tnmlicitacoes.app.ui.fragment.CitySelectFragment;
+import com.tnmlicitacoes.app.ui.fragment.SegmentSelectFragment;
 import com.tnmlicitacoes.app.utils.BillingUtils;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 
@@ -38,7 +37,7 @@ import io.realm.Realm;
 
 import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
-public class AccountConfigurationActivity extends BaseActivity implements OnAccountConfigurationListener {
+public class AccountConfigurationActivity extends BaseAuthenticatedActivity implements OnAccountConfigurationListener {
 
     private static final String TAG = "AccountConfigurationActivity";
 
@@ -78,12 +77,10 @@ public class AccountConfigurationActivity extends BaseActivity implements OnAcco
         }
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.init_config_content, mCurrentFragment);
+        fragmentTransaction.replace(R.id.init_config_content, mCurrentFragment);
         fragmentTransaction.commit();
 
         updateSelectedText(0);
-
-
 
         new Handler().post(new Runnable() {
             @Override
@@ -322,6 +319,16 @@ public class AccountConfigurationActivity extends BaseActivity implements OnAcco
         } else {
             mSelectedText.setText("");
             mContinueButton.setEnabled(false);
+        }
+    }
+
+    @Override
+    protected void onTokenRefreshed() {
+        // TODO(diego): Find a better way to do this!
+        if (mCurrentFragment instanceof CitySelectFragment) {
+            ((CitySelectFragment) mCurrentFragment).fetchCities();
+        } else if (mCurrentFragment instanceof SegmentSelectFragment) {
+            ((SegmentSelectFragment) mCurrentFragment).fetchSegments();
         }
     }
 }

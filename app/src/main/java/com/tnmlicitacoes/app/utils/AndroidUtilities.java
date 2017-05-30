@@ -5,10 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Patterns;
@@ -17,23 +14,19 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonObject;
-import com.tnmlicitacoes.app.BuildConfig;
-import com.tnmlicitacoes.app.interfaces.GlobalApplicationListener;
+import com.tnmlicitacoes.app.interfaces.OnUpdateListener;
 import com.tnmlicitacoes.app.ui.activity.AccountConfigurationActivity;
 import com.tnmlicitacoes.app.ui.activity.DetailsActivity;
 import com.tnmlicitacoes.app.ui.activity.IntroActivity;
 import com.tnmlicitacoes.app.ui.activity.MainActivity;
-import com.tnmlicitacoes.app.ui.activity.MyBiddingsActivity;
-import com.tnmlicitacoes.app.ui.activity.MySubscriptionActivity;
+import com.tnmlicitacoes.app.ui.fragment.MyBiddingsFragment;
+import com.tnmlicitacoes.app.ui.fragment.MySubscriptionFragment;
 import com.tnmlicitacoes.app.ui.activity.SettingsActivity;
 import com.tnmlicitacoes.app.ui.activity.SplashScreenActivity;
 import com.tnmlicitacoes.app.ui.activity.VerifyNumberActivity;
 import com.tnmlicitacoes.app.ui.activity.WebviewActivity;
 
 import java.util.HashMap;
-import java.util.UUID;
-
-import static com.tnmlicitacoes.app.utils.LogUtils.LOG_ERROR;
 
 //import com.tnmlicitacoes.app.ui.activity.VerifyNumberActivity;
 
@@ -41,7 +34,7 @@ public class AndroidUtilities {
 
     private static final String TAG = "AndroidUtilities";
 
-    public static GlobalApplicationListener sGlobalApplicationListener = null;
+    public static OnUpdateListener sOnUpdateListener = null;
 
     private static Context sContext = null;
 
@@ -118,7 +111,7 @@ public class AndroidUtilities {
             } break;
             case MY_SUBS_ACTIVITY:
             {
-                clazz = MySubscriptionActivity.class;
+                clazz = MySubscriptionFragment.class;
             } break;
             case SETTINGS_ACTIVITY:
             {
@@ -126,7 +119,7 @@ public class AndroidUtilities {
             } break;
             case MY_BIDDINGS_ACTIVITY:
             {
-                clazz = MyBiddingsActivity.class;
+                clazz = MyBiddingsFragment.class;
             } break;
             case WEB_VIEW_ACTIVITY:
             {

@@ -4,10 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.tnmlicitacoes.app.R;
+import com.tnmlicitacoes.app.ui.fragment.MyBiddingsFragment;
+import com.tnmlicitacoes.app.ui.fragment.MySubscriptionFragment;
 
 public abstract class BaseBottomNavigationActivity extends BaseActivity {
 
@@ -40,12 +41,12 @@ public abstract class BaseBottomNavigationActivity extends BaseActivity {
 
                     case R.id.action_my_biddings:
                         intent = new Intent(BaseBottomNavigationActivity.this,
-                                MyBiddingsActivity.class);
+                                MyBiddingsFragment.class);
                         break;
 
                     case R.id.action_account:
                         intent = new Intent(BaseBottomNavigationActivity.this,
-                                MySubscriptionActivity.class);
+                                MySubscriptionFragment.class);
                         break;
                 }
 

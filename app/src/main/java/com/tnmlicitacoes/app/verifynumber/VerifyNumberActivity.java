@@ -20,6 +20,7 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.tnmlicitacoes.app.ConfirmCodeMutation;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.RequestCodeMutation;
+import com.tnmlicitacoes.app.TNMApplication;
 import com.tnmlicitacoes.app.interfaces.OnVerifyNumberListener;
 import com.tnmlicitacoes.app.ui.activity.AccountConfigurationActivity;
 import com.tnmlicitacoes.app.ui.activity.BaseActivity;
@@ -158,8 +159,13 @@ public class VerifyNumberActivity extends BaseActivity implements OnVerifyNumber
         // Store these tokens in a secure way
         // @see https://nelenkov.blogspot.com.br/2012/05/storing-application-secrets-in-androids.html
         if (!TextUtils.isEmpty(refreshToken) && !TextUtils.isEmpty(accessToken)) {
-            LOG_DEBUG(TAG, refreshToken);
-            LOG_DEBUG(TAG, accessToken);
+            // TODO(diego): Replace this for a more secure way...
+            SettingsUtils.putString(this, SettingsUtils.PREF_REFRESH_TOKEN, refreshToken);
+            SettingsUtils.putString(this, SettingsUtils.PREF_ACCESS_TOKEN, accessToken);
+            SettingsUtils.putBoolean(this, SettingsUtils.PREF_USER_IS_LOGGED, true);
+
+            // Reinitialize Apollo Client with authentication
+            ((TNMApplication) getApplication()).initApolloClient(accessToken);
 
             Intent intent = new Intent(this, AccountConfigurationActivity.class);
             startActivity(intent);

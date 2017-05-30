@@ -12,19 +12,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Error;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
 import com.tnmlicitacoes.app.CitiesQuery;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.TNMApplication;
+import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
 import com.tnmlicitacoes.app.model.City;
 import com.tnmlicitacoes.app.type.CityOrder;
 import com.tnmlicitacoes.app.type.CityOrderField;
 import com.tnmlicitacoes.app.type.OrderDirection;
 import com.tnmlicitacoes.app.type.State;
+import com.tnmlicitacoes.app.ui.activity.AccountConfigurationActivity;
 import com.tnmlicitacoes.app.ui.adapter.CityAdapter;
-import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
 import com.tnmlicitacoes.app.utils.Utils;
 
 import java.util.ArrayList;
@@ -33,9 +35,8 @@ import java.util.HashMap;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
-
-public class CitySelectFragment extends AccountConfigurationFragment implements OnClickListenerRecyclerView {
+public class CitySelectFragment extends AccountConfigurationFragment
+        implements OnClickListenerRecyclerView {
 
     private static final String TAG = "CitySelectFragment";
 
@@ -72,16 +73,24 @@ public class CitySelectFragment extends AccountConfigurationFragment implements 
     @Override
     public void onStart() {
         super.onStart();
-        fetchCities();
+        if (!TNMApplication.IsRefreshingToken) {
+            fetchCities();
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mRealm.close();
+        if (mCitiesCall != null) {
+            mCitiesCall.cancel();
+        }
     }
 
-    private void fetchCities() {
+    /**
+     * Fetch cities from backend
+     */
+    public void fetchCities() {
         final CityOrder cityOrder = CityOrder.builder()
                 .field(CityOrderField.NAME)
                 .order(OrderDirection.ASC)
@@ -101,18 +110,27 @@ public class CitySelectFragment extends AccountConfigurationFragment implements 
     private ApolloCall.Callback<CitiesQuery.Data> dataCallback = new ApolloCall.Callback<CitiesQuery.Data>() {
         @Override
         public void onResponse(final Response<CitiesQuery.Data> response) {
+            if (response.isSuccessful()) {
+                // Update views
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mCityAdapter.setItems(response.data().cities().edges());
+                        mProgressBar.setVisibility(View.GONE);
+                        mRecyclerView.setVisibility(View.VISIBLE);
 
-            // Update views
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mCityAdapter.setItems(response.data().cities().edges());
-                    mProgressBar.setVisibility(View.GONE);
-                    mRecyclerView.setVisibility(View.VISIBLE);
-
-                    restoreSavedCities();
+                        restoreSavedCities();
+                    }
+                });
+            }
+            else {
+                for (Error e : response.errors()) {
+                    if (e.message().equals("Unauthorized access")) {
+                        AccountConfigurationActivity activity = (AccountConfigurationActivity) getActivity();
+                        activity.refreshToken();
+                    }
                 }
-            });
+            }
         }
 
         @Override

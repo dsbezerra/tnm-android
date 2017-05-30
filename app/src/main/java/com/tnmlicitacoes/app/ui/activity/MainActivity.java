@@ -5,18 +5,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.TabLayout;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
 
 import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
@@ -26,60 +25,50 @@ import com.tnmlicitacoes.app.billing.IabResult;
 import com.tnmlicitacoes.app.billing.Inventory;
 import com.tnmlicitacoes.app.billing.Purchase;
 import com.tnmlicitacoes.app.domain.Subscription;
-import com.tnmlicitacoes.app.fcm.RegistrationIntentService;
-import com.tnmlicitacoes.app.interfaces.GlobalApplicationListener;
 import com.tnmlicitacoes.app.interfaces.OnFilterClickListener;
-import com.tnmlicitacoes.app.model.Segment;
-import com.tnmlicitacoes.app.ui.adapter.NoticeViewPagerAdapter;
-import com.tnmlicitacoes.app.ui.fragment.NoticeTabFragment;
+import com.tnmlicitacoes.app.interfaces.OnUpdateListener;
+import com.tnmlicitacoes.app.ui.fragment.MainFragment;
+import com.tnmlicitacoes.app.ui.fragment.MyBiddingsFragment;
+import com.tnmlicitacoes.app.ui.fragment.MySubscriptionFragment;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
 import com.tnmlicitacoes.app.utils.BillingUtils;
-import com.tnmlicitacoes.app.utils.FilterUtils;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 import com.tnmlicitacoes.app.utils.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.Sort;
-
 import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
-public class MainActivity extends BaseBottomNavigationActivity implements OnFilterClickListener, GlobalApplicationListener {
+public class MainActivity extends BaseAuthenticatedActivity implements
+        OnFilterClickListener, OnUpdateListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MainActivity";
 
-    private List<Segment> mSegments = new ArrayList<>();
+    private IabHelper mBillingHelper;
 
-    private NoticeViewPagerAdapter mViewPagerAdapter;
-
-    private TabLayout mTabs;
+    private BottomNavigationView mBottomNavigationView;
 
     private AppBarLayout mAppBarLayout;
 
-    private ViewPager mViewPager;
-
-    private IabHelper mBillingHelper;
-
-    private Realm mRealm;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // We need  to put this before the super because the super gets a reference
-        // from the xml layout
-        setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        mRealm = Realm.getDefaultInstance();
-        AndroidUtilities.sGlobalApplicationListener = this;
+        mAppBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
+        mBottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(this);
+
         setupToolbar();
-        setupDatabaseData();
-        initViews();
         setupInAppBilling();
-        if(SettingsUtils.getNewestVersionCode(this) > BuildConfig.VERSION_CODE) {
+
+        AndroidUtilities.sOnUpdateListener = this;
+        if (SettingsUtils.getNewestVersionCode(this) > BuildConfig.VERSION_CODE) {
             showUpdateDialog();
+        }
+
+        if (savedInstanceState == null) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.main_content, new MainFragment());
+            fragmentTransaction.commit();
         }
     }
 
@@ -87,33 +76,24 @@ public class MainActivity extends BaseBottomNavigationActivity implements OnFilt
     protected void onStart() {
         super.onStart();
         SettingsUtils.eraseTemporarySettings(this);
-        if(SettingsUtils.isFirstStart(this)) {
+        if (SettingsUtils.isFirstStart(this)) {
             showNotificationDialog();
         }
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if(SettingsUtils.needToUpdateTopics(this)) {
-            setupDatabaseData();
-            initGcm();
-        }
+    protected void onTokenRefreshed() {
+        //NoticeTabFragment fragment = getCurrentFragment();
+        //if (fragment != null) {
+        //    fragment.fetchNotices(null, false);
+        //}
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        AndroidUtilities.sGlobalApplicationListener = null;
-        mRealm.close();
-    }
-
-    private void initGcm() {
-        if (!SettingsUtils.isTokenInServer(this)) {
-            startService(new Intent(this, RegistrationIntentService.class));
-        } else if (SettingsUtils.needToUpdateTopics(this)) {
-            startService(new Intent(this, RegistrationIntentService.class));
-        }
+        AndroidUtilities.sOnUpdateListener = null;
+        LOG_DEBUG(TAG, "Realm closed.");
     }
 
     @Override
@@ -175,8 +155,9 @@ public class MainActivity extends BaseBottomNavigationActivity implements OnFilt
         } else if (id == R.id.action_search) {
             return true;
         } else if (id == R.id.menu_refresh) {
-            NoticeTabFragment fragment = getCurrentFragment();
-            fragment.refreshData();
+            // TODO(diego):
+            //NoticeTabFragment fragment = getCurrentFragment();
+            //fragment.refreshData();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -365,87 +346,6 @@ public class MainActivity extends BaseBottomNavigationActivity implements OnFilt
         }
     };
 
-    /**
-     * Setup a categories array used in the view pager for namimg tabs
-     */
-    private void setupSegmentTabs() {
-
-        LOG_DEBUG(TAG, "Starting setup of segment tabs.");
-
-        RealmResults<Segment> segments = mRealm.where(Segment.class).findAll();
-        if (segments.size() == 0) {
-            LOG_DEBUG(TAG, "Zero segments in database.");
-            // TODO(diego): send back to configuration
-        }
-
-        // Sorting by name because we want the items sorted...
-        segments = segments.sort("name");
-
-        mSegments = new ArrayList<>(segments);
-
-        if(mSegments.size() == 1) {
-            mTabs.setTabMode(TabLayout.MODE_FIXED);
-            mTabs.setTabGravity(TabLayout.GRAVITY_FILL);
-        } else {
-            mTabs.setTabMode(TabLayout.MODE_SCROLLABLE);
-            mTabs.setTabGravity(TabLayout.GRAVITY_CENTER);
-        }
-
-        LOG_DEBUG(TAG, "Finished setting up segments tabs.");
-    }
-
-    /**
-     * Initialization of views
-     */
-    private void initViews() {
-        mViewPager = (ViewPager) findViewById(R.id.viewPager);
-        mTabs = (TabLayout) findViewById(R.id.tabLayout);
-        mAppBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
-    }
-
-    /**
-     * Setup categories tabs and locations
-     */
-    private void setupDatabaseData() {
-        Handler handler = new Handler();
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                setupSegmentTabs();
-                setupTabsAndViewPager();
-            }
-        });
-    }
-
-    private void setupTabsAndViewPager() {
-        mViewPagerAdapter = new NoticeViewPagerAdapter(getSupportFragmentManager(), mSegments);
-        mViewPager.setAdapter(mViewPagerAdapter);
-        mViewPager.setOffscreenPageLimit(0);
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                if (state == ViewPager.SCROLL_STATE_IDLE || state == ViewPager.SCROLL_STATE_SETTLING) {
-                    mAppBarLayout.setExpanded(true, true);
-                }
-            }
-        });
-        mTabs.setupWithViewPager(mViewPager);
-    }
-
-    private NoticeTabFragment getCurrentFragment() {
-        return (NoticeTabFragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem());
-    }
-
     @Override
     public void onFilter(CharSequence constraint) {
 //        NoticeTabFragment fragment = getCurrentFragment();
@@ -485,5 +385,36 @@ public class MainActivity extends BaseBottomNavigationActivity implements OnFilt
                 showUpdateDialog();
             }
         });
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        boolean result = false;
+
+        mAppBarLayout.setElevation(0);
+
+        int id = item.getItemId();
+        if (id == R.id.action_home) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_content, new MainFragment())
+                    .commit();
+            result = true;
+        } else if (id == R.id.action_my_biddings) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_content, new MyBiddingsFragment())
+                    .commit();
+            result = true;
+        } else if (id == R.id.action_account) {
+            mAppBarLayout.setElevation(AndroidUtilities.dp(MainActivity.this, 4));
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_content, new MySubscriptionFragment())
+                    .commit();
+            result = true;
+        }
+
+        return result;
     }
 }

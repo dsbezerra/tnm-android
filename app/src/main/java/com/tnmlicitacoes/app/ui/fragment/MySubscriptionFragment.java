@@ -1,20 +1,24 @@
-package com.tnmlicitacoes.app.ui.activity;
+package com.tnmlicitacoes.app.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.billing.BillingActivity;
+import com.tnmlicitacoes.app.ui.activity.ChangeChosenActivity;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 import com.tnmlicitacoes.app.utils.Utils;
 
-public class MySubscriptionActivity extends BaseBottomNavigationActivity implements View.OnClickListener {
+public class MySubscriptionFragment extends Fragment implements View.OnClickListener {
 
     private LinearLayout mContentLayout;
 
@@ -31,40 +35,32 @@ public class MySubscriptionActivity extends BaseBottomNavigationActivity impleme
         int STORE        = 3;
     }
 
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        // We need  to put this before the super because the super gets a reference
-        // from the xml layout
-        setContentView(R.layout.activity_my_subscription);
-        super.onCreate(savedInstanceState);
-        setupToolbar("Meu plano");
-        initViews();
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_my_account, container, false);
+        initViews(v);
         initViewListeners();
+        return v;
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         populateViews();
     }
 
     @Override
-    protected void setupToolbar(String title) {
-        super.setupToolbar(title);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
     }
 
-    private void initViews() {
-        mContentLayout = (LinearLayout) findViewById(R.id.contentLinearLayout);
-        mGoToStore = (Button) findViewById(R.id.btnAppStore);
+    private void initViews(View v) {
+        mContentLayout = (LinearLayout) v.findViewById(R.id.contentLinearLayout);
+        mGoToStore = (Button) v.findViewById(R.id.btnAppStore);
 
         mLayoutInflater = (LayoutInflater)
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     private void initViewListeners() {
@@ -90,7 +86,7 @@ public class MySubscriptionActivity extends BaseBottomNavigationActivity impleme
 
         itemHeader.setText(getString(R.string.current_subscription_text));
 
-        String billingName = SettingsUtils.getBillingSubName(this);
+        String billingName = SettingsUtils.getBillingSubName(getContext());
         if(billingName == null || billingName.isEmpty() || billingName.equals(SettingsUtils.STRING_DEFAULT)) {
             //long days = 30 - (System.currentTimeMillis() - SettingsUtils.getActivationDateFromPrefs(this)) / Utils.DAY_IN_MILLIS;
             itemName.setText("Avaliação gratuita");
@@ -143,7 +139,7 @@ public class MySubscriptionActivity extends BaseBottomNavigationActivity impleme
 
             case Buttons.SUBSCRIPTION:
             {
-                Intent intent = new Intent(this, BillingActivity.class);
+                Intent intent = new Intent(getContext(), BillingActivity.class);
                 intent.putExtra("IS_CHANGING_SUBSCRIPTION", true);
                 startActivity(intent);
                 //AnalyticsUtils.fireEvent(getApplicationContext(), "Meu plano", "Alterar plano");
@@ -151,7 +147,7 @@ public class MySubscriptionActivity extends BaseBottomNavigationActivity impleme
 
             case Buttons.CITIES:
             {
-                Intent intent = new Intent(this, ChangeChosenActivity.class);
+                Intent intent = new Intent(getContext(), ChangeChosenActivity.class);
                 intent.putExtra(ChangeChosenActivity.FRAGMENT_ID, ChangeChosenActivity.CITIES_CHANGE_FRAGMENT);
                 startActivity(intent);
                 //AnalyticsUtils.fireEvent(getApplicationContext(), "Meu plano", "Alterar cidades");
@@ -159,7 +155,7 @@ public class MySubscriptionActivity extends BaseBottomNavigationActivity impleme
 
             case Buttons.CATEGORIES:
             {
-                Intent intent = new Intent(this, ChangeChosenActivity.class);
+                Intent intent = new Intent(getContext(), ChangeChosenActivity.class);
                 intent.putExtra(ChangeChosenActivity.FRAGMENT_ID, ChangeChosenActivity.CATEGORIES_CHANGE_FRAGMENT);
                 startActivity(intent);
                 //AnalyticsUtils.fireEvent(getApplicationContext(), "Meu plano", "Alterar segmentos");
@@ -167,7 +163,7 @@ public class MySubscriptionActivity extends BaseBottomNavigationActivity impleme
 
             case Buttons.STORE:
             {
-                startActivity(Utils.createPlayStoreIntent(this));
+                startActivity(Utils.createPlayStoreIntent(getContext()));
                 //AnalyticsUtils.fireEvent(getApplicationContext(), "Cancelamento de assintura", "Botão ir para o aplicativo");
             } break;
 

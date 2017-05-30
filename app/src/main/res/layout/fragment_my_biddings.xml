@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
+<android.support.design.widget.CoordinatorLayout
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -10,16 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabLayout"
@@ -35,15 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="56dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
-
-    <include
-        android:id="@+id/navigation"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_gravity="bottom|start"
-        layout="@layout/main_navigation"
         />
 
 </android.support.design.widget.CoordinatorLayout>

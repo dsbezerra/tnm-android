@@ -141,6 +141,10 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         notifyDataSetChanged();
     }
 
+    public List<NoticesQuery.Data.Edge> getItems() {
+        return mNoticeEdges;
+    }
+
     public void add(NoticesQuery.Data.Edge notice, int position) {
         mNoticeEdges.add(notice);
         notifyItemInserted(position);

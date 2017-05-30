@@ -2684,7 +2684,7 @@
               "deprecationReason": null
             },
             {
-              "name": "getUserAccessToken",
+              "name": "refreshUserToken",
               "description": "Validates the existing token and returns a new access token",
               "args": [],
               "type": {
@@ -2727,7 +2727,7 @@
               "deprecationReason": null
             },
             {
-              "name": "getSupplierAccessToken",
+              "name": "refreshSupplierToken",
               "description": "Validates the existing token and returns a new access token",
               "args": [],
               "type": {

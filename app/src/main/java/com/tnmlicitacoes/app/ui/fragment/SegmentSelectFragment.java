@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Error;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
@@ -27,6 +28,7 @@ import com.tnmlicitacoes.app.model.Segment;
 import com.tnmlicitacoes.app.type.OrderDirection;
 import com.tnmlicitacoes.app.type.SegmentOrder;
 import com.tnmlicitacoes.app.type.SegmentOrderField;
+import com.tnmlicitacoes.app.ui.activity.AccountConfigurationActivity;
 import com.tnmlicitacoes.app.ui.adapter.SegmentAdapter;
 import com.tnmlicitacoes.app.ui.widget.SimpleDividerItemDecoration;
 import com.tnmlicitacoes.app.utils.Utils;
@@ -71,16 +73,25 @@ public class SegmentSelectFragment extends AccountConfigurationFragment implemen
     @Override
     public void onStart() {
         super.onStart();
-        fetchSegments();
+        if (!TNMApplication.IsRefreshingToken) {
+            fetchSegments();
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         mRealm.close();
+
+        if (mSegmentsCall != null) {
+            mSegmentsCall.cancel();
+        }
     }
 
-    private void fetchSegments() {
+    /**
+     * Fetch segments from backend
+     */
+    public void fetchSegments() {
         final SegmentOrder segmentOrder = SegmentOrder.builder()
                 .field(SegmentOrderField.NAME)
                 .order(OrderDirection.ASC)
@@ -100,18 +111,26 @@ public class SegmentSelectFragment extends AccountConfigurationFragment implemen
     private ApolloCall.Callback<SegmentsQuery.Data> dataCallback = new ApolloCall.Callback<SegmentsQuery.Data>() {
         @Override
         public void onResponse(final Response<SegmentsQuery.Data> response) {
+            if (response.isSuccessful()) {
+                // Update views
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSegmentAdapter.setItems(response.data().segments().edges());
+                        mProgressBar.setVisibility(View.GONE);
+                        mSegmentsRecyclerView.setVisibility(View.VISIBLE);
 
-            // Update views
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mSegmentAdapter.setItems(response.data().segments().edges());
-                    mProgressBar.setVisibility(View.GONE);
-                    mSegmentsRecyclerView.setVisibility(View.VISIBLE);
-
-                    restoreSavedSegments();
+                        restoreSavedSegments();
+                    }
+                });
+            } else {
+                for (Error e : response.errors()) {
+                    if (e.message().equals("Unauthorized access")) {
+                        AccountConfigurationActivity activity = (AccountConfigurationActivity) getActivity();
+                        activity.refreshToken();
+                    }
                 }
-            });
+            }
         }
 
         @Override

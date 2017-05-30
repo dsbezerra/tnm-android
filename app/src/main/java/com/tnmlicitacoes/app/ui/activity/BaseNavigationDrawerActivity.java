@@ -17,6 +17,8 @@ import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
+import com.tnmlicitacoes.app.ui.fragment.MyBiddingsFragment;
+import com.tnmlicitacoes.app.ui.fragment.MySubscriptionFragment;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 import com.tnmlicitacoes.app.utils.Utils;
 
@@ -121,7 +123,7 @@ public abstract class BaseNavigationDrawerActivity extends BaseActivity {
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        startActivity(new Intent(BaseNavigationDrawerActivity.this, MySubscriptionActivity.class));
+                        startActivity(new Intent(BaseNavigationDrawerActivity.this, MySubscriptionFragment.class));
                         //AnalyticsUtils.fireEvent(getApplicationContext(), "Meu plano", "Ver detalhes");
                         overridePendingTransition(R.anim.activity_fade_enter, R.anim.activity_fade_exit);
                     }
@@ -165,14 +167,14 @@ public abstract class BaseNavigationDrawerActivity extends BaseActivity {
 
                             } else if (drawerItem.getIdentifier() == NAVDRAWER_ITEM_MY_BIDDINGS) {
 
-                                //if (BaseNavigationDrawerActivity.this instanceof MyBiddingsActivity) {
+                                //if (BaseNavigationDrawerActivity.this instanceof MyBiddingsFragment) {
                                 //    return false;
                                 //}
-                                intent = new Intent(BaseNavigationDrawerActivity.this, MyBiddingsActivity.class)
+                                intent = new Intent(BaseNavigationDrawerActivity.this, MyBiddingsFragment.class)
                                         .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
                             } else if(drawerItem.getIdentifier() == NAVDRAWER_ITEM_ACCOUNT) {
-                                intent = new Intent(BaseNavigationDrawerActivity.this, MySubscriptionActivity.class);
+                                intent = new Intent(BaseNavigationDrawerActivity.this, MySubscriptionFragment.class);
 
                             } else if (drawerItem.getIdentifier() == NAVDRAWER_ITEM_SETTINGS) {
                                 intent = new Intent(BaseNavigationDrawerActivity.this, SettingsActivity.class);

@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:text="@string/sub_monthly"
-            android:textColor="@color/md_grey_400"
+            android:textColor="@color/colorGrey"
             android:gravity="center_horizontal"
             android:layout_gravity="center_horizontal"
             />

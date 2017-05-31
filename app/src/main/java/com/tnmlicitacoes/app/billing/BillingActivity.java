@@ -32,13 +32,13 @@ import android.widget.Toast;
 
 import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.domain.Subscription;
+import com.tnmlicitacoes.app.model.Subscription;
 import com.tnmlicitacoes.app.ui.activity.AccountConfigurationActivity;
-import com.tnmlicitacoes.app.ui.activity.VerifyNumberActivity;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
 import com.tnmlicitacoes.app.utils.BillingUtils;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 import com.tnmlicitacoes.app.utils.Utils;
+import com.tnmlicitacoes.app.verifynumber.VerifyNumberActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -556,7 +556,7 @@ public class BillingActivity extends AppCompatActivity {
 
                 if(mPurchasedSku.equals(subscription.getSku())) {
                     itemViewHolder.subButton.setEnabled(false);
-                    itemViewHolder.subButton.setTextColor(mContext.getResources().getColor(R.color.md_grey_600));
+                    itemViewHolder.subButton.setTextColor(mContext.getResources().getColor(R.color.colorGrey));
                     itemViewHolder.subButton.setText("Assinado");
                 } else {
                     itemViewHolder.subButton.setEnabled(true);

@@ -3,7 +3,7 @@ package com.tnmlicitacoes.app.utils;
 import android.content.Context;
 
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.domain.Subscription;
+import com.tnmlicitacoes.app.model.Subscription;
 
 import java.util.Arrays;
 import java.util.List;

@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 
 import com.apollographql.apollo.ApolloClient;
+import com.apollographql.apollo.api.Field;
+import com.apollographql.apollo.api.Operation;
 import com.apollographql.apollo.cache.normalized.CacheKey;
 import com.apollographql.apollo.cache.normalized.CacheKeyResolver;
 import com.apollographql.apollo.cache.normalized.NormalizedCacheFactory;
@@ -12,29 +14,23 @@ import com.apollographql.apollo.cache.normalized.lru.LruNormalizedCacheFactory;
 import com.apollographql.apollo.cache.normalized.sql.ApolloSqlHelper;
 import com.apollographql.apollo.cache.normalized.sql.SqlNormalizedCacheFactory;
 import com.crashlytics.android.Crashlytics;
+import com.squareup.leakcanary.LeakCanary;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 import com.tnmlicitacoes.app.utils.Utils;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
-import okhttp3.Authenticator;
 import okhttp3.CertificatePinner;
-import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.Route;
-
-import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
 public class TNMApplication extends Application {
 
@@ -49,6 +45,12 @@ public class TNMApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
         Realm.init(this);
 
         if (!BuildConfig.DEBUG) {
@@ -82,11 +84,15 @@ public class TNMApplication extends Application {
      */
     public void initApolloClient(final String authToken) {
 
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
         CertificatePinner pinner = new CertificatePinner.Builder()
                 .add("tnm-graph.herokuapp.com", "sha256/Vuy2zjFSPqF5Hz18k88DpUViKGbABaF3vZx5Raghplc=")
                 .add("tnm-graph.herokuapp.com", "sha256/k2v657xBsOVe1PQRwOsHsw3bsGT2VzIqz5K+59sNQws=")
                 .add("tnm-graph.herokuapp.com", "sha256/k2v657xBsOVe1PQRwOsHsw3bsGT2VzIqz5K+59sNQws=")
                 .build();
+
+        builder.certificatePinner(pinner);
 
         Interceptor interceptor = null;
         if (authToken != null) {
@@ -100,26 +106,31 @@ public class TNMApplication extends Application {
                     return chain.proceed(builder.build());
                 }
             };
+            builder.addInterceptor(interceptor);
         }
 
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
-                .certificatePinner(pinner)
-                .build();
+
+        OkHttpClient okHttpClient = builder.build();
 
         ApolloSqlHelper apolloSqlHelper = new ApolloSqlHelper(this, SQL_CACHE_NAME);
         NormalizedCacheFactory normalizedCacheFactory = new LruNormalizedCacheFactory(EvictionPolicy.NO_EVICTION,
                 new SqlNormalizedCacheFactory(apolloSqlHelper));
 
-        CacheKeyResolver<Map<String, Object>> cacheKeyResolver = new CacheKeyResolver<Map<String, Object>>() {
+        CacheKeyResolver cacheKeyResolver = new CacheKeyResolver() {
             @Nonnull
             @Override
-            public CacheKey resolve(@Nonnull Map<String, Object> objectSource) {
-                String id = (String) objectSource.get("id");
-                if (id == null || id.isEmpty()) {
-                    return CacheKey.NO_KEY;
+            public CacheKey fromFieldRecordSet(@Nonnull Field field, @Nonnull Map<String, Object> map) {
+                if (map.containsKey("id")) {
+                    String typeNameAndIDKey = map.get("__typename") + "." + map.get("id");
+                    return CacheKey.from(typeNameAndIDKey);
                 }
-                return CacheKey.from(id);
+                return CacheKey.NO_KEY;
+            }
+
+            @Nonnull
+            @Override
+            public CacheKey fromFieldArguments(@Nonnull Field field, @Nonnull Operation.Variables variables) {
+                return CacheKey.NO_KEY;
             }
         };
 

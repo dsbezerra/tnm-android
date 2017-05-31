@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
@@ -19,8 +18,6 @@ import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
 import com.tnmlicitacoes.app.ConfirmCodeMutation;
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.ui.activity.AccountConfigurationActivity;
-import com.tnmlicitacoes.app.ui.fragment.VerifyNumberFragment;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 import com.tnmlicitacoes.app.utils.Utils;
@@ -49,7 +46,7 @@ public class WaitingSmsFragment extends VerifyNumberFragment implements
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_waiting_sms_new, container, false);
+        View view = inflater.inflate(R.layout.fragment_waiting_sms, container, false);
         initViews(view);
         return view;
     }
@@ -92,7 +89,7 @@ public class WaitingSmsFragment extends VerifyNumberFragment implements
                         .build();
 
                 mConfirmCodeCall = mApplication.getApolloClient()
-                        .newCall(confirmCode)
+                        .mutate(confirmCode)
                         .cacheControl(CacheControl.NETWORK_ONLY);
 
                 mConfirmCodeCall.enqueue(dataCallback);
@@ -117,8 +114,8 @@ public class WaitingSmsFragment extends VerifyNumberFragment implements
         @Override
         public void onResponse(Response<ConfirmCodeMutation.Data> response) {
 
-            if (response.isSuccessful()) {
-                ConfirmCodeMutation.Data.ConfirmCode confirmCode = response.data().confirmCode();
+            if (!response.hasErrors()) {
+                ConfirmCodeMutation.ConfirmCode confirmCode = response.data().confirmCode();
                 boolean isCodeValid = confirmCode.validCode();
                 if (!isCodeValid) {
                     mActivity.runOnUiThread(new Runnable() {

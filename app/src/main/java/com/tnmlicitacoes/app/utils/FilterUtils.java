@@ -1,12 +1,14 @@
 package com.tnmlicitacoes.app.utils;
 
+import com.tnmlicitacoes.app.ui.main.MainActivity;
+
 import java.util.HashMap;
 
 public class FilterUtils {
 
     /**
      * Flag used in Filterable to determine if the user is filtering by
-     * typing some text or is using the {@link com.tnmlicitacoes.app.ui.activity.MainActivity.FilterDialog }
+     * typing some text or is using the {@link MainActivity.FilterDialog }
      */
     public static boolean NON_TEXT_FILTERING = false;
 

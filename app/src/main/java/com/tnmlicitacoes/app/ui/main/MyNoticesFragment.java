@@ -1,16 +1,17 @@
-package com.tnmlicitacoes.app.ui.fragment;
+package com.tnmlicitacoes.app.ui.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 
+import com.evernote.android.state.State;
 import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.adapter.MyBiddingsViewPagerAdapter;
+import com.tnmlicitacoes.app.ui.base.BaseFragment;
 import com.tnmlicitacoes.app.ui.fragment.BiddingsTabFragment;
 import com.tnmlicitacoes.app.ui.fragment.FilesTabFragment;
 
@@ -20,13 +21,13 @@ import android.view.ViewGroup;
 import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
 /**
- *  MyBiddingsFragment
+ *  MyNoticesFragment
  *  Show the downloaded files in my notices view
  */
 
-public class MyBiddingsFragment extends Fragment {
+public class MyNoticesFragment extends BaseFragment {
 
-    private static final String TAG = "MyBiddingsFragment";
+    public static final String TAG = "MyNoticesFragment";
 
     private TabLayout mTabs;
 
@@ -34,10 +35,13 @@ public class MyBiddingsFragment extends Fragment {
 
     private MyBiddingsViewPagerAdapter mViewPagerAdapter;
 
+    @State
+    int mCurrentItem;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_my_biddings, container, false);
+        View v = inflater.inflate(R.layout.fragment_my_notices, container, false);
         initViews(v);
         return v;
     }
@@ -46,9 +50,8 @@ public class MyBiddingsFragment extends Fragment {
         mTabs = (TabLayout) v.findViewById(R.id.tabLayout);
         mViewPager = (ViewPager) v.findViewById(R.id.viewPager);
 
-        mViewPagerAdapter = new MyBiddingsViewPagerAdapter(getFragmentManager(), getContext());
+        mViewPagerAdapter = new MyBiddingsViewPagerAdapter(getChildFragmentManager(), getContext());
         mViewPager.setAdapter(mViewPagerAdapter);
-        mViewPager.setOffscreenPageLimit(0);
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -63,18 +66,12 @@ public class MyBiddingsFragment extends Fragment {
             @Override
             public void onPageScrollStateChanged(int state) {
                 if (state == ViewPager.SCROLL_STATE_IDLE || state == ViewPager.SCROLL_STATE_SETTLING) {
-                    if (mViewPager.getCurrentItem() != 1) {
-
-                    }
-
+                    mCurrentItem = mViewPager.getCurrentItem();
                     Fragment currentFragment = getCurrentFragment();
-                    if(currentFragment instanceof BiddingsTabFragment) {
-                        if(BuildConfig.DEBUG)
-                            LOG_DEBUG(TAG, "BiddingsTab");
+                    if (currentFragment instanceof BiddingsTabFragment) {
+                        // Empty
                     }
                     else if (currentFragment instanceof FilesTabFragment) {
-                        if(BuildConfig.DEBUG)
-                            LOG_DEBUG(TAG, "FilesTab");
                         FilesTabFragment fragment = (FilesTabFragment) currentFragment;
                         fragment.loadFiles();
                     }
@@ -83,6 +80,8 @@ public class MyBiddingsFragment extends Fragment {
             }
         });
 
+        mViewPager.setCurrentItem(mCurrentItem);
+
         mTabs.setupWithViewPager(mViewPager);
         mTabs.setTabGravity(TabLayout.GRAVITY_FILL);
         mTabs.setTabMode(TabLayout.MODE_FIXED);
@@ -90,10 +89,5 @@ public class MyBiddingsFragment extends Fragment {
 
     private Fragment getCurrentFragment() {
         return (Fragment) mViewPagerAdapter.instantiateItem(mViewPager, mViewPager.getCurrentItem());
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 }

@@ -1,4 +1,4 @@
-package com.tnmlicitacoes.app.domain;
+package com.tnmlicitacoes.app.model;
 
 import android.content.Context;
 

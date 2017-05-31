@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.tnmlicitacoes.app.R;
+import com.tnmlicitacoes.app.ui.base.BaseActivity;
 import com.tnmlicitacoes.app.utils.Utils;
 
 /**

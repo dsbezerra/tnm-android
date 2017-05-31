@@ -23,9 +23,11 @@ import com.tnmlicitacoes.app.SegmentsQuery;
 import com.tnmlicitacoes.app.interfaces.OnAccountConfigurationListener;
 import com.tnmlicitacoes.app.model.City;
 import com.tnmlicitacoes.app.model.Segment;
+import com.tnmlicitacoes.app.ui.base.BaseAuthenticatedActivity;
 import com.tnmlicitacoes.app.ui.fragment.AccountConfigurationFragment;
 import com.tnmlicitacoes.app.ui.fragment.CitySelectFragment;
 import com.tnmlicitacoes.app.ui.fragment.SegmentSelectFragment;
+import com.tnmlicitacoes.app.ui.main.MainActivity;
 import com.tnmlicitacoes.app.utils.BillingUtils;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 
@@ -216,7 +218,7 @@ public class AccountConfigurationActivity extends BaseAuthenticatedActivity impl
      * @param newCount count of selected cities and -1 on failure
      */
     @Override
-    public void onCitySelected(int newCount, CitiesQuery.Data.Node city) {
+    public void onCitySelected(int newCount, CitiesQuery.Node city) {
         // Let's update the selected text in the bottom of view
         // and add to database
         if (newCount >= 0 && city != null) {
@@ -255,7 +257,7 @@ public class AccountConfigurationActivity extends BaseAuthenticatedActivity impl
      * @param newCount count of selected segments and -1 on failure
      */
     @Override
-    public void onSegmentSelected(int newCount, SegmentsQuery.Data.Node segment) {
+    public void onSegmentSelected(int newCount, SegmentsQuery.Node segment) {
         // Let's update the selected text in the bottom of view
         // and add to database
         if (newCount >= 0 && segment != null) {
@@ -319,16 +321,6 @@ public class AccountConfigurationActivity extends BaseAuthenticatedActivity impl
         } else {
             mSelectedText.setText("");
             mContinueButton.setEnabled(false);
-        }
-    }
-
-    @Override
-    protected void onTokenRefreshed() {
-        // TODO(diego): Find a better way to do this!
-        if (mCurrentFragment instanceof CitySelectFragment) {
-            ((CitySelectFragment) mCurrentFragment).fetchCities();
-        } else if (mCurrentFragment instanceof SegmentSelectFragment) {
-            ((SegmentSelectFragment) mCurrentFragment).fetchSegments();
         }
     }
 }

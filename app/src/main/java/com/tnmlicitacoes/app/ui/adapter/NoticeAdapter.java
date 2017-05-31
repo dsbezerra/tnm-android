@@ -1,6 +1,7 @@
 package com.tnmlicitacoes.app.ui.adapter;
 
 import android.content.Context;
+import android.icu.text.SimpleDateFormat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,13 @@ import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
 import com.tnmlicitacoes.app.utils.NoticeUtils;
 
+import java.text.ParseException;
+import java.text.ParsePosition;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import io.realm.internal.android.ISO8601Utils;
 
 import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
@@ -37,7 +43,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private final Context mContext;
 
     /* Store the fetched notices */
-    private List<NoticesQuery.Data.Edge> mNoticeEdges = new ArrayList<>();
+    private List<NoticesQuery.Edge> mNoticeEdges = new ArrayList<>();
 
     /* OnClick listener */
     private OnClickListenerRecyclerView mOnClickListener;
@@ -76,11 +82,11 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             final NoticeViewHolder noticeHolder = (NoticeViewHolder) holder;
 
-            final NoticesQuery.Data.Node notice = getItem(position);
+            final NoticesQuery.Node notice = getItem(position);
             if (notice != null) {
 
                 if (notice.agency() != null) {
-                    NoticesQuery.Data.Agency agency = notice.agency();
+                    NoticesQuery.Agency agency = notice.agency();
                     noticeHolder.noticeAgencyInfo.setText(mContext.getResources().getString(
                             R.string.notices_item_header, agency.city().state().name(),
                             agency.city().name(), agency.name()));
@@ -107,7 +113,20 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     }
                 });
 
-                noticeHolder.noticeDisputeDate.setText(notice.disputeDate().toString());
+
+                Date disputeDate = null;
+                try {
+                    disputeDate = ISO8601Utils.parse(notice.disputeDate().toString(), new ParsePosition(0));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                if (disputeDate != null) {
+                    boolean withTime = disputeDate.getHours() != 0;
+                    String pattern = withTime ? "dd/MM/yyyy HH:mm" : "dd/MM/yyyy";
+                    noticeHolder.noticeDisputeDate.setText(new SimpleDateFormat(pattern)
+                            .format(disputeDate));
+                }
             }
 
 
@@ -117,7 +136,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public NoticesQuery.Data.Node getItem(int position) {
+    public NoticesQuery.Node getItem(int position) {
         if (position >= 0 && position < mNoticeEdges.size()) {
             return mNoticeEdges.get(position).node();
         } else {
@@ -130,22 +149,22 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return mNoticeEdges.size();
     }
 
-    public void append(List<NoticesQuery.Data.Edge> list) {
+    public void append(List<NoticesQuery.Edge> list) {
         for (int i = 0; i < list.size(); i++) {
             add(list.get(i), mNoticeEdges.size());
         }
     }
 
-    public void setItems(List<NoticesQuery.Data.Edge> list) {
+    public void setItems(List<NoticesQuery.Edge> list) {
         mNoticeEdges = list;
         notifyDataSetChanged();
     }
 
-    public List<NoticesQuery.Data.Edge> getItems() {
+    public List<NoticesQuery.Edge> getItems() {
         return mNoticeEdges;
     }
 
-    public void add(NoticesQuery.Data.Edge notice, int position) {
+    public void add(NoticesQuery.Edge notice, int position) {
         mNoticeEdges.add(notice);
         notifyItemInserted(position);
     }

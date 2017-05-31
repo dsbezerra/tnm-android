@@ -1,116 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:fillViewport="true"
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@android:color/white"
+    android:padding="@dimen/spacing_small"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bem-vindo ao TáNaMão Licitações"
+        android:textColor="@color/colorAccent"
+        android:textSize="20sp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Entre com seu número de telefone para começar"
+        android:textColor="@color/colorLightGrey"
+        android:layout_marginTop="@dimen/spacing_tiny"
+        />
 
     <LinearLayout
+        android:id="@+id/phoneContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/md_grey_200"
-        >
+        android:orientation="horizontal"
+        android:focusableInTouchMode="true"
+        android:layout_marginTop="@dimen/spacing_normal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:padding="@dimen/spacing_normal"
-            android:background="#fafafa"
-            android:orientation="vertical"
-            android:elevation="4dp">
+        <android.support.design.widget.TextInputLayout
+            app:hintTextAppearance="@style/Widget.TNM.TextInput"
+            android:textColorHint="@color/colorLightGrey"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/send_sms_text"
-                android:textSize="18sp"
-                android:textColor="#535353"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_normal"
-                android:text="@string/input_email_phone"
-                android:textSize="18sp"
-                android:textColor="#535353"
-                />
-
-            <EditText
-                android:id="@+id/emailField"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height_tall"
-                android:layout_marginTop="@dimen/spacing_small"
-                android:padding="@dimen/spacing_tiny"
-                android:focusable="true"
-                android:hint="@string/email_input_hint"
-                android:ellipsize="end"
-                android:inputType="textEmailAddress"
-                android:textColor="#535353"
-                android:textColorHint="#d7d7d7"
-                style="@style/Widget.AppCompat.EditText"
-                />
-
-            <EditText
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/phoneField"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height_tall"
-                android:layout_marginTop="@dimen/spacing_small"
-                android:ellipsize="end"
-                android:padding="@dimen/spacing_tiny"
-                android:focusable="true"
-                android:hint="@string/phone_input_hint"
-                android:inputType="phone"
-                android:maxLength="15"
-                android:textColor="#535353"
-                android:textColorHint="#d7d7d7"
-                style="@style/Widget.AppCompat.EditText"
-                />
-
-            <Button
-                android:id="@+id/numberOkButton"
-                android:layout_height="@dimen/button_height_normal"
-                android:layout_width="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/spacing_normal"
-                android:text="PROSSEGUIR COM VERIFICAÇÃO"
-                style="@style/Widget.AppCompat.Button.Colored"
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:padding="@dimen/spacing_normal"
-            android:background="#fafafa"
-            android:orientation="vertical"
-            android:elevation="4dp">
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="Em caso de dúvidas e/ou problemas encontrados.\nEntre em contato conosco tocando no botão abaixo."
+                android:inputType="phone"
+                android:hint="Telefone"
+                android:maxLength="15"
+                android:maxLines="1"
                 />
 
-            <Button
-                android:id="@+id/contactButton"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/button_height_normal"
-                android:layout_marginTop="@dimen/spacing_normal"
-                android:text="ENTRAR EM CONTATO"
-                android:layout_gravity="center_horizontal"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                />
+        </android.support.design.widget.TextInputLayout>
 
-
-        </LinearLayout>
+        <Button
+            android:id="@+id/advanceBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:text="Avançar"
+            style="@style/Widget.AppCompat.Button.Colored"
+            />
 
     </LinearLayout>
 
-</ScrollView>
+    <LinearLayout
+        android:id="@+id/progressContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/progressText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aguarde um momento..."
+            android:textSize="16sp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <fr.castorflex.android.circularprogressbar.CircularProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:indeterminate="true"
+            app:cpb_color="@color/colorPrimary"
+            app:cpb_rotation_speed="1.0"
+            app:cpb_sweep_speed="1.0"
+            app:cpb_stroke_width="2dp"
+            app:cpb_min_sweep_angle="10"
+            app:cpb_max_sweep_angle="300"
+            android:layout_marginEnd="@dimen/spacing_normal"
+            android:layout_marginStart="@dimen/spacing_normal"
+            android:layout_gravity="center_vertical"
+            />
+
+    </LinearLayout>
+</LinearLayout>

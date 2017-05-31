@@ -40,6 +40,11 @@ public class NoticeViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        return super.instantiateItem(container, position);
+    }
+
+    @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         mRegisteredFragments.remove(position);
         super.destroyItem(container, position, object);

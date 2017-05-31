@@ -18,9 +18,11 @@ import android.widget.TextView;
 
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.billing.BillingActivity;
+import com.tnmlicitacoes.app.ui.main.MainActivity;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
 import com.tnmlicitacoes.app.utils.BillingUtils;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
+import com.tnmlicitacoes.app.verifynumber.VerifyNumberActivity;
 
 public class IntroActivity extends AppCompatActivity {
 

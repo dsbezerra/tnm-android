@@ -1,4 +1,4 @@
-package com.tnmlicitacoes.app.ui.activity;
+package com.tnmlicitacoes.app.ui.base;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -7,11 +7,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.evernote.android.state.StateSaver;
 import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.fcm.MyFcmListenerService;
@@ -28,14 +30,16 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StateSaver.restoreInstanceState(this, savedInstanceState);
 
         // Set app title color to white
         setupTaskDescription();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        StateSaver.saveInstanceState(this, outState);
     }
 
     @Override
@@ -47,7 +51,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void setupToolbar() {
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
+        if (actionBar != null) {
             actionBar.setTitle(getString(R.string.app_name));
         }
 

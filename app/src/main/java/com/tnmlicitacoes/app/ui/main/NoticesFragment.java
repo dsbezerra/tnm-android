@@ -1,20 +1,22 @@
-package com.tnmlicitacoes.app.ui.fragment;
+package com.tnmlicitacoes.app.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.evernote.android.state.State;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.fcm.RegistrationIntentService;
+import com.tnmlicitacoes.app.interfaces.AuthStateListener;
 import com.tnmlicitacoes.app.model.Segment;
 import com.tnmlicitacoes.app.ui.adapter.NoticeViewPagerAdapter;
+import com.tnmlicitacoes.app.ui.base.BaseFragment;
+import com.tnmlicitacoes.app.ui.fragment.NoticeTabFragment;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 
 import java.util.ArrayList;
@@ -25,9 +27,9 @@ import io.realm.RealmResults;
 
 import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
-public class MainFragment extends Fragment {
+public class NoticesFragment extends BaseFragment implements AuthStateListener {
 
-    private static final String TAG = "MainFragment";
+    public static final String TAG = "NoticesFragment";
 
     private static final String STATE_ACTIVE_TAB = "activeTab";
 
@@ -41,9 +43,13 @@ public class MainFragment extends Fragment {
 
     private Realm mRealm;
 
+    @State
+    public int mCurrentItem;
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         mRealm = Realm.getDefaultInstance();
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         initViews(v);
@@ -52,21 +58,11 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        // Save active tab so it can be restored
-        savedInstanceState.putInt(STATE_ACTIVE_TAB, mViewPager.getCurrentItem());
-
-        LOG_DEBUG(TAG, "Saved tab: " + mViewPager.getCurrentItem());
-
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         if (SettingsUtils.needToUpdateTopics(getContext())) {
             setupDatabaseData(null);
-            initGcm();
+            initFCM();
         }
     }
 
@@ -89,7 +85,7 @@ public class MainFragment extends Fragment {
      */
     private void setupDatabaseData(Bundle savedInstanceState) {
         setupSegmentTabs();
-        setupTabsAndViewPager(savedInstanceState);
+        setupTabsAndViewPager();
     }
 
     /**
@@ -121,10 +117,10 @@ public class MainFragment extends Fragment {
         LOG_DEBUG(TAG, "Finished setting up segments tabs.");
     }
 
-    private void setupTabsAndViewPager(Bundle savedInstanceState) {
-        mViewPagerAdapter = new NoticeViewPagerAdapter(getFragmentManager(), mSegments);
+    private void setupTabsAndViewPager() {
+        mViewPagerAdapter = new NoticeViewPagerAdapter(getChildFragmentManager(), mSegments);
         mViewPager.setAdapter(mViewPagerAdapter);
-        mViewPager.setOffscreenPageLimit(0);
+        mViewPager.setOffscreenPageLimit(Math.min(mSegments.size(), 4));
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -138,32 +134,36 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                if (state == ViewPager.SCROLL_STATE_IDLE || state == ViewPager.SCROLL_STATE_SETTLING) {
-                    //mAppBarLayout.setExpanded(true, true);
-                }
+                mCurrentItem = mViewPager.getCurrentItem();
+                LOG_DEBUG(TAG, "Currrent tab: " + mCurrentItem);
             }
         });
-        mTabs.setupWithViewPager(mViewPager);
 
-        if (savedInstanceState != null) {
-            final int lastActiveTab = savedInstanceState.getInt(STATE_ACTIVE_TAB);
-            LOG_DEBUG(TAG, "Restored tab: " + lastActiveTab);
-            mViewPager.post(new Runnable() {
-                @Override
-                public void run() {
-                    mViewPager.setCurrentItem(lastActiveTab);
-                }
-            });
-        }
+        mTabs.setupWithViewPager(mViewPager);
+        mViewPager.setCurrentItem(mCurrentItem);
+        LOG_DEBUG(TAG, "Currrent tab: " + mCurrentItem);
     }
 
-
-
-    private void initGcm() {
+    private void initFCM() {
         if (!SettingsUtils.isTokenInServer(getContext())) {
             getActivity().startService(new Intent(getContext(), RegistrationIntentService.class));
         } else if (SettingsUtils.needToUpdateTopics(getContext())) {
             getActivity().startService(new Intent(getContext(), RegistrationIntentService.class));
         }
+    }
+
+    public NoticeTabFragment getCurrentTabFragment() {
+        return (NoticeTabFragment) mViewPagerAdapter.instantiateItem(mViewPager,
+                mViewPager.getCurrentItem());
+    }
+
+    @Override
+    public void onAuthChanged() {
+        NoticeTabFragment fragment = getCurrentTabFragment();
+        if (fragment != null) {
+            fragment.refreshData();
+        }
+
+        LOG_DEBUG(TAG, "onAuthChanged");
     }
 }

@@ -17,7 +17,7 @@ import android.text.style.StyleSpan;
 import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.service.TipRatingService;
-import com.tnmlicitacoes.app.ui.activity.MainActivity;
+import com.tnmlicitacoes.app.ui.main.MainActivity;
 import com.tnmlicitacoes.app.ui.activity.WebviewActivity;
 
 import org.json.JSONArray;

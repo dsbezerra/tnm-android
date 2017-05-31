@@ -35,10 +35,10 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context mContext;
 
     /* Store the fetched cities */
-    private List<CitiesQuery.Data.Edge> mCityEdges = new ArrayList<>();
+    private List<CitiesQuery.Edge> mCityEdges = new ArrayList<>();
 
     /* Store the selected cities */
-    private HashMap<String, CitiesQuery.Data.Node> mSelectedCities = new HashMap<>();
+    private HashMap<String, CitiesQuery.Node> mSelectedCities = new HashMap<>();
 
     /* OnClick listener */
     private OnClickListenerRecyclerView mRecyclerViewOnClickListenerHack;
@@ -72,7 +72,7 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if(holder instanceof VH) {
             VH itemViewHolder = (VH) holder;
 
-            CitiesQuery.Data.Node city = mCityEdges.get(position).node();
+            CitiesQuery.Node city = mCityEdges.get(position).node();
             if (city != null) {
                 boolean isSelected = mSelectedCities.containsKey(city.id());
 
@@ -130,7 +130,7 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return mCityEdges.size();
     }
 
-    public CitiesQuery.Data.Node getItem(int position) {
+    public CitiesQuery.Node getItem(int position) {
         return mCityEdges.get(position).node();
     }
 
@@ -142,7 +142,7 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return mSelectedCities.size();
     }
 
-    public void setItems(List<CitiesQuery.Data.Edge> list) {
+    public void setItems(List<CitiesQuery.Edge> list) {
         mCityEdges = list;
         notifyDataSetChanged();
     }
@@ -152,7 +152,7 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param edge city edge to be added
      * @param position position where the edge is going to be inserted
      */
-    public void add(CitiesQuery.Data.Edge edge, int position) {
+    public void add(CitiesQuery.Edge edge, int position) {
         mCityEdges.add(edge);
         notifyItemInserted(position);
     }
@@ -166,7 +166,7 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         int result = -1;
 
-        CitiesQuery.Data.Node newCity = mCityEdges.get(position).node();
+        CitiesQuery.Node newCity = mCityEdges.get(position).node();
         if (newCity != null) {
             // Check if is already selected, then remove
             if (mSelectedCities.containsKey(newCity.id())) {
@@ -187,7 +187,7 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return result;
     }
 
-    public void setSelected(HashMap<String, CitiesQuery.Data.Node> selected) {
+    public void setSelected(HashMap<String, CitiesQuery.Node> selected) {
         this.mSelectedCities = selected;
         notifyDataSetChanged();
     }

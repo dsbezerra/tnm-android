@@ -13,20 +13,17 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.gson.JsonObject;
 import com.tnmlicitacoes.app.interfaces.OnUpdateListener;
+import com.tnmlicitacoes.app.settings.SettingsActivity;
 import com.tnmlicitacoes.app.ui.activity.AccountConfigurationActivity;
 import com.tnmlicitacoes.app.ui.activity.DetailsActivity;
 import com.tnmlicitacoes.app.ui.activity.IntroActivity;
-import com.tnmlicitacoes.app.ui.activity.MainActivity;
-import com.tnmlicitacoes.app.ui.fragment.MyBiddingsFragment;
-import com.tnmlicitacoes.app.ui.fragment.MySubscriptionFragment;
-import com.tnmlicitacoes.app.ui.activity.SettingsActivity;
+import com.tnmlicitacoes.app.ui.main.MainActivity;
 import com.tnmlicitacoes.app.ui.activity.SplashScreenActivity;
-import com.tnmlicitacoes.app.ui.activity.VerifyNumberActivity;
 import com.tnmlicitacoes.app.ui.activity.WebviewActivity;
-
-import java.util.HashMap;
+import com.tnmlicitacoes.app.ui.main.AccountFragment;
+import com.tnmlicitacoes.app.ui.main.MyNoticesFragment;
+import com.tnmlicitacoes.app.verifynumber.VerifyNumberActivity;
 
 //import com.tnmlicitacoes.app.ui.activity.VerifyNumberActivity;
 
@@ -111,7 +108,7 @@ public class AndroidUtilities {
             } break;
             case MY_SUBS_ACTIVITY:
             {
-                clazz = MySubscriptionFragment.class;
+                clazz = AccountFragment.class;
             } break;
             case SETTINGS_ACTIVITY:
             {
@@ -119,7 +116,7 @@ public class AndroidUtilities {
             } break;
             case MY_BIDDINGS_ACTIVITY:
             {
-                clazz = MyBiddingsFragment.class;
+                clazz = MyNoticesFragment.class;
             } break;
             case WEB_VIEW_ACTIVITY:
             {
@@ -208,32 +205,5 @@ public class AndroidUtilities {
             InputMethodManager inputManager = (InputMethodManager) sContext.getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
-    }
-
-    /**
-     * Parse HashMap to Json
-     */
-    public static JsonObject toJsonObject(HashMap<String, Object> parameters) {
-
-        JsonObject result = new JsonObject();
-
-        for(String param : parameters.keySet()) {
-            Object value = parameters.get(param);
-
-            if(value instanceof Integer) {
-                result.addProperty(param, (Number) value);
-            }
-            else if (value instanceof String) {
-                result.addProperty(param, (String) value);
-            }
-            else if (value instanceof Character ) {
-                result.addProperty(param, (Character) value);
-            }
-            else if (value instanceof Boolean) {
-                result.addProperty(param, (Boolean) value);
-            }
-        }
-
-        return result;
     }
 }

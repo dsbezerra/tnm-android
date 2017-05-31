@@ -11,10 +11,9 @@ import android.os.Environment;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
-import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.mupdf.MuPDFActivity;
-import com.tnmlicitacoes.app.ui.activity.MainActivity;
+import com.tnmlicitacoes.app.ui.main.MainActivity;
 import com.tnmlicitacoes.app.utils.FileUtils;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 

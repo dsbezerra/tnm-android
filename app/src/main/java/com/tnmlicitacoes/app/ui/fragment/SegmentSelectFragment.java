@@ -103,7 +103,7 @@ public class SegmentSelectFragment extends AccountConfigurationFragment implemen
                 .build();
 
         mSegmentsCall = mApplication.getApolloClient()
-                .newCall(segmentsQuery)
+                .query(segmentsQuery)
                 .cacheControl(CacheControl.NETWORK_FIRST);
         mSegmentsCall.enqueue(dataCallback);
     }
@@ -111,7 +111,7 @@ public class SegmentSelectFragment extends AccountConfigurationFragment implemen
     private ApolloCall.Callback<SegmentsQuery.Data> dataCallback = new ApolloCall.Callback<SegmentsQuery.Data>() {
         @Override
         public void onResponse(final Response<SegmentsQuery.Data> response) {
-            if (response.isSuccessful()) {
+            if (!response.hasErrors()) {
                 // Update views
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -148,7 +148,7 @@ public class SegmentSelectFragment extends AccountConfigurationFragment implemen
         mSegmentAdapter.setListenerHack(this);
 
         if(savedInstanceState == null) {
-            mSegmentAdapter.setItems(new ArrayList<SegmentsQuery.Data.Edge>());
+            mSegmentAdapter.setItems(new ArrayList<SegmentsQuery.Edge>());
         }
 
         mNoItemText = (TextView) view.findViewById(R.id.text1);
@@ -182,10 +182,10 @@ public class SegmentSelectFragment extends AccountConfigurationFragment implemen
     private void restoreSavedSegments() {
         final RealmResults<Segment> selectedSegments = mRealm.where(Segment.class).findAll();
         if (selectedSegments.size() > 0) {
-            HashMap<String, SegmentsQuery.Data.Node> selected = new HashMap<>();
+            HashMap<String, SegmentsQuery.Node> selected = new HashMap<>();
             for (int i = 0; i < selectedSegments.size(); i++) {
                 Segment selectedSegment = selectedSegments.get(i);
-                SegmentsQuery.Data.Node segment = new SegmentsQuery.Data.Node(selectedSegment.getId(),
+                SegmentsQuery.Node segment = new SegmentsQuery.Node("Segment", selectedSegment.getId(),
                         selectedSegment.getName(), selectedSegment.getIcon(),
                         selectedSegment.getDefaultImg(), selectedSegment.getMqdefault(),
                         selectedSegment.getHqdefault());

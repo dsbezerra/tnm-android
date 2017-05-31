@@ -2,13 +2,14 @@
 <resources>
 
     <color name="black">#000</color>
+    <color name="white">#FFF</color>
 
     <color name="background_grey">#ffeeeeee</color>
     <color name="darker_grey">#ff303030</color>
 
     <color name="colorPrimary">#ffff6600</color>
     <color name="colorPrimaryDark">#ffb24700</color>
-    <color name="colorAccent">#ff9800</color>
+    <color name="colorAccent">#ffff6600</color>
 
     <color name="colorActionModePrimary">#ffffa726</color>
     <color name="colorActionModePrimaryDark">#fffb8c00</color>

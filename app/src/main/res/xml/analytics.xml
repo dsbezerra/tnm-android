@@ -22,7 +22,7 @@
 
     <screenName name="com.tnmlicitacoes.app.ui.activity.AccountConfigurationActivity">Tela de Configuração Inicial</screenName>
 
-    <screenName name="com.tnmlicitacoes.app.ui.activity.MainActivity">Tela Inicial</screenName>
+    <screenName name="com.tnmlicitacoes.app.ui.main.MainActivity">Tela Inicial</screenName>
 
     <screenName name="com.tnmlicitacoes.app.ui.activity.DetailsActivity">Tela de Detalhes</screenName>
 

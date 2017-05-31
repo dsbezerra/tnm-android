@@ -3,28 +3,22 @@ package com.tnmlicitacoes.app.verifynumber;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.text.TextUtils;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.apollographql.apollo.ApolloCall;
-import com.apollographql.apollo.api.Error;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
-import com.tnmlicitacoes.app.ConfirmCodeMutation;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.RequestCodeMutation;
 import com.tnmlicitacoes.app.TNMApplication;
 import com.tnmlicitacoes.app.interfaces.OnVerifyNumberListener;
 import com.tnmlicitacoes.app.ui.activity.AccountConfigurationActivity;
-import com.tnmlicitacoes.app.ui.activity.BaseActivity;
-import com.tnmlicitacoes.app.ui.fragment.VerifyNumberFragment;
+import com.tnmlicitacoes.app.ui.base.BaseActivity;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 import com.transitionseverywhere.ChangeBounds;
@@ -34,8 +28,6 @@ import com.transitionseverywhere.TransitionManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
 public class VerifyNumberActivity extends BaseActivity implements OnVerifyNumberListener {
 
@@ -144,7 +136,7 @@ public class VerifyNumberActivity extends BaseActivity implements OnVerifyNumber
 
     @Override
     public void onRequestCodeResponse(Response<RequestCodeMutation.Data> response, ApolloException e) {
-        if (response != null && response.isSuccessful()) {
+        if (response != null && !response.hasErrors()) {
             SettingsUtils.putBoolean(this, SettingsUtils.PREF_IS_WAITING_FOR_SMS, true);
             // Setup trial variables here
             showFragment();

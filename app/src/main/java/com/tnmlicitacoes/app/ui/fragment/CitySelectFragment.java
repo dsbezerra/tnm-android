@@ -102,7 +102,7 @@ public class CitySelectFragment extends AccountConfigurationFragment
                 .build();
 
         mCitiesCall = mApplication.getApolloClient()
-                .newCall(citiesQuery)
+                .query(citiesQuery)
                 .cacheControl(CacheControl.NETWORK_FIRST);
         mCitiesCall.enqueue(dataCallback);
     }
@@ -110,7 +110,7 @@ public class CitySelectFragment extends AccountConfigurationFragment
     private ApolloCall.Callback<CitiesQuery.Data> dataCallback = new ApolloCall.Callback<CitiesQuery.Data>() {
         @Override
         public void onResponse(final Response<CitiesQuery.Data> response) {
-            if (response.isSuccessful()) {
+            if (!response.hasErrors()) {
                 // Update views
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -145,7 +145,7 @@ public class CitySelectFragment extends AccountConfigurationFragment
         mCityAdapter.setListenerHack(this);
 
         if(savedInstanceState == null) {
-            mCityAdapter.setItems(new ArrayList<CitiesQuery.Data.Edge>());
+            mCityAdapter.setItems(new ArrayList<CitiesQuery.Edge>());
         }
 
         mNoItemText = (TextView) v.findViewById(R.id.text1);
@@ -180,10 +180,10 @@ public class CitySelectFragment extends AccountConfigurationFragment
     private void restoreSavedCities() {
         final RealmResults<City> selectedCities = mRealm.where(City.class).findAll();
         if (selectedCities.size() > 0) {
-            HashMap<String, CitiesQuery.Data.Node> selected = new HashMap<>();
+            HashMap<String, CitiesQuery.Node> selected = new HashMap<>();
             for (int i = 0; i < selectedCities.size(); i++) {
                 City selectedCity = selectedCities.get(i);
-                CitiesQuery.Data.Node city = new CitiesQuery.Data.Node(selectedCity.getId(),
+                CitiesQuery.Node city = new CitiesQuery.Node("City", selectedCity.getId(),
                         selectedCity.getName(), State.valueOf(selectedCity.getState()));
                 selected.put(selectedCity.getId(), city);
             }

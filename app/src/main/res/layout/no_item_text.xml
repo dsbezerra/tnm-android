@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:textColor="@color/md_white_1000"
+        android:textColor="@color/white"
         android:padding="@dimen/spacing_small"
         android:text="Não encontrou sua cidade?"
         android:background="@drawable/bg_new_date"

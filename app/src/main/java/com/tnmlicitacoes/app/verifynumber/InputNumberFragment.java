@@ -1,9 +1,7 @@
 package com.tnmlicitacoes.app.verifynumber;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,18 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
-import com.apollographql.apollo.ApolloCallback;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.RequestCodeMutation;
-import com.tnmlicitacoes.app.ui.fragment.VerifyNumberFragment;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 import com.transitionseverywhere.TransitionManager;
@@ -33,8 +26,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.regex.Pattern;
-
-import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 
 import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
@@ -80,7 +71,7 @@ public class InputNumberFragment extends VerifyNumberFragment implements
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_number_input_new, container, false);
+        View view = inflater.inflate(R.layout.fragment_number_input, container, false);
         initViews(view);
         mTransitionContainer = (ViewGroup) view;
         return view;
@@ -177,7 +168,7 @@ public class InputNumberFragment extends VerifyNumberFragment implements
                         .build();
 
                 mRequestCodeCall = mApplication.getApolloClient()
-                        .newCall(requestCode)
+                        .mutate(requestCode)
                         .cacheControl(CacheControl.NETWORK_ONLY);
 
                 mRequestCodeCall.enqueue(dataCallback);

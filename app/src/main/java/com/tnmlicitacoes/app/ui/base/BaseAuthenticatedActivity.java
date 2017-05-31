@@ -1,6 +1,4 @@
-package com.tnmlicitacoes.app.ui.activity;
-
-import android.widget.Toast;
+package com.tnmlicitacoes.app.ui.base;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Error;
@@ -9,8 +7,8 @@ import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
 import com.tnmlicitacoes.app.RefreshSupplierTokenMutation;
 import com.tnmlicitacoes.app.TNMApplication;
+import com.tnmlicitacoes.app.interfaces.AuthStateListener;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
-import com.tnmlicitacoes.app.utils.Utils;
 
 import java.util.Date;
 
@@ -22,6 +20,8 @@ public abstract class BaseAuthenticatedActivity extends BaseActivity {
 
     private static final String TAG = "BaseAuthActivity";
 
+    protected AuthStateListener mAuthStateListener;
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -31,6 +31,17 @@ public abstract class BaseAuthenticatedActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mAuthStateListener != null) {
+            mAuthStateListener = null;
+        }
+    }
+
+    /**
+     * Refreshes the access token
+     */
     public void refreshToken() {
         // Initialize apollo with refresh token as the authorization header
         TNMApplication application = (TNMApplication) getApplication();
@@ -38,7 +49,7 @@ public abstract class BaseAuthenticatedActivity extends BaseActivity {
 
         RefreshSupplierTokenMutation mutation = new RefreshSupplierTokenMutation();
         ApolloCall<RefreshSupplierTokenMutation.Data> call = application.getApolloClient()
-                .newCall(mutation)
+                .mutate(mutation)
                 .cacheControl(CacheControl.NETWORK_ONLY);
 
         call.enqueue(dataCallback);
@@ -50,7 +61,7 @@ public abstract class BaseAuthenticatedActivity extends BaseActivity {
         @Override
         public void onResponse(@Nonnull Response<RefreshSupplierTokenMutation.Data> response) {
 
-            if (response.isSuccessful()) {
+            if (!response.hasErrors()) {
                 String newAccessToken = response.data().refreshSupplierToken();
                 SettingsUtils.putString(BaseAuthenticatedActivity.this,
                         SettingsUtils.PREF_ACCESS_TOKEN,
@@ -68,7 +79,11 @@ public abstract class BaseAuthenticatedActivity extends BaseActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        onTokenRefreshed();
+                        // Notify for changes so the other fragments or activities that implement
+                        // this interface can refetch the content with the new access token
+                        if (mAuthStateListener != null) {
+                            mAuthStateListener.onAuthChanged();
+                        }
                     }
                 });
 
@@ -85,9 +100,4 @@ public abstract class BaseAuthenticatedActivity extends BaseActivity {
 
         }
     };
-
-    /**
-     * Called when the access token is refreshed
-     */
-    protected abstract void onTokenRefreshed();
 }

@@ -10,17 +10,6 @@
         <item name="actionModeBackground">@color/colorActionModePrimary</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
 
-        <!-- MaterialDrawer specific values -->
-        <item name="material_drawer_background">@color/material_drawer_background</item>
-        <item name="material_drawer_primary_text">@color/material_drawer_primary_text</item>
-        <item name="material_drawer_primary_icon">@color/material_drawer_primary_icon</item>
-        <item name="material_drawer_secondary_text">@color/material_drawer_secondary_text</item>
-        <item name="material_drawer_hint_text">@color/material_drawer_hint_text</item>
-        <item name="material_drawer_divider">@color/material_drawer_divider</item>
-        <item name="material_drawer_selected">@color/material_drawer_selected</item>
-        <item name="material_drawer_selected_text">@color/material_drawer_selected_text</item>
-        <item name="material_drawer_header_selection_text">@color/material_drawer_header_selection_text</item>
-
     </style>
 
     <style name="Theme.VerifyNumber" parent="Theme.DefaultTheme">
@@ -31,20 +20,11 @@
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
 
-    <style name="SettingsTheme" parent="Theme.DefaultTheme">
-        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
-        <!-- Overriding the category views as they don't look good -->
-        <item name="android:listSeparatorTextViewStyle">@style/SettingsTheme.ListSeparatorTextView</item>
-        <item name="android:textAppearanceLarge">@style/TextAppearance.AppCompat.Body1</item>
-    </style>
 
-    <!-- The default category looks bad, so overriding its appearance now -->
-    <style name="SettingsTheme.ListSeparatorTextView">
-        <item name="android:textSize">12sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/accent</item>
-        <item name="android:paddingTop">16dp</item>
-        <item name="android:layout_marginBottom">16dp</item>
+    <style name="PreferenceTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="PdfTheme" parent="Theme.DefaultTheme">
@@ -76,7 +56,7 @@
     </style>
 
     <style name="Widget.TNM.NoticeInfoItemDate" parent="Widget.TNM.NoticeInfoItem">
-        <item name="android:textColor">@color/md_grey_500</item>
+        <item name="android:textColor">@color/colorGrey</item>
         <item name="android:textSize">12sp</item>
     </style>
 
@@ -116,7 +96,7 @@
     </style>
 
     <style name="Widget.TNM.CheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
-        <item name="colorControlNormal">@color/md_grey_500</item>
+        <item name="colorControlNormal">@color/colorGrey</item>
         <item name="colorControlActivated">@color/colorAccent</item>
     </style>
 

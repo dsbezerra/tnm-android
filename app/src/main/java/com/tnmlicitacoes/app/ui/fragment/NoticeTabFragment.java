@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,7 +17,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,30 +35,30 @@ import com.tnmlicitacoes.app.service.DownloadService;
 import com.tnmlicitacoes.app.type.NoticeOrder;
 import com.tnmlicitacoes.app.type.NoticeOrderField;
 import com.tnmlicitacoes.app.type.OrderDirection;
-import com.tnmlicitacoes.app.ui.activity.MainActivity;
+import com.tnmlicitacoes.app.ui.main.MainActivity;
 import com.tnmlicitacoes.app.ui.activity.WebviewActivity;
 import com.tnmlicitacoes.app.ui.adapter.NoticeAdapter;
+import com.tnmlicitacoes.app.ui.base.BaseFragment;
 import com.tnmlicitacoes.app.ui.view.CustomRecyclerView;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
 import com.tnmlicitacoes.app.utils.FileUtils;
 import com.tnmlicitacoes.app.utils.NoticeUtils;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.HttpUrl;
 
 import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
-public class NoticeTabFragment extends Fragment implements OnClickListenerRecyclerView,
+public class NoticeTabFragment extends BaseFragment implements OnClickListenerRecyclerView,
         DownloadService.OnDownloadListener, OnNoticeActionsDialogListener {
 
     /* Tag for logging */
     private static final String TAG = "NoticeTabFragment";
 
-    private ProgressBar mProgressBar;
+    /* Request code of the write ext storage permission */
+    private static final int PERMISSION_REQUEST_WRITE_EXT_STORAGE = 1041231;
 
     /* Holds a reference for the refresh layout */
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -73,7 +72,8 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
     /* View that displays a no connection message */
     private TextView mNoConnectionView;
 
-    private TextView mNotFoundView;
+    /* View that displays a not found text */
+    private LinearLayout mNotFoundView;
 
     /* Indicate whether is loading more or not */
     private boolean mIsLoadingMore = false;
@@ -91,13 +91,10 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
     private ApolloCall<NoticesQuery.Data> mNoticesCall;
 
     /* The notices query pageInfo */
-    private NoticesQuery.Data.PageInfo mPageInfo = null;
-
-    /* Request code of the write ext storage permission */
-    private static final int PERMISSION_REQUEST_WRITE_EXT_STORAGE = 1041231;
+    private NoticesQuery.PageInfo mPageInfo = null;
 
     /* Stores the last touched notice */
-    private NoticesQuery.Data.Node mLastTouchedNotice = null;
+    private NoticesQuery.Node mLastTouchedNotice = null;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -109,7 +106,7 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mApplication = (TNMApplication) getActivity().getApplication();
         View v = inflater.inflate(R.layout.fragment_notices, container, false);
-        initAdapter(savedInstanceState);
+        initAdapter();
         initViews(v);
         initViewsListeners();
         return v;
@@ -136,12 +133,6 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean("FETCH_FROM_STORE", true);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         mNoticeAdapter.setOnClickListener(null);
@@ -151,21 +142,17 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
         }
     }
 
-    private void initAdapter(Bundle savedInstanceState) {
+    private void initAdapter() {
         mNoticeAdapter = new NoticeAdapter(getContext());
-        if (savedInstanceState != null) {
-        }
         mNoticeAdapter.setOnClickListener(this);
     }
 
     private void initViews(View v) {
-        mNotFoundView           = (TextView) v.findViewById(R.id.notFoundView);
+        mNotFoundView           = (LinearLayout) v.findViewById(R.id.notFoundView);
         mNoConnectionView       = (TextView) v.findViewById(R.id.noConnectionView);
         mNoticesRecyclerView    = (CustomRecyclerView) v.findViewById(R.id.noticeRecyclerView);
-        mProgressBar            = (ProgressBar) v.findViewById(R.id.recyclerProgressBar);
         mSwipeRefreshLayout     = (SwipeRefreshLayout) v.findViewById(R.id.swipeRefreshLayout);
 
-        mProgressBar.setVisibility(View.GONE);
         mNoConnectionView.setVisibility(View.GONE);
 
         mNoticesRecyclerView.setHasFixedSize(true);
@@ -241,8 +228,8 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
                     .build();
 
             mNoticesCall = mApplication.getApolloClient()
-                    .newCall(citiesQuery)
-                    .cacheControl(CacheControl.CACHE_FIRST);
+                    .query(citiesQuery)
+                    .cacheControl(CacheControl.NETWORK_FIRST);
             mNoticesCall.enqueue(dataCallback);
         }
     }
@@ -251,7 +238,7 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
         @Override
         public void onResponse(final Response<NoticesQuery.Data> response) {
 
-            if (response.isSuccessful()) {
+            if (!response.hasErrors()) {
                 mPageInfo = response.data().notices().pageInfo();
 
                 // Update views
@@ -259,6 +246,8 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
                     mActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            mSwipeRefreshLayout.setRefreshing(false);
+
                             if (mIsLoadingMore) {
                                 mNoticeAdapter.remove(mNoticeAdapter.getItemCount() - 1);
                                 mNoticeAdapter.append(new ArrayList<>(response.data().notices().edges()));
@@ -266,9 +255,17 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
                             } else {
                                 mNoticeAdapter.setItems(new ArrayList<>(response.data().notices().edges()));
                             }
-                            mProgressBar.setVisibility(View.GONE);
-                            mNoticesRecyclerView.setVisibility(View.VISIBLE);
-                            mSwipeRefreshLayout.setRefreshing(false);
+
+                            boolean hasItems = mNoticeAdapter.getItemCount() > 0;
+                            if (hasItems) {
+                                mNoticesRecyclerView.setVisibility(View.VISIBLE);
+                                mNotFoundView.setVisibility(View.GONE);
+                            } else {
+                                mNoticesRecyclerView.setVisibility(View.GONE);
+                                mNotFoundView.setVisibility(View.VISIBLE);
+                                ((TextView) mNotFoundView.findViewById(R.id.text))
+                                        .setText("No momento não encontramos licitações para este segmento.");
+                            }
                         }
                     });
                 }
@@ -305,7 +302,7 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
 
     @Override
     public void OnClickListener(View v, int position) {
-        final NoticesQuery.Data.Node notice = mNoticeAdapter.getItem(position);
+        final NoticesQuery.Node notice = mNoticeAdapter.getItem(position);
         if(notice == null) {
             return;
         }
@@ -316,23 +313,6 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
         NoticeActionsDialog bottomSheet = new NoticeActionsDialog();
         bottomSheet.setListener(this);
         bottomSheet.show(getFragmentManager(), bottomSheet.getTag());
-    }
-
-    private void showProgressBar() {
-        mNoConnectionView.setVisibility(View.GONE);
-        mNoticesRecyclerView.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.VISIBLE);
-    }
-
-    private void hideProgressBar() {
-        mNoticesRecyclerView.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.GONE);
-    }
-
-    private void showNoConnectionView() {
-        mNoticesRecyclerView.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.GONE);
-        mNoConnectionView.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -387,7 +367,7 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
         }
     }
 
-    private void startDownload(NoticesQuery.Data.Node notice) {
+    private void startDownload(NoticesQuery.Node notice) {
         if(notice == null)
             return;
 
@@ -448,8 +428,7 @@ public class NoticeTabFragment extends Fragment implements OnClickListenerRecycl
     public void refreshData() {
         mPageInfo = null;
         mIsLoadingMore = false;
-        mNoticeAdapter.setItems(new ArrayList<NoticesQuery.Data.Edge>());
-        //showProgressBar();
+        mNoticeAdapter.setItems(new ArrayList<NoticesQuery.Edge>());
         fetchNotices(null, false);
     }
 

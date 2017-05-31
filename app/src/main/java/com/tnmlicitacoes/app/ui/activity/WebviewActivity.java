@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tnmlicitacoes.app.R;
+import com.tnmlicitacoes.app.ui.base.BaseActivity;
 
 public class WebviewActivity extends BaseActivity {
 

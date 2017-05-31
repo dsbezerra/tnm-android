@@ -120,10 +120,10 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
     private final Context mContext;
 
     /* Store the fetched segments */
-    private List<SegmentsQuery.Data.Edge> mSegmentEdges = new ArrayList<>();
+    private List<SegmentsQuery.Edge> mSegmentEdges = new ArrayList<>();
 
     /* Store the selected segments */
-    private HashMap<String, SegmentsQuery.Data.Node> mSelectedSegments = new HashMap<>();
+    private HashMap<String, SegmentsQuery.Node> mSelectedSegments = new HashMap<>();
 
     /* Color matrix used to modify color of segment views */
     private final ColorMatrix mColorMatrix = new ColorMatrix();
@@ -148,7 +148,7 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
 
     @Override
     public void onBindViewHolder(final VH holder, int position) {
-        SegmentsQuery.Data.Node segment = getItem(position);
+        SegmentsQuery.Node segment = getItem(position);
         if (segment != null) {
 
             boolean isSelected = mSelectedSegments.containsKey(segment.id());
@@ -224,7 +224,7 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
         return mSelectedSegments.size();
     }
 
-    public SegmentsQuery.Data.Node getItem(int position) {
+    public SegmentsQuery.Node getItem(int position) {
         if (position >= 0 && position < mSegmentEdges.size()) {
             return mSegmentEdges.get(position).node();
         } else {
@@ -232,7 +232,7 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
         }
     }
 
-    public void setItems(List<SegmentsQuery.Data.Edge> list) {
+    public void setItems(List<SegmentsQuery.Edge> list) {
         mSegmentEdges = list;
         notifyDataSetChanged();
     }
@@ -246,7 +246,7 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
 
         int result = -1;
 
-        SegmentsQuery.Data.Node newSegment = mSegmentEdges.get(position).node();
+        SegmentsQuery.Node newSegment = mSegmentEdges.get(position).node();
         if (newSegment != null) {
             // Check if is already selected, then remove
             if (mSelectedSegments.containsKey(newSegment.id())) {
@@ -267,7 +267,7 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
         return result;
     }
 
-    public void setSelected(HashMap<String, SegmentsQuery.Data.Node> selected) {
+    public void setSelected(HashMap<String, SegmentsQuery.Node> selected) {
         this.mSelectedSegments = selected;
         notifyDataSetChanged();
     }
@@ -285,7 +285,7 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
      * @param segment
      * @return
      */
-    private String getUriAccordingWithDpi(SegmentsQuery.Data.Node segment) {
+    private String getUriAccordingWithDpi(SegmentsQuery.Node segment) {
         String result = Config.TNM_URL_PREFIX + segment.defaultImg();
         if (mDensityDpi >= DisplayMetrics.DENSITY_HIGH && mDensityDpi <= DisplayMetrics.DENSITY_XHIGH) {
             result = Config.TNM_URL_PREFIX + segment.mqdefault();

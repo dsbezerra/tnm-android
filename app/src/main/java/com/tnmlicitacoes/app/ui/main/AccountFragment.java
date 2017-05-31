@@ -1,10 +1,9 @@
-package com.tnmlicitacoes.app.ui.fragment;
+package com.tnmlicitacoes.app.ui.main;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +14,13 @@ import android.widget.TextView;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.billing.BillingActivity;
 import com.tnmlicitacoes.app.ui.activity.ChangeChosenActivity;
+import com.tnmlicitacoes.app.ui.base.BaseFragment;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 import com.tnmlicitacoes.app.utils.Utils;
 
-public class MySubscriptionFragment extends Fragment implements View.OnClickListener {
+public class AccountFragment extends BaseFragment implements View.OnClickListener {
+
+    public static final String TAG = "AccountFragment";
 
     private LinearLayout mContentLayout;
 
@@ -38,7 +40,7 @@ public class MySubscriptionFragment extends Fragment implements View.OnClickList
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_my_account, container, false);
+        View v = inflater.inflate(R.layout.fragment_account, container, false);
         initViews(v);
         initViewListeners();
         return v;
@@ -87,7 +89,7 @@ public class MySubscriptionFragment extends Fragment implements View.OnClickList
         itemHeader.setText(getString(R.string.current_subscription_text));
 
         String billingName = SettingsUtils.getBillingSubName(getContext());
-        if(billingName == null || billingName.isEmpty() || billingName.equals(SettingsUtils.STRING_DEFAULT)) {
+        if(billingName == null || billingName.isEmpty()) {
             //long days = 30 - (System.currentTimeMillis() - SettingsUtils.getActivationDateFromPrefs(this)) / Utils.DAY_IN_MILLIS;
             itemName.setText("Avaliação gratuita");
             changeButton.setText("VIRAR PREMIUM");

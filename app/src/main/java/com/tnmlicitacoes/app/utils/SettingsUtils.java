@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
+import com.tnmlicitacoes.app.ui.base.BaseActivity;
 
 public class SettingsUtils {
 
@@ -46,7 +47,7 @@ public class SettingsUtils {
 
     /**
      * Boolean indicating if we need to check for unique session
-     * Used only on {@link com.tnmlicitacoes.app.ui.activity.BaseActivity}
+     * Used only on {@link BaseActivity}
      * to check if the session is valid or not
      */
     public static final String PREF_CHECK_FOR_UNIQUE_SESSION = "tnm_check_for_unique_session";
@@ -56,7 +57,7 @@ public class SettingsUtils {
      * if the app isn't on top of activity stack, in another words,
      * check when the user is in fact using the application.
      *
-     * Also only used in {@link com.tnmlicitacoes.app.ui.activity.BaseActivity}
+     * Also only used in {@link BaseActivity}
      */
     public static final String PREF_NEW_DEVICE_ID = "tnm_new_device_id";
 
@@ -72,7 +73,7 @@ public class SettingsUtils {
 
     /**
      * Long used to check if the session is valid after 1 week, also only used in
-     * {@link com.tnmlicitacoes.app.ui.activity.BaseActivity}
+     * {@link BaseActivity}
      */
     public static final String PREF_LAST_SESSION_CHECKED_TIMESTAMP = "tnm_last_session_checked_timestamp";
 
@@ -191,11 +192,6 @@ public class SettingsUtils {
      * Long indicating the amount of time elapsed in waiting sms
      */
     public static final String PREF_WAITING_SMS_REMAINING_TIME = "tnm_remaining_sms_waiting_time";
-
-    /**
-     * Default string when there is not a string in stored
-     */
-    public static final String STRING_DEFAULT = "null";
 
     /**
      * Default long value
@@ -335,7 +331,7 @@ public class SettingsUtils {
      * */
     public static String getUserPhoneNumber(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(PREF_USER_PHONE_NUMBER, STRING_DEFAULT);
+        return preferences.getString(PREF_USER_PHONE_NUMBER, null);
     }
 
     /**
@@ -343,7 +339,7 @@ public class SettingsUtils {
      */
     public static String getCurrentGcmToken(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(PREF_GCM_TOKEN, STRING_DEFAULT);
+        return preferences.getString(PREF_GCM_TOKEN, null);
     }
 
     /**
@@ -351,7 +347,7 @@ public class SettingsUtils {
      */
     public static String getUserPhoneFormattedNumber(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(PREF_USER_PHONE_NUMBER_FORMATTED, STRING_DEFAULT);
+        return preferences.getString(PREF_USER_PHONE_NUMBER_FORMATTED, null);
     }
 
     /**
@@ -367,7 +363,7 @@ public class SettingsUtils {
      */
     public static String getBillingState(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(PREF_BILLING_STATE, STRING_DEFAULT);
+        return preferences.getString(PREF_BILLING_STATE, null);
     }
 
     /**
@@ -375,7 +371,7 @@ public class SettingsUtils {
      */
     public static String getBillingSubName(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(PREF_BILLING_SUB_NAME, STRING_DEFAULT);
+        return preferences.getString(PREF_BILLING_SUB_NAME, null);
     }
 
     /**
@@ -383,7 +379,7 @@ public class SettingsUtils {
      */
     public static String getUnsubscribeTopics(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(PREF_TMP_UNSUBSCRIBE_TOPICS, STRING_DEFAULT);
+        return preferences.getString(PREF_TMP_UNSUBSCRIBE_TOPICS, null);
     }
 
     /**
@@ -391,7 +387,7 @@ public class SettingsUtils {
      */
     public static String getUserId(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(PREF_USER_ID, STRING_DEFAULT);
+        return preferences.getString(PREF_USER_ID, null);
     }
 
     /**
@@ -400,7 +396,7 @@ public class SettingsUtils {
      * */
     public static String getNewDeviceId(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(PREF_NEW_DEVICE_ID, STRING_DEFAULT);
+        return preferences.getString(PREF_NEW_DEVICE_ID, null);
     }
 
     /**
@@ -408,7 +404,7 @@ public class SettingsUtils {
      */
     public static String getDeviceId(final Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(PREF_DEVICE_ID, STRING_DEFAULT);
+        return preferences.getString(PREF_DEVICE_ID, null);
     }
 
     /**
@@ -440,7 +436,7 @@ public class SettingsUtils {
      */
     public static String getRefreshToken(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(PREF_REFRESH_TOKEN, STRING_DEFAULT);
+        return preferences.getString(PREF_REFRESH_TOKEN, null);
     }
 
     /**
@@ -448,7 +444,7 @@ public class SettingsUtils {
      */
     public static String getCurrentAccessToken(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(PREF_ACCESS_TOKEN, STRING_DEFAULT);
+        return preferences.getString(PREF_ACCESS_TOKEN, null);
     }
 
     /**
@@ -510,7 +506,7 @@ public class SettingsUtils {
     public static String getTemporaryString(Context context, final String key) {
         SharedPreferences preferences = context
                 .getSharedPreferences(PREFERENCES_TMP_SETTINGS_NAME, Context.MODE_PRIVATE);
-        return preferences.getString(key, STRING_DEFAULT);
+        return preferences.getString(key, null);
     }
 
     /**

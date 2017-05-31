@@ -14,6 +14,7 @@ import com.tnmlicitacoes.app.CitiesQuery;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.SegmentsQuery;
 import com.tnmlicitacoes.app.interfaces.OnAccountConfigurationListener;
+import com.tnmlicitacoes.app.ui.base.BaseActivity;
 import com.tnmlicitacoes.app.ui.fragment.SegmentSelectFragment;
 import com.tnmlicitacoes.app.ui.fragment.CitySelectFragment;
 import com.tnmlicitacoes.app.utils.BillingUtils;
@@ -117,14 +118,14 @@ public class ChangeChosenActivity extends BaseActivity implements OnAccountConfi
     }
 
     @Override
-    public void onCitySelected(int selectedSize, CitiesQuery.Data.Node city) {
+    public void onCitySelected(int selectedSize, CitiesQuery.Node city) {
         mRemainingText.setText(getString(R.string.sub_max_selected, selectedSize, BillingUtils.getMaxText(BillingUtils.SUBSCRIPTION_MAX_ITEMS)));
         mRemainingText.setVisibility(selectedSize > 0 ? View.VISIBLE : View.INVISIBLE);
         mButtonConfirm.setEnabled(selectedSize > 0);
     }
 
     @Override
-    public void onSegmentSelected(int selectedSize, SegmentsQuery.Data.Node segment) {
+    public void onSegmentSelected(int selectedSize, SegmentsQuery.Node segment) {
         mRemainingText.setText(getString(R.string.sub_max_selected, selectedSize, BillingUtils.getMaxText(BillingUtils.SUBSCRIPTION_MAX_ITEMS)));
         mRemainingText.setVisibility(selectedSize > 0 ? View.VISIBLE : View.INVISIBLE);
         mButtonConfirm.setEnabled(selectedSize > 0);

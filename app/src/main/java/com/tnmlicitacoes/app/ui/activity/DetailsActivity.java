@@ -11,6 +11,7 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.tnmlicitacoes.app.R;
+import com.tnmlicitacoes.app.ui.base.BaseActivity;
 import com.tnmlicitacoes.app.ui.fragment.DetailsFragment;
 
 /**

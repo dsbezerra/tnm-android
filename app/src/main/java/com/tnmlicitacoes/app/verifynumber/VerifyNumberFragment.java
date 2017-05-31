@@ -1,6 +1,5 @@
-package com.tnmlicitacoes.app.ui.fragment;
+package com.tnmlicitacoes.app.verifynumber;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -65,7 +64,7 @@ public abstract class VerifyNumberFragment extends Fragment {
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             alertDialog = new AlertDialog.Builder(context,
-                    R.style.MaterialBaseTheme_Light_AlertDialog);
+                    R.style.Theme_AppCompat_Light_Dialog_Alert);
         }
         else {
             alertDialog = new AlertDialog.Builder(context);

@@ -3,6 +3,51 @@
     <!-- App Name and Version Stuff -->
     <string name="app_name" translatable="false">TáNaMão Licitações</string>
 
+    <!-- Activity titles -->
+    <string name="title_activity_main">TáNaMão Licitações</string>
+    <string name="title_activity_main_my_notices">My biddings</string>
+    <string name="title_activity_main_account">Account</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="title_activity_save_card">Adicionar cartão</string>
+    <string name="title_activity_save_card_edit_mode">Editar cartão</string>
+    <string name="title_activity_card_details">Detalhes do cartão</string>
+
+    <string name="title_activity_subscription_select_plan">Selecionar plano</string>
+    <string name="title_activity_subscription_select_card">Selecionar cartão</string>
+    <string name="title_activity_subscription_confirm">Confirmar assinatura</string>
+
+    <!-- API Error -->
+    <string name="error_api_unknown">Ocorreu um erro desconhecido</string>
+    <string name="error_api_not_authorized">Sem permissão para realizar esta ação</string>
+    <string name="error_api_limit_exceeded">Limite de requisições excedido</string>
+    <string name="error_api_send_sms_failed">Falha ao enviar mensagem SMS</string>
+    <string name="error_api_email_activated">Este e-mail já está confirmado</string>
+
+    <string name="error_api_unknown_message">Ocorreu um erro desconhecido. Por favor, tente novamente.</string>
+
+
+    <string name="error_stripe_invalid_number">Número do cartão inválido</string>
+    <string name="error_stripe_invalid_expiry_month">Mês inválido</string>
+    <string name="error_stripe_invalid_expiry_year">Ano inválido</string>
+    <string name="error_stripe_invalid_cvc">Código de segurança inválido</string>
+    <string name="error_stripe_incorrect_number">Número incorreto</string>
+    <string name="error_stripe_expired_card">Cartão expirado</string>
+    <string name="error_stripe_incorrect_cvc">Código de segurança incorreto</string>
+    <string name="error_stripe_incorrect_zip">CEP incorreto</string>
+    <string name="error_stripe_card_declined">Cartão recusado</string>
+    <string name="error_stripe_processing_error">Erro ao processar cartão</string>
+    <string name="error_stripe_invalid_number_message">O número do cartão de crédito inserido é inválido</string>
+    <string name="error_stripe_invalid_expiry_month_message">O mês da data de vencimento do cartão de crédito é inválido</string>
+    <string name="error_stripe_invalid_expiry_year_message">O ano da data de vencimento do cartão de crédito é inválido</string>
+    <string name="error_stripe_invalid_cvc_message">O código de segurança do cartão de crédito é inválido</string>
+    <string name="error_stripe_incorrect_number_message">O número do cartão de crédito está incorreto</string>
+    <string name="error_stripe_expired_card_message">Este cartão de crédito expirou</string>
+    <string name="error_stripe_incorrect_cvc_message">O código de segurança do cartão de crédito está incorreto</string>
+    <string name="error_stripe_incorrect_zip_message">O CEP informado está incorreto</string>
+    <string name="error_stripe_card_declined_message">Este cartão de crédito foi recusado pela operadora do cartão</string>
+    <string name="error_stripe_processing_error_message">Ocorreu um erro desconhecido durante o processamento do cartão de crédito</string>
+
     <!-- Notifications strings -->
     <string name="notification_news_title">TáNaMão Informa</string>
     <string name="notification_tips_title">Se liga na dica!</string>
@@ -307,6 +352,8 @@
     <string name="okay">OK</string>
     <string name="choose_value">Choose value</string>
     <string name="not_supported">Not supported</string>
+    <!-- [END] MuPDF Strings [END] -->
+
     <string name="drawer_account">Conta</string>
     <string name="waiting_sms_toolbar_title">Confirmação de número</string>
     <string name="input_number_toolbar_title">Verificação de número</string>
@@ -331,7 +378,9 @@
     <string name="server_communication_error">Houve um problema na comunicação com nossos servidores. Por favor, tente novamente mais tarde.</string>
 
 
-    <string name="title_activity_settings">Configurações</string>
+    <string name="accountconfiguration_sub_max_selected">Selecionados: %1$d/%2$s</string>
+
+    <string name="card_number_last_digits">•••• •••• •••• %1$s</string>
 
     <!-- Strings related to Settings -->
 
@@ -344,6 +393,50 @@
     <string name="pref_ringtone_silent">Silencioso</string>
 
     <string name="pref_title_vibrate">Vibrar</string>
-    <!-- [END] MuPDF Strings [END] -->
+    <string name="edit">Editar</string>
+    <string name="delete">Excluir</string>
+    <string name="card_help_expiry_date_title">Data de vencimento</string>
+    <string name="card_help_expiry_date_message">A data de vencimento do seu cartão encontra-se na parte da frente, logo abaixo do número</string>
+    <string name="card_help_cvc_title">CSC</string>
+    <string name="card_help_cvc_message">O código de segurança do seu cartão de crédito encontra-se no verso do cartão e possui três dígitos</string>
+    <string name="card_set_as_default">Definir como padrão</string>
+    <string name="card_remove_dialog_title">Excluir forma de pagamento</string>
+    <string name="card_remove_dialog_message">Você tem certeza que quer excluir esta forma de pagamento?</string>
+    <string name="card_remove_progress_message">Removendo cartão...</string>
+    <string name="card_fail_to_remove">Falha ao remover cartão</string>
+    <string name="card_removed">Cartão removido</string>
+    <string name="card_defined_as_default">Cartão definido como padrão</string>
+    <string name="card_fail_to_set_as_default">Falha ao definir cartão como padrão</string>
+    <string name="card_make_default_dialog_title">Definir como padrão</string>
+    <string name="card_make_default_dialog_message">Você tem certeza de que quer definir este cartão como o cartão padrão?</string>
+    <string name="card_make_default_progress_message">Definindo como padrão...</string>
+    <string name="card_add_new">Adicionar novo cartão de crédito</string>
+    <string name="account_email_not_defined">E-mail não definido</string>
+    <string name="account_email_required_message">É necessário um e-mail para utilizar todas as funções do aplicativo!</string>
+    <string name="account_email_verified">E-mail verificado.</string>
+    <string name="account_email_not_verified">E-mail não verificado. Algumas funcionalidades do aplicativo dependem de um e-mail verificado!</string>
+    <string name="plan_basic_name">Básico</string>
+    <string name="plan_basic_description">1 segmento e cidade</string>
+    <string name="plan_default_name">Padrão</string>
+    <string name="plan_default_description">3 segmentos e cidades</string>
+    <string name="plan_custom_description">Construa um plano que seja adequado para as suas necessidades</string>
+    <string name="plan_custom_name">Personalizado</string>
+    <string name="plan_price">R$ %1$.2f</string>
+    <string name="add_card_dialog_progress_message">Adicionando cartão...</string>
+    <string name="add_card_fail">Falha ao adicionar cartão</string>
+
+    <string name="plan_custom_both_plural_description">%1$d segmentos e %2$d cidades</string>
+    <string name="plan_custom_segment_plural_description">%1$d segmentos e 1 cidade</string>
+    <string name="plan_custom_city_plural_description">1 segmento e %1$d cidades</string>
+    <string name="plan_custom_both_singular_description">%1$d segmento e cidade</string>
+
+    <string name="advance_button_text">Avançar</string>
+    <string name="confirm_button_text">Confirmar</string>
+
+    <string name="item_price_x_total">R$ %1$.2f x %2$d</string>
+    <string name="confirm_subscription_chosen_plan_header">Plano escolhido</string>
+    <string name="confirm_subscription_payment_method_header">Forma de pagamento</string>
+    <string name="confirm_subscription_total_header">Total</string>
+
 
 </resources>

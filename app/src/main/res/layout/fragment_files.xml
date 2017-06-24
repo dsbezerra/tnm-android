@@ -15,8 +15,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:drawablePadding="@dimen/spacing_small"
-        android:drawableTop="@drawable/ic_empty_box"
         android:textSize="@dimen/font_large"
         android:text="Nenhum arquivo encontrado."
         />

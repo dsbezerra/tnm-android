@@ -9,9 +9,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.TNMApplication;
+import com.tnmlicitacoes.app.TnmApplication;
 import com.tnmlicitacoes.app.interfaces.OnVerifyNumberListener;
-import com.tnmlicitacoes.app.verifynumber.VerifyNumberActivity;
 
 public abstract class VerifyNumberFragment extends Fragment {
 
@@ -28,13 +27,13 @@ public abstract class VerifyNumberFragment extends Fragment {
     protected VerifyNumberActivity mActivity;
 
     /* The app singleton */
-    protected TNMApplication mApplication;
+    protected TnmApplication mApplication;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mActivity = (VerifyNumberActivity) getActivity();
-        mApplication = (TNMApplication) mActivity.getApplication();
+        mApplication = (TnmApplication) mActivity.getApplication();
         mListener = mActivity;
     }
 
@@ -60,16 +59,8 @@ public abstract class VerifyNumberFragment extends Fragment {
      */
     protected void displayDialog(Context context, String title, String message) {
 
-        AlertDialog.Builder alertDialog;
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            alertDialog = new AlertDialog.Builder(context,
-                    R.style.Theme_AppCompat_Light_Dialog_Alert);
-        }
-        else {
-            alertDialog = new AlertDialog.Builder(context);
-        }
-
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context,
+                R.style.Theme_AppCompat_Light_Dialog_Alert);
         alertDialog.setTitle(title);
         alertDialog.setMessage(message)
                 .setPositiveButton(R.string.dialog_close_button, new DialogInterface.OnClickListener() {

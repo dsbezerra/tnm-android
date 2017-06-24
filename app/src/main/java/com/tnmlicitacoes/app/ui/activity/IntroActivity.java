@@ -2,6 +2,7 @@ package com.tnmlicitacoes.app.ui.activity;
 
 import android.animation.ObjectAnimator;
 import android.animation.StateListAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -17,8 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.billing.BillingActivity;
-import com.tnmlicitacoes.app.ui.main.MainActivity;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
 import com.tnmlicitacoes.app.utils.BillingUtils;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
@@ -69,16 +68,16 @@ public class IntroActivity extends AppCompatActivity {
                 = preferences.getBoolean(SettingsUtils.PREF_IS_TRIAL_EXPIRED, false);
 
         if(isLoggedIn && isInitialConfigFinished) {
-            goToActivity(MainActivity.class);
+            //goToActivity(MainActivity.class);
             return;
         }
         else if (isLoggedIn && !isTrialExpired) {
             BillingUtils.sIsTrialActive = true;
-            goToActivity(BillingActivity.class);
+            //goToActivity(BillingActivity.class);
             return;
         }
         else if (isLoggedIn) {
-            goToActivity(AccountConfigurationActivity.class);
+            //goToActivity(AccountConfigurationActivity.class);
             return;
         }
 
@@ -133,11 +132,11 @@ public class IntroActivity extends AppCompatActivity {
         });
     }
 
-    private void goToActivity(Class<?> clazz) {
+    private void goToActivity(Context context, Class<?> clazz) {
 
         SettingsUtils.putBoolean(this, SettingsUtils.PREF_INTRO_VIEWED, true);
 
-        Intent i = AndroidUtilities.getInstance(this).createClearStackIntent(clazz);
+        Intent i = new AndroidUtilities().createClearStackIntent(context, clazz);
         startActivity(i);
         finish();
         overridePendingTransition(R.anim.activity_fade_enter, R.anim.activity_fade_exit);

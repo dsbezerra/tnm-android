@@ -1,0 +1,3 @@
+mutation SubscribeMutation($source: String, $citiesQuantity: Int!, $segmentsQuantity: Int!) {
+    subscribe(source: $source, citiesQuantity: $citiesQuantity, segmentsQuantity: $segmentsQuantity)
+}

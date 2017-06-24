@@ -1,4 +1,17 @@
 <resources>
+    <!-- Activity titles -->
+    <string name="title_activity_main">TáNaMão Licitações</string>
+    <string name="title_activity_main_my_notices">Minhas licitações</string>
+    <string name="title_activity_main_account">Conta</string>
+    <string name="title_activity_settings">Configurações</string>
+
+    <!-- API Error -->
+    <string name="error_api_unknown">Ocorreu um erro desconhecido. Por favor, tente novamente.</string>
+    <string name="error_api_not_authorized">Sem permissão para realizar esta ação.</string>
+    <string name="error_api_limit_exceeded">Limite de requisições excedido! Aguarde um momento e  tente novamente.</string>
+    <string name="error_api_send_sms_failed">Falha ao enviar mensagem SMS.</string>
+    <string name="error_api_email_activated">Este e-mail já está confirmado.</string>
+
     <!-- Notifications strings -->
     <string name="notification_news_title">TáNaMão Informa</string>
     <string name="notification_tips_title">Se liga na dica!</string>
@@ -263,6 +276,11 @@
     <string name="action_close">Fechar</string>
     <string name="action_remove">Excluir</string>
     <string name="server_communication_error">Houve um problema na comunicação com nossos servidores. Por favor, tente novamente mais tarde.</string>
+    <string name="edit">Editar</string>
+    <string name="delete">Excluir</string>
+    <string name="confirm_subscription_chosen_plan_header">Plano escolhido</string>
+    <string name="confirm_subscription_payment_method_header">Forma de pagamento</string>
+    <string name="confirm_subscription_total_header">Total</string>
     <!-- [END] MuPDF Strings [END] -->
 
 </resources>

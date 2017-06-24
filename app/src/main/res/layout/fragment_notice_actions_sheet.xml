@@ -15,7 +15,7 @@
         >
 
         <ImageView
-            android:src="@drawable/ic_error_outline"
+            app:srcCompat="@drawable/ic_error_outline"
             style="@style/Widget.TNM.BottomSheetIcon"
             />
 
@@ -31,7 +31,7 @@
         style="@style/Widget.TNM.BottomSheetLayout">
 
         <ImageView
-            android:src="@drawable/ic_open_in_browser"
+            app:srcCompat="@drawable/ic_open_in_browser"
             style="@style/Widget.TNM.BottomSheetIcon"
             />
 
@@ -47,7 +47,7 @@
         style="@style/Widget.TNM.BottomSheetLayout">
 
         <ImageView
-            android:src="@drawable/ic_mail"
+            app:srcCompat="@drawable/ic_mail"
             style="@style/Widget.TNM.BottomSheetIcon"
             />
 
@@ -63,7 +63,7 @@
         style="@style/Widget.TNM.BottomSheetLayout">
 
         <ImageView
-            android:src="@drawable/ic_file_download"
+            app:srcCompat="@drawable/ic_file_download"
             style="@style/Widget.TNM.BottomSheetIcon"
             />
 
@@ -79,7 +79,7 @@
         style="@style/Widget.TNM.BottomSheetLayout">
 
         <ImageView
-            android:src="@drawable/ic_close"
+            app:srcCompat="@drawable/ic_close"
             style="@style/Widget.TNM.BottomSheetIcon"
             />
 

@@ -3,16 +3,13 @@ package com.tnmlicitacoes.app.fcm;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.tnmlicitacoes.app.model.Segment;
+import com.tnmlicitacoes.app.model.realm.PickedSegment;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,10 +110,10 @@ public class RegistrationIntentService extends IntentService {
 
     private void populateTopicsArray() {
         Realm realm = Realm.getDefaultInstance();
-        RealmResults<Segment> segments = realm.where(Segment.class).findAll();
+        RealmResults<PickedSegment> segments = realm.where(PickedSegment.class).findAll();
         LOG_DEBUG(TAG, "Adding segments to topics array...");
         for (int i = 0; i < segments.size(); i++) {
-            Segment segment = segments.get(i);
+            PickedSegment segment = segments.get(i);
             mTopics.add(segment.getId());
         }
         LOG_DEBUG(TAG, "Added " + segments.size() + " to topics array!");

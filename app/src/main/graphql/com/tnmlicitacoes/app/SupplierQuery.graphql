@@ -1,0 +1,26 @@
+query SupplierQuery {
+  supplier {
+    id
+    customerId
+    deviceId
+    subId
+    name
+    email
+    cityNum
+    segNum
+    activated
+    activeSub
+    phone
+    defaultCard
+    createdAt
+    updatedAt
+    activatedAt
+    cards {
+        id
+        brand
+        last4
+        exp_month
+        exp_year
+    }
+  }
+}

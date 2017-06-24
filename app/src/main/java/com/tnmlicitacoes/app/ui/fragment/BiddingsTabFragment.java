@@ -19,6 +19,7 @@ import com.tnmlicitacoes.app.adapter.MyBiddingsAdapter;
 import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
 import com.tnmlicitacoes.app.tasks.SendEmailTask;
 import com.tnmlicitacoes.app.ui.activity.WebviewActivity;
+import com.tnmlicitacoes.app.ui.base.BaseFragment;
 import com.tnmlicitacoes.app.utils.Utils;
 
 import java.util.HashMap;
@@ -27,7 +28,7 @@ import okhttp3.HttpUrl;
 
 import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
-public class BiddingsTabFragment extends Fragment implements OnClickListenerRecyclerView {
+public class BiddingsTabFragment extends BaseFragment implements OnClickListenerRecyclerView {
 
     private static final String TAG = "BiddingsTabFragment";
 
@@ -45,8 +46,6 @@ public class BiddingsTabFragment extends Fragment implements OnClickListenerRecy
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_biddings, container, false);
-        if(BuildConfig.DEBUG)
-            LOG_DEBUG(TAG, "onCreateView");
         initViews(view);
         initAdapters();
         return view;

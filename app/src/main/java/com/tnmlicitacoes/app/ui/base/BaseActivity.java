@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import com.evernote.android.state.StateSaver;
 import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
+import com.tnmlicitacoes.app.TnmApplication;
 import com.tnmlicitacoes.app.fcm.MyFcmListenerService;
 import com.tnmlicitacoes.app.interfaces.OnSessionChangedListener;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
@@ -25,12 +26,20 @@ import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
+    /* The logging tag */
     private static final String TAG = "BaseActivity";
+
+    /* The main toolbar */
+    protected Toolbar mToolbar;
+
+    /* The application singleton */
+    protected TnmApplication mApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StateSaver.restoreInstanceState(this, savedInstanceState);
+        mApplication = (TnmApplication) getApplication();
 
         // Set app title color to white
         setupTaskDescription();
@@ -49,7 +58,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void setupToolbar() {
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(getString(R.string.app_name));
@@ -58,7 +68,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void setupToolbar(String title) {
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null) {
             actionBar.setTitle(title);

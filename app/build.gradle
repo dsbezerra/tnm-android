@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'com.apollographql.android'
 apply plugin: 'io.fabric'
@@ -7,6 +9,7 @@ apply plugin: 'realm-android'
 repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    mavenCentral()
 }
 
 def tnmVersionCode = 27
@@ -79,6 +82,9 @@ dependencies {
     compile "com.android.support:preference-v14:$supportVersion"
     compile "com.android.support:recyclerview-v7:$supportVersion"
 
+    compile "com.stripe:stripe-android:$stripeVersion"
+
+    compile 'me.himanshusoni.quantityview:quantity-view:1.2.0'
 
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
@@ -86,17 +92,21 @@ dependencies {
     compile('com.crashlytics.sdk.android:answers:1.3.6@aar') {
         transitive = true;
     }
-    compile 'com.andkulikov:transitionseverywhere:1.7.3'
-    compile 'com.github.castorflex.smoothprogressbar:library-circular:1.1.0'
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.squareup.okhttp3:okhttp:3.8.0'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.android.support:support-vector-drawable:25.3.1'
-    testCompile 'junit:junit:4.12'
 
     debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
     testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile "com.andkulikov:transitionseverywhere:$transitionsEverywhereVersion"
+
+    compile "com.github.castorflex.smoothprogressbar:library:$smoothProgressBarVersion"
+    compile "com.github.castorflex.smoothprogressbar:library-circular:$smoothProgressBarVersion"
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.okhttp3:okhttp:3.8.0'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:support-vector-drawable:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    testCompile 'junit:junit:4.12'
 }
 
 apply plugin: 'com.google.gms.google-services'

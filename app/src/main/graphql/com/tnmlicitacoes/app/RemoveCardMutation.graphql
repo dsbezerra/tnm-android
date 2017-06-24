@@ -1,0 +1,3 @@
+mutation RemoveCardMutation($cardId: String!) {
+  removeCard(cardId: $cardId)
+}

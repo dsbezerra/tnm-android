@@ -581,4 +581,14 @@ public class SettingsUtils {
         prefsEditor.apply();
     }
 
+    public static String getAesKey(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString("aes_key", null);
+    }
+
+    public static String getIV(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString("iv", null);
+    }
+
 }

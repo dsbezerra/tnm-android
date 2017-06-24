@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +15,7 @@ import com.evernote.android.state.State;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.fcm.RegistrationIntentService;
 import com.tnmlicitacoes.app.interfaces.AuthStateListener;
-import com.tnmlicitacoes.app.model.Segment;
+import com.tnmlicitacoes.app.model.realm.PickedSegment;
 import com.tnmlicitacoes.app.ui.adapter.NoticeViewPagerAdapter;
 import com.tnmlicitacoes.app.ui.base.BaseFragment;
 import com.tnmlicitacoes.app.ui.fragment.NoticeTabFragment;
@@ -35,7 +37,7 @@ public class NoticesFragment extends BaseFragment implements AuthStateListener {
 
     private NoticeViewPagerAdapter mViewPagerAdapter;
 
-    private List<Segment> mSegments = new ArrayList<>();
+    private List<PickedSegment> mSegments = new ArrayList<>();
 
     private TabLayout mTabs;
 
@@ -45,6 +47,19 @@ public class NoticesFragment extends BaseFragment implements AuthStateListener {
 
     @State
     public int mCurrentItem;
+
+    /**
+     * Creates a new instance of NoticesFragment
+     * @return NoticesFragment brand new instance
+     */
+    public static NoticesFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        NoticesFragment fragment = new NoticesFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -64,6 +79,8 @@ public class NoticesFragment extends BaseFragment implements AuthStateListener {
             setupDatabaseData(null);
             initFCM();
         }
+
+        LOG_DEBUG(TAG, "onResume");
     }
 
     @Override
@@ -95,7 +112,7 @@ public class NoticesFragment extends BaseFragment implements AuthStateListener {
 
         LOG_DEBUG(TAG, "Starting setup of segment tabs.");
 
-        RealmResults<Segment> segments = mRealm.where(Segment.class).findAll();
+        RealmResults<PickedSegment> segments = mRealm.where(PickedSegment.class).findAll();
         if (segments.size() == 0) {
             LOG_DEBUG(TAG, "Zero segments in database.");
             // TODO(diego): send back to configuration
@@ -159,11 +176,13 @@ public class NoticesFragment extends BaseFragment implements AuthStateListener {
 
     @Override
     public void onAuthChanged() {
-        NoticeTabFragment fragment = getCurrentTabFragment();
-        if (fragment != null) {
-            fragment.refreshData();
-        }
-
         LOG_DEBUG(TAG, "onAuthChanged");
+        SparseArray<Fragment> fragments = mViewPagerAdapter.getFragments();
+        for (int i = 0; i < fragments.size(); i++) {
+            NoticeTabFragment fragment = (NoticeTabFragment) fragments.get(i);
+            if (fragment != null) {
+                fragment.refreshData();
+            }
+        }
     }
 }

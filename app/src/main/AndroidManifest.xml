@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.tnmlicitacoes.app">
 
     <uses-sdk xmlns:tools="http://schemas.android.com/tools"
@@ -20,8 +21,7 @@
         android:smallScreens="true" />
 
     <application
-        android:name=".TNMApplication"
-        android:allowBackup="false"
+        android:name=".TnmApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.DefaultTheme">
@@ -50,16 +50,14 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.main.MainActivity"
-            android:label="@string/app_name"></activity>
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name" />
         <activity
-            android:name=".ui.activity.AccountConfigurationActivity"
+            android:name=".ui.accountconfiguration.AccountConfigurationActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".billing.BillingActivity"
-            android:label="@string/app_name"></activity>
-        <activity
-            android:name=".ui.activity.ChangeChosenActivity"
+            android:name=".ui.changepicked.ChangePickedActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
@@ -121,12 +119,19 @@
         <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/PreferenceTheme"
-            android:parentActivityName=".ui.main.MainActivity">
+            android:parentActivityName=".ui.main.MainActivity"
+            android:theme="@style/PreferenceTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tnmlicitacoes.app.ui.main.MainActivity" />
         </activity>
+        <activity
+            android:name=".ui.subscription.SaveCardActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.subscription.PaymentsActivity" />
+        <activity android:name=".ui.subscription.CardDetailsActivity" />
+        <activity android:name=".ui.subscription.SubscriptionActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

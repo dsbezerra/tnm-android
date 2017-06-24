@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
-import com.tnmlicitacoes.app.model.Notice;
+import com.tnmlicitacoes.app.model.realm.Notice;
 
 import java.util.ArrayList;
 import java.util.List;

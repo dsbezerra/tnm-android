@@ -4,7 +4,7 @@
         android:title="Início"
         android:icon="@drawable/ic_home" />
 
-    <item android:id="@+id/action_my_biddings"
+    <item android:id="@+id/action_my_notices"
         android:title="Minhas licitações"
         android:icon="@drawable/ic_gavel" />
 

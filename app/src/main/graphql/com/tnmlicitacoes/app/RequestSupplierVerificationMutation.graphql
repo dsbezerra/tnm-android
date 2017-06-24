@@ -1,0 +1,5 @@
+mutation RequestSupplierVerificationMutation($email: String!) {
+  requestSupplierVerification(email: $email) {
+    id
+  }
+}

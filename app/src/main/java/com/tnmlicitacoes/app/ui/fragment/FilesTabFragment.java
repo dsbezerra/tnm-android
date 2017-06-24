@@ -25,6 +25,7 @@ import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.adapter.FileAdapter;
 import com.tnmlicitacoes.app.interfaces.FileViewListener;
 import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
+import com.tnmlicitacoes.app.ui.base.BaseFragment;
 import com.tnmlicitacoes.app.utils.FileUtils;
 
 import java.io.File;
@@ -34,7 +35,7 @@ import java.util.List;
 import static com.tnmlicitacoes.app.utils.AndroidUtilities.PERMISSION_REQUEST_WRITE_EXT_STORAGE;
 import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
-public class FilesTabFragment extends Fragment implements OnClickListenerRecyclerView {
+public class FilesTabFragment extends BaseFragment implements OnClickListenerRecyclerView {
 
     private static final String TAG = "FilesTabFragment";
 

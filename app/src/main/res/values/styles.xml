@@ -9,7 +9,13 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeBackground">@color/colorActionModePrimary</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
 
+    <style name="Theme.DefaultDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <!-- Primary palette -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="Theme.VerifyNumber" parent="Theme.DefaultTheme">
@@ -19,7 +25,6 @@
     <style name="SplashScreenTheme" parent="Theme.DefaultTheme">
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
-
 
     <style name="PreferenceTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -135,6 +140,18 @@
 
     <style name="Widget.TNM.TextInput" parent="TextAppearance.AppCompat">
         <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="Widget.TNM.ResendEmailButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/btn_resend_email_compat</item>
+    </style>
+
+    <style name="Widget.TNM.AccountHeader">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_marginBottom">@dimen/spacing_normal</item>
     </style>
 
 </resources>

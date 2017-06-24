@@ -1,7 +1,6 @@
 package com.tnmlicitacoes.app.ui.adapter;
 
 import android.content.Context;
-import android.icu.text.SimpleDateFormat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,18 +11,17 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.tnmlicitacoes.app.NoticesQuery;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
+import com.tnmlicitacoes.app.model.realm.Agency;
+import com.tnmlicitacoes.app.model.realm.City;
+import com.tnmlicitacoes.app.model.realm.Notice;
 import com.tnmlicitacoes.app.utils.NoticeUtils;
 
-import java.text.ParseException;
-import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import io.realm.internal.android.ISO8601Utils;
 
 import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
@@ -39,11 +37,8 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private final int VIEW_LOADING_MORE = 0;
     private final int VIEW_ITEM         = 1;
 
-    /* Context of the app */
-    private final Context mContext;
-
     /* Store the fetched notices */
-    private List<NoticesQuery.Edge> mNoticeEdges = new ArrayList<>();
+    private List<Notice> mNotices = new ArrayList<>();
 
     /* OnClick listener */
     private OnClickListenerRecyclerView mOnClickListener;
@@ -52,13 +47,9 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     // TODO(diego): See if this is still relevant
     //private NoticeFilter mNoticeFilter = null;
 
-    public NoticeAdapter(Context context) {
-        mContext = context;
-    }
-
     @Override
     public int getItemViewType(int position) {
-        return mNoticeEdges.get(position) != null ? VIEW_ITEM : VIEW_LOADING_MORE;
+        return mNotices.get(position) != null ? VIEW_ITEM : VIEW_LOADING_MORE;
     }
 
     @Override
@@ -82,26 +73,39 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             final NoticeViewHolder noticeHolder = (NoticeViewHolder) holder;
 
-            final NoticesQuery.Node notice = getItem(position);
+            final Notice notice = getItem(position);
             if (notice != null) {
-
-                if (notice.agency() != null) {
-                    NoticesQuery.Agency agency = notice.agency();
-                    noticeHolder.noticeAgencyInfo.setText(mContext.getResources().getString(
-                            R.string.notices_item_header, agency.city().state().name(),
-                            agency.city().name(), agency.name()));
+                Context context = noticeHolder.itemView.getContext();
+                if (notice.getAgency() != null) {
+                    Agency agency = notice.getAgency();
+                    City city = agency.getCity();
+                    if (city != null) {
+                        noticeHolder.noticeAgencyInfo.setText(context.getString(
+                                R.string.notices_item_header, city.getState(),
+                                city.getName(), agency.getName()));
+                    }
                 }
 
-                noticeHolder.noticeModality.setText(
-                        NoticeUtils.resolveModalityToName(notice.modality())
-                );
-                noticeHolder.noticeNumber.setText(notice.number());
-                noticeHolder.noticeDescription.setText(notice.object());
+                noticeHolder.noticeModality.setText(NoticeUtils.resolveEnumNameToName(notice.getModality()));
+                noticeHolder.noticeNumber.setText(notice.getNumber());
+                noticeHolder.noticeDescription.setText(notice.getObject());
 
-                noticeHolder.exclusiveMpe.setVisibility(notice.exclusive() ? View.VISIBLE : View.GONE);
+                noticeHolder.exclusiveMpe.setVisibility(notice.isExclusive() ? View.VISIBLE : View.GONE);
 
-                String iconUrl = sIconUrl.replace("{segId}", notice.segment().id());
-                Picasso.with(mContext).load(iconUrl).into(noticeHolder.noticeSegment, new Callback() {
+                Date disputeDate = notice.getDisputeDate();
+                if (disputeDate != null) {
+                    boolean withTime = disputeDate.getHours() != 0;
+                    String pattern = withTime ? "dd/MM/yyyy HH:mm" : "dd/MM/yyyy";
+                    noticeHolder.noticeDisputeDate.setText(new SimpleDateFormat(pattern)
+                            .format(disputeDate));
+                }
+
+                if (notice.getSegment() == null) {
+                    return;
+                }
+
+                String iconUrl = sIconUrl.replace("{segId}", notice.getSegment().getId());
+                Picasso.with(context).load(iconUrl).into(noticeHolder.noticeSegment, new Callback() {
                     @Override
                     public void onSuccess() {
                         noticeHolder.noticeSegment.setVisibility(View.VISIBLE);
@@ -112,21 +116,6 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         noticeHolder.noticeSegment.setVisibility(View.GONE);
                     }
                 });
-
-
-                Date disputeDate = null;
-                try {
-                    disputeDate = ISO8601Utils.parse(notice.disputeDate().toString(), new ParsePosition(0));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                if (disputeDate != null) {
-                    boolean withTime = disputeDate.getHours() != 0;
-                    String pattern = withTime ? "dd/MM/yyyy HH:mm" : "dd/MM/yyyy";
-                    noticeHolder.noticeDisputeDate.setText(new SimpleDateFormat(pattern)
-                            .format(disputeDate));
-                }
             }
 
 
@@ -136,9 +125,9 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public NoticesQuery.Node getItem(int position) {
-        if (position >= 0 && position < mNoticeEdges.size()) {
-            return mNoticeEdges.get(position).node();
+    public Notice getItem(int position) {
+        if (position >= 0 && position < mNotices.size()) {
+            return mNotices.get(position);
         } else {
             return null;
         }
@@ -146,31 +135,31 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return mNoticeEdges.size();
+        return mNotices.size();
     }
 
-    public void append(List<NoticesQuery.Edge> list) {
+    public void append(List<Notice> list) {
         for (int i = 0; i < list.size(); i++) {
-            add(list.get(i), mNoticeEdges.size());
+            add(list.get(i), mNotices.size());
         }
     }
 
-    public void setItems(List<NoticesQuery.Edge> list) {
-        mNoticeEdges = list;
+    public void setItems(List<Notice> list) {
+        mNotices = list;
         notifyDataSetChanged();
     }
 
-    public List<NoticesQuery.Edge> getItems() {
-        return mNoticeEdges;
+    public List<Notice> getItems() {
+        return mNotices;
     }
 
-    public void add(NoticesQuery.Edge notice, int position) {
-        mNoticeEdges.add(notice);
+    public void add(Notice notice, int position) {
+        mNotices.add(notice);
         notifyItemInserted(position);
     }
 
     public void remove(int position) {
-        mNoticeEdges.remove(position);
+        mNotices.remove(position);
         notifyItemRemoved(position);
     }
 

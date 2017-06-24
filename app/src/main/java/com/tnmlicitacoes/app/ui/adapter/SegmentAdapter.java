@@ -134,6 +134,12 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
     /* OnClick listener */
     private OnClickListenerRecyclerView mRecyclerViewOnClickListenerHack;
 
+    /**
+     * Indicate if we should highlight the segment row even when it is not in the selected HashMap
+     * Used only to show colors in AccountFragment PickedSegments
+     * */
+    private boolean mIsHighlight = false;
+
     public SegmentAdapter(Context context) {
         mContext = context;
         mDensityDpi = context.getResources().getDisplayMetrics().densityDpi;
@@ -159,7 +165,7 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
             bigMatrix.setScale(5, 5);
             holder.segmentBackground.setImageMatrix(bigMatrix);
 
-            if (!isSelected) {
+            if (!isSelected && !mIsHighlight) {
                 mColorMatrix.setSaturation(0.0f);
 
                 // Invert icon colors
@@ -174,20 +180,10 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
                 paint.setColorFilter(cmColorFilter);
                 paint.setAlpha(100);
 
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    holder.segmentBackground.setLayerType(View.LAYER_TYPE_HARDWARE, paint);
-                } else {
-                    holder.segmentBackground.setColorFilter(cmColorFilter);
-                }
+                holder.segmentBackground.setLayerType(View.LAYER_TYPE_HARDWARE, paint);
 
             } else {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    holder.segmentBackground.setLayerType(View.LAYER_TYPE_HARDWARE, new Paint());
-                } else {
-                    mColorMatrix.setSaturation(1.0f);
-                    holder.segmentBackground.setColorFilter(new ColorMatrixColorFilter(mColorMatrix));
-                }
-
+                holder.segmentBackground.setLayerType(View.LAYER_TYPE_HARDWARE, new Paint());
 
                 // Invert icon colors
                 holder.segmentIcon.setColorFilter(new ColorMatrixColorFilter(new ColorMatrix()));
@@ -204,9 +200,14 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
                     .into(holder.segmentBackground);
             // Set text
             holder.segmentName.setText(segment.name());
+
+            String icon = segment.icon();
+            if (icon == null) {
+                icon = "/img/app/categories/${id}/icon_white.webp".replace("${id}", segment.id());
+            }
             // Load icon with picasso
             Picasso.with(mContext)
-                    .load(Config.TNM_URL_PREFIX + segment.icon())
+                    .load(Config.TNM_URL_PREFIX + icon)
                     .into(holder.segmentIcon);
         }
     }
@@ -217,24 +218,50 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
     }
 
     /**
-     * Returns the count of selected segments
-     * @return count of selected segments
+     * Returns the item in the given position
      */
-    public int getSelectedCount() {
-        return mSelectedSegments.size();
-    }
-
     public SegmentsQuery.Node getItem(int position) {
         if (position >= 0 && position < mSegmentEdges.size()) {
             return mSegmentEdges.get(position).node();
-        } else {
-            return null;
         }
+
+        return null;
     }
 
+    /**
+     * Sets the segment list
+     * @param list The SegmentsQuery new list
+     */
     public void setItems(List<SegmentsQuery.Edge> list) {
         mSegmentEdges = list;
         notifyDataSetChanged();
+    }
+
+    /**
+     * Gets the segment list
+     * @return the SegmentsQuery list
+     */
+    public List<SegmentsQuery.Edge> getItems() {
+        return mSegmentEdges;
+    }
+
+    /**
+     * Inserts a new SegmentEdge in the collection
+     * @param edge segment edge to be added
+     * @param position position where the edge is going to be inserted
+     */
+    public void add(SegmentsQuery.Edge edge, int position) {
+        mSegmentEdges.add(edge);
+        notifyItemInserted(position);
+    }
+
+    /**
+     * Removes a SegmentEdge of the collection
+     * @param position position where the edge is going to be removed
+     */
+    public void remove(int position) {
+        mSegmentEdges.remove(position);
+        notifyItemRemoved(position);
     }
 
     /**
@@ -242,18 +269,20 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
      * @param position position of the touched segment in the list
      * @return returns new count on success and -1 on failure
      */
-    public int addToSelected(int position) {
-
+    public int select(int position) {
         int result = -1;
+
+        if (position < 0 || position >= mSegmentEdges.size()) {
+            return result;
+        }
 
         SegmentsQuery.Node newSegment = mSegmentEdges.get(position).node();
         if (newSegment != null) {
             // Check if is already selected, then remove
             if (mSelectedSegments.containsKey(newSegment.id())) {
-                mSelectedSegments.remove(newSegment.id());
-                result = mSelectedSegments.size();
+                result = deselect(newSegment.id());
             } else {
-
+                // TODO(diego): Check if the user can select
                 if (getSelectedCount() < BillingUtils.SUBSCRIPTION_MAX_ITEMS) {
                     mSelectedSegments.put(newSegment.id(), newSegment);
                     result = mSelectedSegments.size();
@@ -267,9 +296,49 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
         return result;
     }
 
+    /**
+     * Deselect a given segment by ID
+     * @param key the id of the segment in the map
+     * @return new count on success and -1 on failure
+     */
+    private int deselect(String key) {
+        int result = -1;
+
+        if (key == null || key.isEmpty()) {
+            return result;
+        }
+
+        SegmentsQuery.Node removed = mSelectedSegments.remove(key);
+        if (removed != null) {
+            result = mSelectedSegments.size();
+        }
+
+        return result;
+    }
+
+    /**
+     * Sets the selected items map
+     * @param selected the selected items map
+     */
     public void setSelected(HashMap<String, SegmentsQuery.Node> selected) {
         this.mSelectedSegments = selected;
         notifyDataSetChanged();
+    }
+
+    /**
+     * Returns the selected segments map
+     * @return selected segments
+     */
+    public HashMap<String, SegmentsQuery.Node> getSelected() {
+        return mSelectedSegments;
+    }
+
+    /**
+     * Returns the count of selected segments
+     * @return count of selected segments
+     */
+    public int getSelectedCount() {
+        return mSelectedSegments.size();
     }
 
     /**
@@ -281,17 +350,30 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
     }
 
     /**
+     * Sets the highlight new value
+     */
+    public void setIsHighlight(boolean value) {
+        this.mIsHighlight = value;
+    }
+
+    /**
      * Returns the background image uri according with the density dpi of device
-     * @param segment
-     * @return
+     * @param segment The segment to get the uri
+     * @return uri for the density
      */
     private String getUriAccordingWithDpi(SegmentsQuery.Node segment) {
-        String result = Config.TNM_URL_PREFIX + segment.defaultImg();
+
+        boolean hasNoUri = false;
+        if (segment.icon() == null) {
+            hasNoUri = true;
+        }
+
+        String result = Config.TNM_URL_PREFIX + (!hasNoUri ? segment.defaultImg() : "/img/app/categories/${id}/default.webp".replace("${id}", segment.id()));
         if (mDensityDpi >= DisplayMetrics.DENSITY_HIGH && mDensityDpi <= DisplayMetrics.DENSITY_XHIGH) {
-            result = Config.TNM_URL_PREFIX + segment.mqdefault();
+            result = Config.TNM_URL_PREFIX + (!hasNoUri ? segment.mqdefault() : "/img/app/categories/${id}/mqdefault.webp".replace("${id}", segment.id()));
         }
         else if (mDensityDpi >= DisplayMetrics.DENSITY_XXHIGH && mDensityDpi <= DisplayMetrics.DENSITY_XXXHIGH) {
-            result = Config.TNM_URL_PREFIX + segment.hqdefault();
+            result = Config.TNM_URL_PREFIX + (!hasNoUri ? segment.hqdefault() : "/img/app/categories/${id}/hqdefault.webp".replace("${id}", segment.id()));
         }
         return result;
     }
@@ -301,12 +383,12 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
      */
     public class VH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView segmentName;
-        public ImageView segmentIcon;
-        public ImageView segmentBackground;
-        public View segmentGradientEffect;
+        private TextView segmentName;
+        private ImageView segmentIcon;
+        private ImageView segmentBackground;
+        private View segmentGradientEffect;
 
-        public VH(View itemView) {
+        private VH(View itemView) {
             super(itemView);
             this.segmentName = (TextView) itemView.findViewById(R.id.segmentName);
             this.segmentIcon = (ImageView) itemView.findViewById(R.id.segmentIcon);
@@ -318,7 +400,7 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
 
         @Override
         public void onClick(View v) {
-            if(mRecyclerViewOnClickListenerHack != null) {
+            if (mRecyclerViewOnClickListenerHack != null) {
                 v.requestFocus();
                 mRecyclerViewOnClickListenerHack.OnClickListener(v, getAdapterPosition());
             }

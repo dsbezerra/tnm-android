@@ -16,6 +16,7 @@ import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
+import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.ConfirmCodeMutation;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
@@ -27,8 +28,8 @@ import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 public class WaitingSmsFragment extends VerifyNumberFragment implements
         VerifyNumberActivity.VerifyNumberContent, View.OnClickListener {
 
-    /* Tag for logging */
-    private static final String TAG = "WaitingSmsFragment";
+    /* The logging and fragment tag */
+    public static final String TAG = "WaitingSmsFragment";
 
     /* The enter code text field */
     private TextInputEditText mCodeField;
@@ -85,7 +86,7 @@ public class WaitingSmsFragment extends VerifyNumberFragment implements
                 ConfirmCodeMutation confirmCode = ConfirmCodeMutation.builder()
                         .phone(phone)
                         .code(code)
-                        .deviceId(AndroidUtilities.getDeviceToken())
+                        .deviceId(BuildConfig.DEBUG ? "debug" : AndroidUtilities.getDeviceToken())
                         .build();
 
                 mConfirmCodeCall = mApplication.getApolloClient()

@@ -1,16 +1,17 @@
 package com.tnmlicitacoes.app.ui.adapter;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import com.tnmlicitacoes.app.model.Segment;
+import com.tnmlicitacoes.app.model.realm.PickedSegment;
 import com.tnmlicitacoes.app.ui.fragment.NoticeTabFragment;
 
 import java.util.List;
+
+import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
 public class NoticeViewPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -18,24 +19,23 @@ public class NoticeViewPagerAdapter extends FragmentStatePagerAdapter {
 
     private SparseArray<Fragment> mRegisteredFragments = new SparseArray<>();
 
-    private List<Segment> mSegments;
+    private List<PickedSegment> mSegments;
 
     private int mTabsNum;
 
-    public NoticeViewPagerAdapter(FragmentManager fm, List<Segment> segments) {
-        super(fm);
+    public NoticeViewPagerAdapter(FragmentManager fragmentManager, List<PickedSegment> segments) {
+        super(fragmentManager);
         this.mSegments = segments;
         this.mTabsNum = segments.size();
     }
 
     @Override
     public Fragment getItem(int position) {
-        NoticeTabFragment noticeTab = new NoticeTabFragment();
-        Bundle b = new Bundle();
-        b.putString("tabName", mSegments.get(position).getName());
-        b.putString("segId", mSegments.get(position).getId());
-        noticeTab.setArguments(b);
+        PickedSegment segment = mSegments.get(position);
+
+        NoticeTabFragment noticeTab = NoticeTabFragment.newInstance(segment);
         mRegisteredFragments.put(position, noticeTab);
+        LOG_DEBUG(TAG, "Added tab " + segment.getName() + " at position " + position);
         return noticeTab;
     }
 
@@ -46,13 +46,21 @@ public class NoticeViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        mRegisteredFragments.remove(position);
+        if (position >= 0 && position < mRegisteredFragments.size()) {
+            mRegisteredFragments.remove(position);
+            LOG_DEBUG(TAG, "Removed tab at position " + position);
+        }
+
         super.destroyItem(container, position, object);
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mSegments.get(position).getName();
+        if (position >= 0 && position < mSegments.size()) {
+            return mSegments.get(position).getName();
+        }
+
+        return null;
     }
 
     @Override
@@ -61,6 +69,14 @@ public class NoticeViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public Fragment getFragment(int position) {
-        return mRegisteredFragments.get(position);
+        if (position >= 0 && position < mRegisteredFragments.size()) {
+            return mRegisteredFragments.get(position);
+        }
+
+        return null;
+    }
+
+    public SparseArray<Fragment> getFragments() {
+        return mRegisteredFragments;
     }
 }

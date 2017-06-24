@@ -130,25 +130,36 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return mCityEdges.size();
     }
 
+    /**
+     * Returns the item in the given position
+     */
     public CitiesQuery.Node getItem(int position) {
-        return mCityEdges.get(position).node();
+        if (position >= 0 && position < mCityEdges.size()) {
+            return mCityEdges.get(position).node();
+        }
+
+        return null;
     }
 
     /**
-     * Returns the count of selected cities
-     * @return count of selected cities
+     * Sets the city list
+     * @param list The CitiesQuery new list
      */
-    public int getSelectedCount() {
-        return mSelectedCities.size();
-    }
-
     public void setItems(List<CitiesQuery.Edge> list) {
         mCityEdges = list;
         notifyDataSetChanged();
     }
 
     /**
-     * Inserts an new CityEdge in the collection
+     * Gets the city list
+     * @return the CitiesQuery list
+     */
+    public List<CitiesQuery.Edge> getItems() {
+        return mCityEdges;
+    }
+
+    /**
+     * Inserts a new CityEdge in the collection
      * @param edge city edge to be added
      * @param position position where the edge is going to be inserted
      */
@@ -158,22 +169,33 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     /**
-     * Add city to selected collection
+     * Removes a CityEdge of the collection
+     * @param position position where the edge is going to be removed
+     */
+    public void remove(int position) {
+        mCityEdges.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    /**
+     * Add city to selected map
      * @param position position of the touched city in the list
      * @return returns new count on success and -1 on failure
      */
-    public int addToSelected(int position) {
-
+    public int select(int position) {
         int result = -1;
+
+        if (position < 0 || position >= mCityEdges.size()) {
+            return result;
+        }
 
         CitiesQuery.Node newCity = mCityEdges.get(position).node();
         if (newCity != null) {
             // Check if is already selected, then remove
             if (mSelectedCities.containsKey(newCity.id())) {
-                mSelectedCities.remove(newCity.id());
-                result = mSelectedCities.size();
+                result = deselect(newCity.id());
             } else {
-
+                // TODO(diego): Check if the user can select
                 if (getSelectedCount() < BillingUtils.SUBSCRIPTION_MAX_ITEMS) {
                     mSelectedCities.put(newCity.id(), newCity);
                     result = mSelectedCities.size();
@@ -187,9 +209,49 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return result;
     }
 
+    /**
+     * Deselect a given city by ID
+     * @param key the id of the city in the map
+     * @return new count on success and -1 on failure
+     */
+    public int deselect(String key) {
+        int result = -1;
+
+        if (key == null || key.isEmpty()) {
+            return result;
+        }
+
+        CitiesQuery.Node removed = mSelectedCities.remove(key);
+        if (removed != null) {
+            result = mSelectedCities.size();
+        }
+
+        return result;
+    }
+
+    /**
+     * Sets the selected items map
+     * @param selected the selected items map
+     */
     public void setSelected(HashMap<String, CitiesQuery.Node> selected) {
         this.mSelectedCities = selected;
         notifyDataSetChanged();
+    }
+
+    /**
+     * Returns the selected cities map
+     * @return selected cities
+     */
+    public HashMap<String, CitiesQuery.Node> getSelected() {
+        return mSelectedCities;
+    }
+
+    /**
+     * Returns the count of selected cities
+     * @return count of selected cities
+     */
+    public int getSelectedCount() {
+        return mSelectedCities.size();
     }
 
     /**
@@ -205,11 +267,11 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     public class VH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView cityName;
-        public TextView stateName;
-        public CheckBox itemCheckBox;
+        private TextView cityName;
+        private TextView stateName;
+        private CheckBox itemCheckBox;
 
-        public VH(View itemView) {
+        private VH(View itemView) {
             super(itemView);
             this.cityName = (TextView) itemView.findViewById(R.id.cityName);
             this.stateName = (TextView) itemView.findViewById(R.id.stateName);

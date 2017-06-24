@@ -1,6 +1,7 @@
 package com.tnmlicitacoes.app.utils;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -11,11 +12,12 @@ import android.util.DisplayMetrics;
 import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.tnmlicitacoes.app.interfaces.OnUpdateListener;
 import com.tnmlicitacoes.app.settings.SettingsActivity;
-import com.tnmlicitacoes.app.ui.activity.AccountConfigurationActivity;
+import com.tnmlicitacoes.app.ui.accountconfiguration.AccountConfigurationActivity;
 import com.tnmlicitacoes.app.ui.activity.DetailsActivity;
 import com.tnmlicitacoes.app.ui.activity.IntroActivity;
 import com.tnmlicitacoes.app.ui.main.MainActivity;
@@ -32,8 +34,6 @@ public class AndroidUtilities {
     private static final String TAG = "AndroidUtilities";
 
     public static OnUpdateListener sOnUpdateListener = null;
-
-    private static Context sContext = null;
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
 
@@ -53,17 +53,7 @@ public class AndroidUtilities {
     private static final short WEB_VIEW_ACTIVITY           = 1008;
     private static final short DETAILS_ACTIVITY            = 1009;
 
-    private static volatile AndroidUtilities sInstance = null;
-
     public static boolean sIsWaitingSms = false;
-
-    public static synchronized AndroidUtilities getInstance(Context context) {
-        if(sInstance == null) {
-            sInstance = new AndroidUtilities();
-        }
-        sContext = context;
-        return sInstance;
-    }
 
     // Classname = full package name + class name
     // ex: com.empresa.app.MainActivity
@@ -135,11 +125,11 @@ public class AndroidUtilities {
     }
 
     // Create a intent and clear the stack
-    public Intent createClearStackIntent(Class<?> cls) {
+    public Intent createClearStackIntent(Context context, Class<?> cls) {
         Intent intent = null;
         if (cls != null) {
             try {
-                intent = new Intent(sContext, cls);
+                intent = new Intent(context, cls);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -166,16 +156,6 @@ public class AndroidUtilities {
         return (int) Math.ceil(metrics.density * value);
     }
 
-    public static int dp(float value) {
-        DisplayMetrics metrics = new DisplayMetrics();
-        ((Activity)sContext).getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        if (value == 0) {
-            return 0;
-        }
-        return (int) Math.ceil(metrics.density * value);
-    }
-
     public static String getDeviceToken() {
         // We are going to use the InstanceId because it provides many other functionalities
         // that can be useful in the future:
@@ -193,17 +173,42 @@ public class AndroidUtilities {
         return (netInfo != null && netInfo.isConnected());
     }
 
-    public void showKeyboard(View view) {
+    public static void showKeyboard(View view) {
         if (view != null) {
-            InputMethodManager inputManager = (InputMethodManager) sContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager inputManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
         }
     }
 
-    public void hideKeyboard(View view) {
+    public static void hideKeyboard(View view) {
         if (view != null) {
-            InputMethodManager inputManager = (InputMethodManager) sContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager inputManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    /**
+     * Create a progress dialog
+     * @param context Context of the app
+     * @param message The message to display
+     * @param indeterminate Whether is indeterminate or not
+     * @param cancelable Whether is cancelable or not
+     * @return
+     */
+    public static ProgressDialog createProgressDialog(Context context, String message,
+                                                      boolean indeterminate, boolean cancelable) {
+        ProgressDialog result = new ProgressDialog(context);
+        result.setIndeterminate(indeterminate);
+        result.setMessage(message);
+        result.setCancelable(cancelable);
+        return result;
+    }
+
+    /**
+     * Mimics a enabled or disabled button changing alpha and clickable states
+     */
+    public static void setButtonEnabled(Button button, boolean enabled) {
+        button.setClickable(enabled);
+        button.setAlpha(enabled ? 1.0f : 0.5f);
     }
 }

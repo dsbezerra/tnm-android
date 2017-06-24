@@ -17,14 +17,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.model.Notice;
+import com.tnmlicitacoes.app.model.realm.Notice;
 import com.tnmlicitacoes.app.service.DownloadService;
 import com.tnmlicitacoes.app.tasks.SendEmailTask;
 import com.tnmlicitacoes.app.ui.activity.DetailsActivity;
 import com.tnmlicitacoes.app.ui.activity.WebviewActivity;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
 import com.tnmlicitacoes.app.utils.FileUtils;
-import com.tnmlicitacoes.app.utils.NoticeUtils;
 import com.tnmlicitacoes.app.utils.Utils;
 
 import java.io.File;

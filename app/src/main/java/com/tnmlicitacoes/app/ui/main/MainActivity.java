@@ -2,25 +2,23 @@ package com.tnmlicitacoes.app.ui.main;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 import com.evernote.android.state.State;
 import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.billing.BillingActivity;
 import com.tnmlicitacoes.app.billing.IabHelper;
-import com.tnmlicitacoes.app.billing.IabResult;
-import com.tnmlicitacoes.app.billing.Inventory;
-import com.tnmlicitacoes.app.billing.Purchase;
-import com.tnmlicitacoes.app.model.Subscription;
 import com.tnmlicitacoes.app.interfaces.OnFilterClickListener;
 import com.tnmlicitacoes.app.interfaces.OnUpdateListener;
 import com.tnmlicitacoes.app.ui.base.BaseAuthenticatedActivity;
@@ -29,8 +27,6 @@ import com.tnmlicitacoes.app.utils.AndroidUtilities;
 import com.tnmlicitacoes.app.utils.BillingUtils;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 import com.tnmlicitacoes.app.utils.Utils;
-
-import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
 public class MainActivity extends BaseAuthenticatedActivity implements
         OnFilterClickListener, OnUpdateListener, BottomNavigationView.OnNavigationItemSelectedListener {
@@ -46,13 +42,16 @@ public class MainActivity extends BaseAuthenticatedActivity implements
 
     private AppBarLayout mAppBarLayout;
 
+    private DrawerLayout mRightDrawer;
+
+    private ListView mFilterList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
         setupToolbar();
-        setupInAppBilling();
 
         AndroidUtilities.sOnUpdateListener = this;
         if (SettingsUtils.getNewestVersionCode(this) > BuildConfig.VERSION_CODE) {
@@ -63,7 +62,7 @@ public class MainActivity extends BaseAuthenticatedActivity implements
         // First time the activity is created we start by showing the user
         // the NoticesFragment (which contains the segments tabs and notice lists)
         if (savedInstanceState == null) {
-            fragment = new NoticesFragment();
+            fragment = NoticesFragment.newInstance();
             // Register the AuthStateListener so the fragment knows when the token changes and
             // needs to refetch the content again or fetch for the first time (in case the token was expired
             // before the user enter in this fragment)
@@ -117,9 +116,9 @@ public class MainActivity extends BaseAuthenticatedActivity implements
             return super.onPrepareOptionsMenu(menu);
         }
 
-        boolean isMainFragment    = mCurrentFragmentTag.equals(NoticesFragment.TAG);
-        boolean isBiddingFragment = mCurrentFragmentTag.equals(MyNoticesFragment.TAG);
-        boolean isAccountFragment = mCurrentFragmentTag.equals(AccountFragment.TAG);
+        boolean isMainFragment      = mCurrentFragmentTag.equals(NoticesFragment.TAG);
+        boolean isMyNoticesFragment = mCurrentFragmentTag.equals(MyNoticesFragment.TAG);
+        boolean isAccountFragment   = mCurrentFragmentTag.equals(AccountFragment.TAG);
 
         MenuItem searchItem   = menu.findItem(R.id.action_search);
         MenuItem filterItem   = menu.findItem(R.id.action_filter);
@@ -138,7 +137,6 @@ public class MainActivity extends BaseAuthenticatedActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_filter) {
-
             return true;
         } else if (id == R.id.action_search) {
             return true;
@@ -211,12 +209,12 @@ public class MainActivity extends BaseAuthenticatedActivity implements
         builder.setPositiveButton(R.string.go_to_subs, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                BillingUtils.sIsTrialActive = false;
-                Intent i = new Intent(MainActivity.this, BillingActivity.class);
-                i.putExtra("IS_CHANGING_SUBSCRIPTION", true);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(i);
-                finish();
+//                BillingUtils.sIsTrialActive = false;
+//                Intent i = new Intent(MainActivity.this, BillingActivity.class);
+//                i.putExtra("IS_CHANGING_SUBSCRIPTION", true);
+//                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(i);
+//                finish();
             }
         });
 
@@ -248,119 +246,6 @@ public class MainActivity extends BaseAuthenticatedActivity implements
         mBottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         mBottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
-
-    private void setupInAppBilling() {
-
-        if(mBillingHelper == null) {
-
-            if(BuildConfig.DEBUG)
-                LOG_DEBUG(TAG, "Creating IAB helper.");
-            mBillingHelper = new IabHelper(MainActivity.this, Utils.decode(Utils.BASE64_PIECES));
-
-            mBillingHelper.enableDebugLogging(false);
-
-            if(BuildConfig.DEBUG)
-                LOG_DEBUG(TAG, "Starting setup.");
-            try {
-                mBillingHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-                    @Override
-                    public void onIabSetupFinished(IabResult result) {
-                        if(!result.isSuccess()) {
-                            if(BuildConfig.DEBUG)
-                                LOG_DEBUG(TAG, "Problem setting up in-app billing: " + result);
-                            return;
-                        }
-
-                        if (mBillingHelper == null) return;
-
-                        if(BuildConfig.DEBUG)
-                            LOG_DEBUG(TAG, "Setup successful. Querying inventory.");
-                        mBillingHelper.queryInventoryAsync(mGotInventoryListener);
-                    }
-                });
-            } catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    private IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
-        public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
-            if(BuildConfig.DEBUG)
-                LOG_DEBUG(TAG, "Query inventory finished.");
-
-            if (mBillingHelper == null) return;
-
-            if (result.isFailure()) {
-                if(BuildConfig.DEBUG)
-                    LOG_DEBUG(TAG, "Failed to query inventory: " + result);
-                return;
-            }
-
-            if(BuildConfig.DEBUG)
-                LOG_DEBUG(TAG, "Query inventory was successful.");
-
-            /*
-             * Check for items we own. Notice that for each purchase, we check
-             * the developer payload to see if it's correct! See
-             * verifyDeveloperPayload().
-             */
-
-            // Do we have the premium plan?
-            Purchase currentSubscription = null;
-            Purchase legacySubPurchase = inventory.getPurchase(BillingUtils.SKU_SUBSCRIPTION_LEGACY);
-            Purchase basicSubPurchase = inventory.getPurchase(BillingUtils.SKU_SUBSCRIPTION_BASIC);
-            Purchase defaultSubPurchase = inventory.getPurchase(BillingUtils.SKU_SUBSCRIPTION_DEFAULT);
-            Purchase unlimitedSubPurchase = inventory.getPurchase(BillingUtils.SKU_SUBSCRIPTION_PREMIUM);
-
-            if(legacySubPurchase != null) {
-                currentSubscription = legacySubPurchase;
-            }
-            else if(basicSubPurchase != null) {
-                currentSubscription = basicSubPurchase;
-            }
-            else if (defaultSubPurchase != null) {
-                currentSubscription = defaultSubPurchase;
-            }
-            else if (unlimitedSubPurchase != null) {
-                currentSubscription = unlimitedSubPurchase;
-            }
-
-            String premiumSku;
-            if(currentSubscription == null) {
-                if(BuildConfig.DEBUG)
-                    LOG_DEBUG(TAG, "User does not have Premium subscriptions");
-
-                long currentTime = System.currentTimeMillis();
-                long registrationTime = SettingsUtils.getActivationDateFromPrefs(MainActivity.this);
-                if(registrationTime == 0) {
-
-                } else if((currentTime - registrationTime) / Utils.DAY_IN_MILLIS > 30) {
-                    SettingsUtils.putBoolean(MainActivity.this, SettingsUtils.PREF_IS_TRIAL_EXPIRED, true);
-                    showExpiredTrialDialog();
-                } else {
-                    if(BuildConfig.DEBUG) {
-                        LOG_DEBUG(TAG, "Not in time to check...");
-                    }
-
-                    SettingsUtils.putString(MainActivity.this, SettingsUtils.PREF_BILLING_SUB_NAME, "Trial");
-                    BillingUtils.SUBSCRIPTION_MAX_ITEMS = BillingUtils.SUBSCRIPTION_MAX_ITEMS_BASIC;
-                }
-
-
-            } else if(Utils.verifyDeveloperPayload(currentSubscription)){
-                premiumSku = currentSubscription.getSku();
-                SettingsUtils.putString(MainActivity.this, SettingsUtils.PREF_BILLING_STATE, premiumSku);
-                Subscription subscription = BillingUtils.getSubscription(MainActivity.this, premiumSku);
-
-                if(subscription != null) {
-                    SettingsUtils.putString(MainActivity.this, SettingsUtils.PREF_BILLING_SUB_NAME, subscription.getName());
-                    BillingUtils.SUBSCRIPTION_MAX_ITEMS = subscription.getQuantity();
-                }
-            }
-        }
-    };
 
     @Override
     public void onFilter(CharSequence constraint) {
@@ -411,8 +296,14 @@ public class MainActivity extends BaseAuthenticatedActivity implements
         // because it is overlapping their TabLayout.
         // We expand too when we change the fragments because we want our users to know where
         // they are.
-        mAppBarLayout.setElevation(0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mAppBarLayout.setElevation(0);
+        }
         mAppBarLayout.setExpanded(true);
+        ((AppBarLayout.LayoutParams) mToolbar.getLayoutParams()).setScrollFlags(
+                AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL |
+                        AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+        );
 
         // We remove the listener here because only the NoticesFragment needs it!
         mAuthStateListener = null;
@@ -421,7 +312,7 @@ public class MainActivity extends BaseAuthenticatedActivity implements
                 .findFragmentByTag(mCurrentFragmentTag);
         NoticesFragment noticesFragment = (NoticesFragment) getSupportFragmentManager()
                 .findFragmentByTag(NoticesFragment.TAG);
-        MyNoticesFragment biddingsFragment = (MyNoticesFragment) getSupportFragmentManager()
+        MyNoticesFragment myNoticesFragment = (MyNoticesFragment) getSupportFragmentManager()
                 .findFragmentByTag(MyNoticesFragment.TAG);
         AccountFragment accountFragment = (AccountFragment) getSupportFragmentManager()
                 .findFragmentByTag(AccountFragment.TAG);
@@ -431,7 +322,7 @@ public class MainActivity extends BaseAuthenticatedActivity implements
         int id = item.getItemId();
         if (id == R.id.action_home) {
             if (noticesFragment == null) {
-                noticesFragment = new NoticesFragment();
+                noticesFragment = NoticesFragment.newInstance();
                 hideAndAdd = true;
             }
 
@@ -439,48 +330,35 @@ public class MainActivity extends BaseAuthenticatedActivity implements
             mCurrentFragmentTag = NoticesFragment.TAG;
 
             if (hideAndAdd) {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .hide(currentFragment)
-                        .add(R.id.main_content, noticesFragment, NoticesFragment.TAG)
-                        .commit();
+                hideAndAddFragments(currentFragment, noticesFragment, NoticesFragment.TAG);
             } else {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .hide(currentFragment)
-                        .show(noticesFragment)
-                        .commit();
+                hideAndShowFragments(currentFragment, noticesFragment);
             }
 
             setupToolbar();
             result = true;
 
-        } else if (id == R.id.action_my_biddings) {
-            if (biddingsFragment == null) {
-                biddingsFragment = new MyNoticesFragment();
+        } else if (id == R.id.action_my_notices) {
+            if (myNoticesFragment == null) {
+                myNoticesFragment = new MyNoticesFragment();
                 hideAndAdd = true;
             }
 
             mCurrentFragmentTag = MyNoticesFragment.TAG;
             if (hideAndAdd) {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .hide(currentFragment)
-                        .add(R.id.main_content, biddingsFragment, MyNoticesFragment.TAG)
-                        .commit();
+                hideAndAddFragments(currentFragment, myNoticesFragment, MyNoticesFragment.TAG);
             } else {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .hide(currentFragment)
-                        .show(biddingsFragment)
-                        .commit();
+                hideAndShowFragments(currentFragment, myNoticesFragment);
             }
 
-            setupToolbar("Minhas licitações");
+            setupToolbar(getString(R.string.title_activity_main_my_notices));
             result = true;
 
         } else if (id == R.id.action_account) {
-            mAppBarLayout.setElevation(AndroidUtilities.dp(MainActivity.this, 4));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mAppBarLayout.setElevation(AndroidUtilities.dp(MainActivity.this, 4));
+            }
+            ((AppBarLayout.LayoutParams) mToolbar.getLayoutParams()).setScrollFlags(0);
             if (accountFragment == null) {
                 accountFragment = new AccountFragment();
                 hideAndAdd = true;
@@ -488,23 +366,46 @@ public class MainActivity extends BaseAuthenticatedActivity implements
 
             mCurrentFragmentTag = AccountFragment.TAG;
             if (hideAndAdd) {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .hide(currentFragment)
-                        .add(R.id.main_content, accountFragment, AccountFragment.TAG)
-                        .commit();
+                hideAndAddFragments(currentFragment, accountFragment, AccountFragment.TAG);
             } else {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .hide(currentFragment)
-                        .show(accountFragment)
-                        .commit();
+                hideAndShowFragments(currentFragment, accountFragment);
             }
 
-            setupToolbar("Conta");
+            setupToolbar(getString(R.string.title_activity_main_account));
             result = true;
         }
 
         return result;
+    }
+
+    /**
+     * Hide and show fragments
+     * @param hide the fragment to be hidden
+     * @param show the fragment to be shown
+     */
+    private void hideAndShowFragments(Fragment hide, Fragment show) {
+        if (hide != null && show != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .hide(hide)
+                    .show(show)
+                    .commit();
+        }
+    }
+
+    /**
+     * Hide and add fragments
+     * @param hide the fragment to be hidden
+     * @param add the fragment to be added
+     * @param fragmentTag the tag of the fragment to be added
+     */
+    private void hideAndAddFragments(Fragment hide, Fragment add, String fragmentTag) {
+        if (fragmentTag != null && hide != null && add != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .hide(hide)
+                    .add(R.id.main_content, add, fragmentTag)
+                    .commit();
+        }
     }
 }

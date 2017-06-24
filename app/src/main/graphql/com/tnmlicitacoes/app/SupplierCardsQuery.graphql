@@ -1,0 +1,12 @@
+query SupplierCardsQuery {
+  supplier {
+    defaultCard
+    cards {
+        id
+        brand
+        last4
+        exp_month
+        exp_year
+    }
+  }
+}

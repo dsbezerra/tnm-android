@@ -101,4 +101,8 @@
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
+    <style name="Widget.TNM.ResendEmailButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/btn_resend_email</item>
+    </style>
+
 </resources>

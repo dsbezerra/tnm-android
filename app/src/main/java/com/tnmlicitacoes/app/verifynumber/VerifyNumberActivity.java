@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -13,13 +14,15 @@ import android.widget.RelativeLayout;
 
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
+import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.RequestCodeMutation;
-import com.tnmlicitacoes.app.TNMApplication;
+import com.tnmlicitacoes.app.TnmApplication;
 import com.tnmlicitacoes.app.interfaces.OnVerifyNumberListener;
-import com.tnmlicitacoes.app.ui.activity.AccountConfigurationActivity;
+import com.tnmlicitacoes.app.ui.accountconfiguration.AccountConfigurationActivity;
 import com.tnmlicitacoes.app.ui.base.BaseActivity;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
+import com.tnmlicitacoes.app.utils.CryptoUtils;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 import com.transitionseverywhere.ChangeBounds;
 import com.transitionseverywhere.Transition;
@@ -27,6 +30,7 @@ import com.transitionseverywhere.TransitionManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class VerifyNumberActivity extends BaseActivity implements OnVerifyNumberListener {
@@ -62,6 +66,11 @@ public class VerifyNumberActivity extends BaseActivity implements OnVerifyNumber
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     public void onBackPressed() {
         // Temporary
         if (mCurrentFragment instanceof WaitingSmsFragment) {
@@ -74,7 +83,6 @@ public class VerifyNumberActivity extends BaseActivity implements OnVerifyNumber
 
     private void showFragment() {
         mCurrentFragment = (VerifyNumberFragment) getCurrentFragment();
-
         mToUpAnimation = mCurrentFragment instanceof WaitingSmsFragment;
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -96,11 +104,12 @@ public class VerifyNumberActivity extends BaseActivity implements OnVerifyNumber
             }
         });
 
-        fragmentTransaction.setCustomAnimations(R.anim.fragment_enter_from_bottom,
-                R.anim.fragment_exit_to_bottom);
+        fragmentTransaction
+                .setCustomAnimations(R.anim.fragment_enter_from_bottom, R.anim.fragment_exit_to_bottom,
+                        R.anim.fragment_enter_from_bottom, R.anim.fragment_exit_to_bottom)
+                .replace(R.id.verify_number_content, mCurrentFragment)
+                .commit();
 
-        fragmentTransaction.replace(R.id.verify_number_content, mCurrentFragment);
-        fragmentTransaction.commit();
     }
 
     /**
@@ -141,7 +150,12 @@ public class VerifyNumberActivity extends BaseActivity implements OnVerifyNumber
             // Setup trial variables here
             showFragment();
         } else {
-            // TODO(diego): See what to do in this case
+            if (BuildConfig.DEBUG) {
+                SettingsUtils.putBoolean(this, SettingsUtils.PREF_IS_WAITING_FOR_SMS, true);
+                showFragment();
+            } else {
+
+            }
         }
     }
 
@@ -151,13 +165,42 @@ public class VerifyNumberActivity extends BaseActivity implements OnVerifyNumber
         // Store these tokens in a secure way
         // @see https://nelenkov.blogspot.com.br/2012/05/storing-application-secrets-in-androids.html
         if (!TextUtils.isEmpty(refreshToken) && !TextUtils.isEmpty(accessToken)) {
-            // TODO(diego): Replace this for a more secure way...
-            SettingsUtils.putString(this, SettingsUtils.PREF_REFRESH_TOKEN, refreshToken);
-            SettingsUtils.putString(this, SettingsUtils.PREF_ACCESS_TOKEN, accessToken);
+            final String fAccessToken = accessToken;
+            final String fRefreshToken = refreshToken;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Context context = getApplicationContext();
+                    try {
+                        // Encrypt refresh and access token and save them as Base64 strings
+                        // TODO(diego): Remove from prefs and put in the Supplier model in Realm
+                        byte[] encryptedAccessToken = CryptoUtils.getInstance()
+                                .encrypt(context, fAccessToken.getBytes());
+                        byte[] encryptedRefreshToken = CryptoUtils.getInstance()
+                                .encrypt(context, fRefreshToken.getBytes());
+                        // Save to prefs
+                        SettingsUtils.putString(context, SettingsUtils.PREF_ACCESS_TOKEN,
+                                Base64.encodeToString(encryptedAccessToken, Base64.DEFAULT));
+                        SettingsUtils.putString(context, SettingsUtils.PREF_REFRESH_TOKEN,
+                                Base64.encodeToString(encryptedRefreshToken, Base64.DEFAULT));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // Save without encryption
+                        SettingsUtils.putString(context, SettingsUtils.PREF_ACCESS_TOKEN,
+                                fAccessToken);
+                        SettingsUtils.putString(context, SettingsUtils.PREF_REFRESH_TOKEN,
+                                fRefreshToken);
+                    }
+
+                    SettingsUtils.putLong(context, SettingsUtils.PREF_LAST_ACCESS_TOKEN_REFRESH_TIMESTAMP,
+                            new Date().getTime());
+                }
+            }).start();
+
             SettingsUtils.putBoolean(this, SettingsUtils.PREF_USER_IS_LOGGED, true);
 
             // Reinitialize Apollo Client with authentication
-            ((TNMApplication) getApplication()).initApolloClient(accessToken);
+            ((TnmApplication) getApplication()).initApolloClient(accessToken, false);
 
             Intent intent = new Intent(this, AccountConfigurationActivity.class);
             startActivity(intent);

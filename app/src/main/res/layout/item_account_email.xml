@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/spacing_normal"
+    android:background="@android:color/white">
+
+    <TextView
+        android:text="E-mail"
+        style="@style/Widget.TNM.AccountHeader"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/emailText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorDarkGrey"
+            android:textSize="16sp"
+            />
+
+        <ImageView
+            android:id="@+id/verifiedIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_normal"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/verifiedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ff0000"
+        android:textSize="12sp"
+        android:text="E-mail não verificado. Algumas funcionalidades do aplicativo dependem de um e-mail verificado!"
+        android:textAlignment="textStart"
+        android:layout_margin="@dimen/spacing_small"
+        />
+
+    <Button
+        android:id="@+id/resendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="REENVIAR E-MAIL DE VERIFICAÇÃO"
+        android:layout_gravity="center_horizontal"
+        style="@style/Widget.TNM.ResendEmailButton"
+        />
+
+    <Button
+        android:id="@+id/defineEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DEFINIR E-MAIL"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        />
+
+    <TextView
+        android:id="@+id/resendText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#008800"
+        android:textSize="12sp"
+        android:text="E-mail de verificação enviado. Acesse o link no corpo do e-mail para efetuar a verificaçao."
+        android:textAlignment="textStart"
+        android:layout_margin="@dimen/spacing_small"
+        android:visibility="gone"
+        />
+
+</LinearLayout>

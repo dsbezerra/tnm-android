@@ -15,6 +15,7 @@ import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
+import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.RequestCodeMutation;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
@@ -31,9 +32,10 @@ import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
 
 public class InputNumberFragment extends VerifyNumberFragment implements
-        VerifyNumberActivity.VerifyNumberContent, View.OnClickListener {
+        VerifyNumberActivity.VerifyNumberContent {
 
-    private static final String TAG = "InputNumberFragment";
+    /* The logging and fragment tag */
+    public static final String TAG = "InputNumberFragment";
 
     /* Make sure the phone has only numbers */
     private static final Pattern ONLY_NUMBERS = Pattern.compile("\\D");
@@ -91,7 +93,12 @@ public class InputNumberFragment extends VerifyNumberFragment implements
         mProgressContainer = (ViewGroup) view.findViewById(R.id.progressContainer);
         mPhoneField = (EditText) view.findViewById(R.id.phoneField);
         mAdvanceButton = (Button) view.findViewById(R.id.advanceBtn);
-        mAdvanceButton.setOnClickListener(this);
+        mAdvanceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleAdvanceButtonClick();
+            }
+        });
         mPhoneField.addTextChangedListener(new TextWatcher() {
 
             boolean ignoreChange = false;
@@ -130,68 +137,67 @@ public class InputNumberFragment extends VerifyNumberFragment implements
         });
     }
 
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.advanceBtn) {
+    /**
+     * Handles the click on advance button
+     */
+    private void handleAdvanceButtonClick() {
+        AndroidUtilities.hideKeyboard(mPhoneField);
 
-            AndroidUtilities.getInstance(mActivity).hideKeyboard(mPhoneField);
+        boolean cancel = false;
 
-            boolean cancel = false;
+        String phoneText = mPhoneField.getText().toString();
+        phoneText = ONLY_NUMBERS.matcher(phoneText).replaceAll("");
 
-            String phoneText = mPhoneField.getText().toString();
-            phoneText = ONLY_NUMBERS.matcher(phoneText).replaceAll("");
+        boolean isValidNumber = isPhoneNumberValid(phoneText);
+        if (!isValidNumber) {
+            mPhoneField.setError("Telefone inválido");
+            cancel = true;
+        }
 
-            boolean isValidNumber = isPhoneNumberValid(phoneText);
-            if (!isValidNumber) {
-                mPhoneField.setError("Telefone inválido");
-                cancel = true;
-            }
+        if (!cancel) {
+            // Hide phone container and show progress one
+            TransitionManager.beginDelayedTransition(mTransitionContainer);
+            mPhoneContainer.setVisibility(View.GONE);
+            mProgressContainer.setVisibility(View.VISIBLE);
 
-            if (!cancel) {
+            String phoneWithCountryCode = "55" + phoneText;
+            // We save the user phone in preferences in both formats because we need
+            // the phone in both formats in other parts of the application.
+            // We could save one and format when necessary too
+            SettingsUtils.putString(mActivity, SettingsUtils.PREF_USER_PHONE_NUMBER,
+                    phoneWithCountryCode);
+            SettingsUtils.putString(mActivity, SettingsUtils.PREF_USER_PHONE_NUMBER_FORMATTED,
+                    formatPhone(phoneWithCountryCode));
 
-                // Hide phone container and show progress one
-                TransitionManager.beginDelayedTransition(mTransitionContainer);
-                mPhoneContainer.setVisibility(View.GONE);
-                mProgressContainer.setVisibility(View.VISIBLE);
-
-                String phoneWithCountryCode = "55" + phoneText;
-                // We save the user phone in preferences in both formats because we need
-                // the phone in both formats in other parts of the application
-                // We could save one and format when necessary too
-                SettingsUtils.putString(mActivity, SettingsUtils.PREF_USER_PHONE_NUMBER,
-                        phoneWithCountryCode);
-                SettingsUtils.putString(mActivity, SettingsUtils.PREF_USER_PHONE_NUMBER_FORMATTED,
-                        formatPhone(phoneWithCountryCode));
-
-                RequestCodeMutation requestCode = RequestCodeMutation.builder()
-                        .phone(phoneWithCountryCode)
-                        .build();
-
-                mRequestCodeCall = mApplication.getApolloClient()
-                        .mutate(requestCode)
-                        .cacheControl(CacheControl.NETWORK_ONLY);
-
-                mRequestCodeCall.enqueue(dataCallback);
-            }
-
+            // Make the call
+            //makeRequestCodeCall(phoneWithCountryCode);
+            mListener.onRequestCodeResponse(null, null);
         }
     }
 
+    /**
+     * Call API requestCode mutation with a phone number
+     * @param phoneWithCountryCode the phone number
+     */
+    private void makeRequestCodeCall(String phoneWithCountryCode) {
+        RequestCodeMutation requestCode = RequestCodeMutation.builder()
+                .phone(phoneWithCountryCode)
+                .build();
+
+        mRequestCodeCall = mApplication.getApolloClient()
+                .mutate(requestCode)
+                .cacheControl(CacheControl.NETWORK_ONLY);
+
+        mRequestCodeCall.enqueue(dataCallback);
+    }
+
+    /**
+     * Callback for the requestCode mutation API call
+     */
     private ApolloCall.Callback<RequestCodeMutation.Data> dataCallback = new ApolloCall.Callback<RequestCodeMutation.Data>() {
         @Override
         public void onResponse(Response<RequestCodeMutation.Data> response) {
-            if (mListener != null) {
-                mListener.onRequestCodeResponse(response, null);
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Restore phone container and hide progress one
-                        TransitionManager.beginDelayedTransition(mTransitionContainer);
-                        mPhoneContainer.setVisibility(View.VISIBLE);
-                        mProgressContainer.setVisibility(View.GONE);
-                    }
-                });
-            }
+            handleRequestCodeResponse(response);
         }
 
         @Override
@@ -203,6 +209,25 @@ public class InputNumberFragment extends VerifyNumberFragment implements
             }
         }
     };
+
+    /**
+     * Handles the requestCode mutation response
+     * @param response The response object
+     */
+    private void handleRequestCodeResponse(Response<RequestCodeMutation.Data> response) {
+        if (mListener != null) {
+            mListener.onRequestCodeResponse(response, null);
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // Restore phone container and hide progress one
+                    TransitionManager.beginDelayedTransition(mTransitionContainer);
+                    mPhoneContainer.setVisibility(View.VISIBLE);
+                    mProgressContainer.setVisibility(View.GONE);
+                }
+            });
+        }
+    }
 
     /**
      * Check if the phone is valid
@@ -217,8 +242,8 @@ public class InputNumberFragment extends VerifyNumberFragment implements
      * Formats a phone from 55XXXXXXXXXXX to +55 (XX) XXXXX-XXXX
      * @param phone The phone to be formatted
      */
-    private static String formatPhone(String phone) {
-        if(phone.length() > 13) {
+    public static String formatPhone(String phone) {
+        if (phone.length() > 13) {
             throw new RuntimeException("Phone length invalid!");
         }
 
@@ -243,7 +268,7 @@ public class InputNumberFragment extends VerifyNumberFragment implements
 
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] params     = line.split(";");
+                String[] params = line.split(";");
                 if (params.length != 3) {
                     throw new RuntimeException("Wrong parameters length, check if "
                             + "states.txt parameters is divided by ;");

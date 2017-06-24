@@ -1,0 +1,5 @@
+mutation UpdateSupplierEmailMutation($email: String!) {
+  updateSupplierEmail(email: $email) {
+    id
+  }
+}

@@ -1,0 +1,3 @@
+mutation UpdateDefaultCardMutation($cardId: String!) {
+  updateDefaultCard(cardId: $cardId)
+}

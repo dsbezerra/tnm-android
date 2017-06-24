@@ -9,11 +9,14 @@ query NoticesQuery($segId: OID, $first: Int, $after: Cursor, $orderBy: NoticeOrd
         disputeDate
         amount
         link
+        url
         exclusive
         agency {
+          id
           name
           abbr
           city {
+            id
             name
             state
           }

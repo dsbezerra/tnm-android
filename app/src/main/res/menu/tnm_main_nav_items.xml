@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/action_home"
-        android:title="Início"
-        android:icon="@drawable/ic_home" />
+        android:title="@string/bottom_nav_home_title"
+        android:icon="@drawable/ic_home"
+        />
 
     <item android:id="@+id/action_my_notices"
-        android:title="Minhas licitações"
-        android:icon="@drawable/ic_gavel" />
+        android:title="@string/bottom_nav_my_notices_title"
+        android:icon="@drawable/ic_gavel"
+        />
 
     <item android:id="@+id/action_account"
-        android:title="Conta"
-        android:icon="@drawable/ic_account" />
+        android:title="@string/bottom_nav_account_title"
+        android:icon="@drawable/ic_account"
+        />
 </menu>

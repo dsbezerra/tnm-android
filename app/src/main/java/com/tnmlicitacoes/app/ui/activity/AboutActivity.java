@@ -19,6 +19,8 @@ import com.tnmlicitacoes.app.utils.Utils;
 
 public class AboutActivity extends BaseActivity implements View.OnClickListener {
 
+    private static final String TAG = "AboutActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +50,11 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
         if(actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    @Override
+    public String getLogTag() {
+        return TAG;
     }
 
     @Override

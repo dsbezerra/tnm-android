@@ -7,8 +7,11 @@ import android.support.annotation.UiThread;
 import com.apollographql.apollo.api.Error;
 import com.tnmlicitacoes.app.R;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+
+import okhttp3.Request;
 
 import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
@@ -24,7 +27,7 @@ public class ApiUtils {
     private static final int MESSAGE = 1;
 
     /* API error codes*/
-    interface ErrorCode {
+    public interface ErrorCode {
 
         /* Error not handled */
         int UNKNOWN                                         =       1;
@@ -32,7 +35,7 @@ public class ApiUtils {
         /* Client is not permitted to perform this action */
         int NOT_AUTHORIZED                                  =      10;
 
-        /* Supplier not found */
+        /* LocalSupplier not found */
         int SUPPLIER_NOT_FOUND                              =      20;
 
         /* Rate limit exceeded */

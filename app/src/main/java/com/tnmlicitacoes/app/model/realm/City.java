@@ -1,5 +1,6 @@
 package com.tnmlicitacoes.app.model.realm;
 
+import com.tnmlicitacoes.app.NoticeByIdQuery;
 import com.tnmlicitacoes.app.NoticesQuery;
 
 import io.realm.RealmObject;
@@ -47,6 +48,10 @@ public class City extends RealmObject {
     }
 
     public static City copyToRealmFromGraphQL(NoticesQuery.City city) {
+        return new City(city.id(), city.name(), city.state().name());
+    }
+
+    public static City copyToRealmFromGraphQL(NoticeByIdQuery.City city) {
         return new City(city.id(), city.name(), city.state().name());
     }
 }

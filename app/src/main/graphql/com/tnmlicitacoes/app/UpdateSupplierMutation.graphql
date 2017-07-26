@@ -1,0 +1,11 @@
+mutation UpdateSupplierMutation($supplier: SupplierInput!) {
+    updateSupplier(supplier: $supplier) {
+      id
+      cityNum
+      segNum
+      activated
+      phone
+      defaultCard
+      email
+    }
+}

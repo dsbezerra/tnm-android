@@ -1,5 +1,6 @@
 package com.tnmlicitacoes.app.model.realm;
 
+import com.tnmlicitacoes.app.NoticeByIdQuery;
 import com.tnmlicitacoes.app.NoticesQuery;
 
 import io.realm.RealmObject;
@@ -57,6 +58,11 @@ public class Agency extends RealmObject {
     }
 
     public static Agency mapToRealmFromGraphQL(NoticesQuery.Agency agency) {
+        return new Agency(agency.id(), agency.name(), agency.abbr(),
+                City.copyToRealmFromGraphQL(agency.city()));
+    }
+
+    public static Agency mapToRealmFromGraphQL(NoticeByIdQuery.Agency agency) {
         return new Agency(agency.id(), agency.name(), agency.abbr(),
                 City.copyToRealmFromGraphQL(agency.city()));
     }

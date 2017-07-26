@@ -7,9 +7,9 @@
     <color name="background_grey">#ffeeeeee</color>
     <color name="darker_grey">#ff303030</color>
 
-    <color name="colorPrimary">#ffff6600</color>
-    <color name="colorPrimaryDark">#ffb24700</color>
-    <color name="colorAccent">#ffff6600</color>
+    <color name="colorPrimary">#FF5722</color>
+    <color name="colorPrimaryDark">#E54A19</color>
+    <color name="colorAccent">#FF5722</color>
 
     <color name="colorActionModePrimary">#ffffa726</color>
     <color name="colorActionModePrimaryDark">#fffb8c00</color>
@@ -33,5 +33,49 @@
     <color name="colorPrimaryText">#212121</color>
 
     <!-- item_public_notice.xml -->
+
+    <integer-array name="gplus_colors">
+        <item>@color/gplus_color_1</item>
+        <item>@color/gplus_color_2</item>
+        <item>@color/gplus_color_3</item>
+        <item>@color/gplus_color_4</item>
+    </integer-array>
+
+    <integer-array name="pocket_bar_colors">
+        <item>@color/pocket_color_1</item>
+        <item>@color/pocket_color_1</item>
+        <item>@color/pocket_color_1</item>
+        <item>@color/pocket_color_1</item>
+        <item>@color/pocket_color_2</item>
+        <item>@color/pocket_color_2</item>
+        <item>@color/pocket_color_2</item>
+        <item>@color/pocket_color_2</item>
+        <item>@color/pocket_color_3</item>
+        <item>@color/pocket_color_3</item>
+        <item>@color/pocket_color_3</item>
+        <item>@color/pocket_color_3</item>
+        <item>@color/pocket_color_4</item>
+        <item>@color/pocket_color_4</item>
+        <item>@color/pocket_color_4</item>
+        <item>@color/pocket_color_4</item>
+    </integer-array>
+
+    <integer-array name="pocket_background_colors">
+        <item>@color/pocket_color_1</item>
+        <item>@color/pocket_color_2</item>
+        <item>@color/pocket_color_3</item>
+        <item>@color/pocket_color_4</item>
+    </integer-array>
+
+    <color name="pocket_color_1">#85edb9</color>
+    <color name="pocket_color_2">#34bdb7</color>
+    <color name="pocket_color_3">#ee4458</color>
+    <color name="pocket_color_4">#fcb74d</color>
+
+    <color name="gplus_color_1">#3e802f</color>
+    <color name="gplus_color_2">#f4b400</color>
+    <color name="gplus_color_3">#427fed</color>
+    <color name="gplus_color_4">#b23424</color>
+
 
 </resources>

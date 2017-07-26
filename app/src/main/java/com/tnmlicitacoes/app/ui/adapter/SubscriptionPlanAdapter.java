@@ -1,7 +1,6 @@
 package com.tnmlicitacoes.app.ui.adapter;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,16 +14,16 @@ import android.widget.TextView;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
 import com.tnmlicitacoes.app.model.SubscriptionPlan;
-import com.tnmlicitacoes.app.ui.subscription.SelectPlanFragment;
+import com.tnmlicitacoes.app.subscription.SelectPlanFragment;
+import com.tnmlicitacoes.app.utils.StringUtils;
 import com.transitionseverywhere.Rotate;
 import com.transitionseverywhere.TransitionManager;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import me.himanshusoni.quantityview.QuantityView;
-
-import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
 /**
  * Created by diegobezerra on 6/16/17.
@@ -107,7 +106,8 @@ public class SubscriptionPlanAdapter extends RecyclerView.Adapter<RecyclerView.V
             presetVH.planDescription.setTextColor(descColor);
             presetVH.planPrice.setTextColor(textColor);
             presetVH.planInterval.setTextColor(textColor);
-            presetVH.planPrice.setText(context.getString(R.string.plan_price, plan.getPrice()));
+            presetVH.planPrice.setText(context.getString(R.string.plan_price,
+                    StringUtils.getPriceInBrazil(plan.getPrice())));
 
             presetVH.itemView.setBackgroundColor(backgroundColor);
 
@@ -116,7 +116,8 @@ public class SubscriptionPlanAdapter extends RecyclerView.Adapter<RecyclerView.V
             customVH.planName.setTextColor(textColor);
             customVH.planDescription.setTextColor(descColor);
             customVH.container.setVisibility(isSelected(plan) ? View.VISIBLE : View.GONE);
-            customVH.planPrice.setText(context.getString(R.string.plan_price, plan.getPrice()));
+            customVH.planPrice.setText(context.getString(R.string.plan_price,
+                    StringUtils.getPriceInBrazil(plan.getPrice())));
             customVH.segmentQuantity.setQuantity(plan.getSegmentQuantity());
             customVH.cityQuantity.setQuantity(plan.getCityQuantity());
             customVH.infoContainer.setBackgroundColor(backgroundColor);

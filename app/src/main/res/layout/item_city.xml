@@ -12,7 +12,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/font_normal"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorGrey"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-condensed"
         />
 
     <TextView
@@ -21,7 +23,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/font_small"
-        android:textColor="@color/colorDarkGrey"
+        android:textColor="@color/colorGrey"
+        android:fontFamily="sans-serif-light"
+        android:layout_marginTop="@dimen/spacing_tiny"
         />
 
     <CheckBox
@@ -29,6 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         style="@style/Widget.TNM.CheckBox"
         />
 

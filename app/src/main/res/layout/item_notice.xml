@@ -32,6 +32,7 @@
         android:ellipsize="end"
         android:textColor="@color/colorLightGrey"
         android:textSize="@dimen/font_tiny"
+        android:fontFamily="sans-serif-condensed"
         />
 
     <!-- Public notice modality -->
@@ -43,6 +44,8 @@
         android:layout_marginTop="@dimen/spacing_tiny"
         android:textColor="@color/black"
         android:textSize="@dimen/font_normal"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-condensed"
         />
 
     <TextView
@@ -52,6 +55,8 @@
         android:layout_below="@+id/noticeModality"
         android:textColor="@color/colorLightGrey"
         android:textSize="@dimen/font_small"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-condensed"
         />
 
     <TextView
@@ -65,6 +70,7 @@
         android:ellipsize="end"
         android:textColor="@color/colorGrey"
         android:textSize="@dimen/font_small"
+        android:fontFamily="sans-serif-condensed"
         />
 
     <LinearLayout
@@ -88,6 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorLightGrey"
+            android:fontFamily="sans-serif-condensed"
             style="@style/Widget.TNM.NoticeInfoItemDate"
             />
 

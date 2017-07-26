@@ -39,6 +39,7 @@
         android:text="ASSINAR"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginBottom="@dimen/spacing_normal"
         style="@style/Widget.AppCompat.Button.Colored"
         />
 
@@ -46,7 +47,7 @@
         android:id="@+id/subscriptionList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
+        android:layout_marginTop="@dimen/spacing_normal"
         />
 
 </LinearLayout>

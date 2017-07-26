@@ -4,4 +4,14 @@
         <item>@color/white</item>
         <item>@color/colorPrimary</item>
     </integer-array>
+    <string-array name="filter_modalities">
+        <item>Todas as modalidades</item>
+        <item>Pregão Presencial</item>
+        <item>Pregão Eletrônico</item>
+        <item>Concorrência</item>
+        <item>Convite</item>
+        <item>Concurso</item>
+        <item>Leilão</item>
+        <item>Tomada de Preço</item>
+    </string-array>
 </resources>

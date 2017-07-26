@@ -24,7 +24,7 @@
 
     <!-- Notification Dialog -->
     <string name="notification_dialog_title">Receber notificações do TáNaMão Licitações?</string>
-    <string name="notification_dialog_message">Notificações sobre notícias, dicas, abertura de novas licitações e mais.</string>
+    <string name="notification_dialog_message">Notificações sobre abertura de novas licitações, novidades do aplicativo e mais.</string>
     <string name="dialog_okay">OK</string>
     <string name="dialog_no_thanks">Não, obrigado</string>
 
@@ -140,7 +140,7 @@
     <string name="sub_feature_three">Envie para seus emails pessoais os editais que lhe interessar</string>
     <string name="sub_feature_four">Encontre facilmente licitações por palavras-chave</string>
 
-    <string name="accountconfiguration_sub_max_selected">Selecionados: %1$d/%2$s</string>
+    <string name="accountconfiguration_sub_max_selected">Selecionados: %1$d/%2$d</string>
     <string name="accountconfiguration_advance_btn">AVANÇAR</string>
     <string name="intro_start_using_text">COMECE A UTILIZAR</string>
     <string name="dialog_default_email">Email padrão</string>
@@ -281,6 +281,14 @@
     <string name="confirm_subscription_chosen_plan_header">Plano escolhido</string>
     <string name="confirm_subscription_payment_method_header">Forma de pagamento</string>
     <string name="confirm_subscription_total_header">Total</string>
+    <string name="bottom_nav_home_title">Início</string>
+    <string name="bottom_nav_my_notices_title">Minhas licitações</string>
+    <string name="bottom_nav_account_title">Conta</string>
+    <string name="cancel_subscription_progress_message">Cancelando assinatura...</string>
+    <string name="cancel_subscription_success_message">Assinatura cancelada</string>
+    <string name="reactive_subscription_btn">REATIVAR ASSINATURA</string>
+    <string name="cancel_subscription_btn">CANCELAR ASSINATURA</string>
+    <string name="subscribe_btn">ASSINAR</string>
     <!-- [END] MuPDF Strings [END] -->
 
 </resources>

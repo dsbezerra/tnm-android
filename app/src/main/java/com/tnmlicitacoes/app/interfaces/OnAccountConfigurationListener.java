@@ -2,6 +2,8 @@ package com.tnmlicitacoes.app.interfaces;
 
 import com.tnmlicitacoes.app.CitiesQuery;
 import com.tnmlicitacoes.app.SegmentsQuery;
+import com.tnmlicitacoes.app.fragment.CityFragment;
+import com.tnmlicitacoes.app.fragment.SegmentFragment;
 
 public interface OnAccountConfigurationListener {
 
@@ -18,4 +20,10 @@ public interface OnAccountConfigurationListener {
      * @param segment new selected segment
      */
     void onSegmentSelected(int selectedSize, SegmentsQuery.Node segment);
+
+    /**
+     * Called when the fragment finishes the setup and notify the activity to update the
+     * count text
+     */
+    void onCompleteInitialisation(String tag);
 }

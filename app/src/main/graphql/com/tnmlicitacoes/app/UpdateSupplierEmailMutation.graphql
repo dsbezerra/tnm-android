@@ -1,5 +1,11 @@
 mutation UpdateSupplierEmailMutation($email: String!) {
   updateSupplierEmail(email: $email) {
     id
+    cityNum
+    segNum
+    activated
+    phone
+    defaultCard
+    email
   }
 }

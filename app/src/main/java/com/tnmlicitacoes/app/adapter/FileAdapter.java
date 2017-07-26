@@ -3,6 +3,7 @@ package com.tnmlicitacoes.app.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,22 +12,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.interfaces.FileViewListener;
-import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
+import com.tnmlicitacoes.app.interfaces.DownloadedFilesListener;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
-import com.tnmlicitacoes.app.utils.LogUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class FileAdapter extends RecyclerView.Adapter<FileAdapter.VH> {
 
     private static final String TAG = "FileAdapter";
 
-    private List<File> mSelectedFiles = new ArrayList<>();
+    /** Constant used when functions are not successfully executed */
+    private static final int NO_SUCCESS = -1;
 
-    private List<File> mFilesList = new ArrayList<>();
+    //private List<File> mSelectedFiles = new ArrayList<>();
+    private HashMap<String, File> mSelected = new HashMap<>();
+
+    private List<File> mFileList = new ArrayList<>();
 
     private Context mContext;
 
@@ -34,9 +38,8 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.VH> {
 
     private boolean mIsActionModeActive = false;
 
-    private OnClickListenerRecyclerView mRecViewListener;
-
-    private FileViewListener mFileViewListener;
+    /** Downloaded files actions listener */
+    private DownloadedFilesListener mDownloadedFilesListener;
 
     public FileAdapter(Activity activity) {
         this.mContext = activity.getApplicationContext();
@@ -51,9 +54,9 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.VH> {
     }
 
     @Override
-    public void onBindViewHolder(VH holder, int position) {
+    public void onBindViewHolder(VH holder, final int position) {
 
-        File file = mFilesList.get(position);
+        File file = mFileList.get(position);
         String fileName = file.getName();
         holder.fileName.setText(fileName);
         if(fileName.endsWith(".pdf")) {
@@ -67,7 +70,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.VH> {
         holder.fileFormat.setText(mContext.getString(R.string.fileFormat, "PDF"));
 
         holder.checkBox.setVisibility(mIsActionModeActive ? View.VISIBLE : View.GONE);
-        holder.checkBox.setChecked(mSelectedFiles.contains(file));
+        holder.checkBox.setChecked(mSelected.containsKey(file.getAbsolutePath()));
 
 
         holder.fileName.setSelected(holder.checkBox.isChecked());
@@ -76,67 +79,158 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.VH> {
         } else {
             holder.fileName.setPadding(AndroidUtilities.dp(mParentActivity, 4.0f), 0, AndroidUtilities.dp(mParentActivity, 4.0f), 0);
         }
-
-        final int pos = position;
-        holder.checkBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mRecViewListener.OnClickListener(v, pos);
-                mFileViewListener.onUpdateActionModeTitle(mSelectedFiles.size());
-            }
-        });
     }
 
-    public void setRecListener(OnClickListenerRecyclerView listener) {
-        this.mRecViewListener = listener;
+    /**
+     * Sets the DownloadedFilesListener
+     * @param listener
+     */
+    public void setDownloadedFilesListener(DownloadedFilesListener listener) {
+        this.mDownloadedFilesListener = listener;
     }
 
-    public void setFileViewListener(FileViewListener listener) {
-        this.mFileViewListener = listener;
+    /**
+     * Sets the selected HashMap
+     * @param map the new HashMap
+     */
+    public void setSelected(HashMap<String, File> map) {
+        int oldCount = mSelected != null ? mSelected.size() : 0;
+        mSelected = map;
+        if (mDownloadedFilesListener != null) {
+            int newCount = mSelected.size();
+            mDownloadedFilesListener.onFilesSelectedChanged(oldCount, newCount);
+        }
+        notifyDataSetChanged();
     }
 
-    public void addToSelected(int position) {
-        File file = mFilesList.get(position);
-        if(mSelectedFiles.contains(file)) {
-            mSelectedFiles.remove(file);
-            if(mSelectedFiles.size() == 0) {
-                mIsActionModeActive = false;
-                mFileViewListener.onActionModeListener(mIsActionModeActive);
-            }
-        } else {
-            mSelectedFiles.add(file);
+    /**
+     * Gets the file in the given position
+     * @param position index of the file in the array
+     * @return file if exists and null if index is invalid
+     */
+    public File getItem(int position) {
+        if (position >= 0 && position < mFileList.size()) {
+            return mFileList.get(position);
         }
 
-        notifyItemChanged(position);
+        return null;
     }
 
-    public void setSelectedItems(List<File> items) {
-        mSelectedFiles = new ArrayList<>(items);
-        mFileViewListener.onUpdateActionModeTitle(mSelectedFiles.size());
+    /**
+     * Selects the file in the given position
+     * @param position the position were the file is located
+     * @return new count of selected items if successful and -1 if not
+     */
+    public int select(int position) {
+        int result = -1;
+
+        // Store old count
+        int oldCount = getSelectedCount();
+
+        File file = getItem(position);
+        if (file == null) {
+            return result;
+        }
+
+        // Filepath here acts like a key for the map
+        String filePath = file.getAbsolutePath();
+        if (mSelected.containsKey(filePath)) {
+            result = deselect(filePath);
+        } else {
+            mSelected.put(filePath, file);
+            result = mSelected.size();
+        }
+
+        // Notify the adapter for changes in the item at 'position'
+        if (result != NO_SUCCESS) {
+            if (mDownloadedFilesListener != null) {
+                int newCount = mSelected.size();
+                mDownloadedFilesListener.onFilesSelectedChanged(oldCount, newCount);
+            }
+            notifyItemChanged(position);
+        }
+
+        return result;
+    }
+
+    /**
+     * Deselects the file from the selected map
+     * @param key the key of the file (the absolutePath)
+     * @return newCount if successful and -1 if not
+     */
+    public int deselect(String key) {
+        int result = NO_SUCCESS;
+
+        if (TextUtils.isEmpty(key)) {
+            return result;
+        }
+
+        if (mSelected.remove(key) != null) {
+            result = mSelected.size();
+        }
+
+        return result;
+    }
+
+    /**
+     * Selects all files in the list
+     */
+    public void selectAll() {
+        // Store old count
+        int oldCount = getSelectedCount();
+
+        for (File file : mFileList) {
+            String key = file.getAbsolutePath();
+            mSelected.put(key, file);
+        }
+
+        if (mDownloadedFilesListener != null) {
+            int newCount = mSelected.size();
+            mDownloadedFilesListener.onFilesSelectedChanged(oldCount, newCount);
+        }
+
         notifyDataSetChanged();
     }
 
+    /**
+     * Deselect all files by clearing the selected hash map
+     */
     public void deselectAll() {
-        mSelectedFiles.clear();
-        mFileViewListener.onUpdateActionModeTitle(0);
+        // Store old count
+        int oldCount = getSelectedCount();
+
+        mSelected.clear();
+
+        if (mDownloadedFilesListener != null) {
+            int newCount = mSelected.size();
+            mDownloadedFilesListener.onFilesSelectedChanged(oldCount, newCount);
+        }
         notifyDataSetChanged();
     }
 
+    /**
+     * Gets the selected count
+     * @return the selected files count
+     */
     public int getSelectedCount() {
-        return mSelectedFiles.size();
+        return mSelected.size();
+    }
+
+    /**
+     * Gets the selected hash map
+     * @return the HashMap with the selected files
+     */
+    public HashMap<String, File> getSelected() {
+        return mSelected;
     }
 
     @Override
     public int getItemCount() {
-        return mFilesList.size();
-    }
-
-    public List<File> getSelectedFiles() {
-        return mSelectedFiles;
+        return mFileList.size();
     }
 
     public void setItems(List<File> list) {
-        this.mFilesList = list;
+        this.mFileList = list;
         notifyDataSetChanged();
     }
 
@@ -144,11 +238,14 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.VH> {
         return mIsActionModeActive;
     }
 
-    public void setIsActionModeActive(boolean value) {
+    public void setActionModeActive(boolean value) {
         mIsActionModeActive = value;
-        if(!mIsActionModeActive) {
-            mFileViewListener.onActionModeListener(false);
-            mSelectedFiles.clear();
+        if (!value) {
+            mSelected.clear();
+            if (mDownloadedFilesListener != null) {
+                // Call onFileLongClick again to disable the action mode
+                mDownloadedFilesListener.onFileLongClick(-1);
+            }
         }
         notifyDataSetChanged();
     }
@@ -172,27 +269,20 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.VH> {
         }
 
         @Override
-        public void onClick(View v) {
-            if(mRecViewListener != null) {
-                v.requestFocus();
+        public void onClick(View view) {
+            view.requestFocus();
+            if (mDownloadedFilesListener != null) {
+                // Just to make sure the checkbox animation runs
                 checkBox.performClick();
+                mDownloadedFilesListener.onFileClick(getAdapterPosition());
             }
         }
 
         @Override
-        public boolean onLongClick(View v) {
-            if(mRecViewListener != null && mFileViewListener != null) {
-                mIsActionModeActive = !mIsActionModeActive;
-                mFileViewListener.onActionModeListener(mIsActionModeActive);
-                if(mIsActionModeActive) {
-                    mSelectedFiles.add(mFilesList.get(getPosition()));
-                } else {
-                    mSelectedFiles.clear();
-                }
-                mFileViewListener.onUpdateActionModeTitle(mSelectedFiles.size());
-                v.requestFocus();
-                LogUtils.LOG_DEBUG(TAG, mSelectedFiles.size() + "");
-                notifyDataSetChanged();
+        public boolean onLongClick(View view) {
+            view.requestFocus();
+            if (mDownloadedFilesListener != null) {
+                mDownloadedFilesListener.onFileLongClick(getAdapterPosition());
                 return true;
             }
             return false;

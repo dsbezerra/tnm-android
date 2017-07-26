@@ -60,7 +60,7 @@
 
     <!-- Notification Dialog -->
     <string name="notification_dialog_title">Receber notificações do TáNaMão Licitações?</string>
-    <string name="notification_dialog_message">Notificações sobre notícias, dicas, abertura de novas licitações e mais.</string>
+    <string name="notification_dialog_message">Notificações sobre abertura de novas licitações, novidades do aplicativo e mais.</string>
     <string name="dialog_okay">OK</string>
     <string name="dialog_no_thanks">Não, obrigado</string>
 
@@ -378,7 +378,7 @@
     <string name="server_communication_error">Houve um problema na comunicação com nossos servidores. Por favor, tente novamente mais tarde.</string>
 
 
-    <string name="accountconfiguration_sub_max_selected">Selecionados: %1$d/%2$s</string>
+    <string name="accountconfiguration_sub_max_selected">Selecionados: %1$d/%2$d</string>
 
     <string name="card_number_last_digits">•••• •••• •••• %1$s</string>
 
@@ -421,7 +421,7 @@
     <string name="plan_default_description">3 segmentos e cidades</string>
     <string name="plan_custom_description">Construa um plano que seja adequado para as suas necessidades</string>
     <string name="plan_custom_name">Personalizado</string>
-    <string name="plan_price">R$ %1$.2f</string>
+    <string name="plan_price">R$ %1$s</string>
     <string name="add_card_dialog_progress_message">Adicionando cartão...</string>
     <string name="add_card_fail">Falha ao adicionar cartão</string>
 
@@ -433,10 +433,24 @@
     <string name="advance_button_text">Avançar</string>
     <string name="confirm_button_text">Confirmar</string>
 
-    <string name="item_price_x_total">R$ %1$.2f x %2$d</string>
+    <string name="item_price_x_total">R$ %1$s x %2$d</string>
     <string name="confirm_subscription_chosen_plan_header">Plano escolhido</string>
     <string name="confirm_subscription_payment_method_header">Forma de pagamento</string>
     <string name="confirm_subscription_total_header">Total</string>
+
+    <string name="modality_estimated_amount_value">R$ %1$s</string>
+    <string name="name_input_label">Como gostaria de ser chamado?</string>
+    <string name="name_input_hint">Nome</string>
+    <string name="input_email_info_message">Um e-mail válido é necessário para utilizar todas as funcionalidades do aplicativo.</string>
+    <string name="bottom_nav_home_title">Início</string>
+    <string name="bottom_nav_my_notices_title">Minhas licitações</string>
+    <string name="bottom_nav_account_title">Conta</string>
+    <string name="dispute_date_search_result"><b>Abertura:</b> %1$s</string>
+    <string name="cancel_subscription_progress_message">Cancelando assinatura...</string>
+    <string name="cancel_subscription_success_message">Assinatura cancelada</string>
+    <string name="reactive_subscription_btn">REATIVAR ASSINATURA</string>
+    <string name="cancel_subscription_btn">CANCELAR ASSINATURA</string>
+    <string name="subscribe_btn">ASSINAR</string>
 
 
 </resources>

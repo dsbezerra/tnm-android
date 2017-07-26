@@ -83,7 +83,7 @@ public abstract class BaseAuthenticatedActivity extends BaseActivity {
                     public void run() {
                         try {
                             // Encrypt refresh and access token and save them as Base64 strings
-                            // TODO(diego): Remove from prefs and put in the Supplier model in Realm
+                            // TODO(diego): Remove from prefs and put in the LocalSupplier model in Realm
                             byte[] encryptedAccessToken = CryptoUtils.getInstance().encrypt(getApplicationContext(),
                                     newAccessToken.getBytes());
                             // Save to prefs

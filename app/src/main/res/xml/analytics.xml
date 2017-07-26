@@ -20,11 +20,11 @@
 
     <screenName name="com.tnmlicitacoes.app.ui.activity.VerifyNumberActivity">Tela de Verificação de Número</screenName>
 
-    <screenName name="com.tnmlicitacoes.app.ui.accountconfiguration.AccountConfigurationActivity">Tela de Configuração Inicial</screenName>
+    <screenName name="com.tnmlicitacoes.app.accountconfiguration.AccountConfigurationActivity">Tela de Configuração Inicial</screenName>
 
-    <screenName name="com.tnmlicitacoes.app.ui.main.MainActivity">Tela Inicial</screenName>
+    <screenName name="com.tnmlicitacoes.app.main.MainActivity">Tela Inicial</screenName>
 
-    <screenName name="com.tnmlicitacoes.app.ui.activity.DetailsActivity">Tela de Detalhes</screenName>
+    <screenName name="com.tnmlicitacoes.app.details.DetailsActivity">Tela de Detalhes</screenName>
 
     <screenName name="com.tnmlicitacoes.app.billing.BillingActivity">Tela de Assinatura</screenName>
 

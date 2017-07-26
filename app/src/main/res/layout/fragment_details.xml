@@ -2,29 +2,36 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/exclusive_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:padding="@dimen/spacing_normal"
+        android:gravity="center_vertical"
+        >
 
         <TextView
-            android:id="@+id/favoriteText"
-            android:drawableTop="@drawable/ic_star_off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/font_small"
-            android:gravity="center_horizontal"
-            android:clickable="true"
-            android:layout_marginRight="@dimen/spacing_normal"
-            android:layout_marginTop="@dimen/spacing_small"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:background="?attr/selectableItemBackground"
-            android:text="@string/save_text"
+            android:text="Exclusivo para MPE's"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
             />
-    </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tint="@color/white"
+            app:srcCompat="@drawable/ic_star"
+            android:layout_marginLeft="@dimen/spacing_normal"
+            />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,13 +49,13 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryText"
+                android:textColor="@color/colorDarkGrey"
                 android:textSize="@dimen/font_normal"
                 android:text="@string/modality_header"
                 />
 
             <TextView
-                android:id="@+id/modalityText"
+                android:id="@+id/modality_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_small"
@@ -65,13 +72,13 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryText"
+                android:textColor="@color/colorDarkGrey"
                 android:textSize="@dimen/font_normal"
                 android:text="@string/number_header"
                 />
 
             <TextView
-                android:id="@+id/numberText"
+                android:id="@+id/number_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_small"
@@ -98,13 +105,13 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryText"
+                android:textColor="@color/colorDarkGrey"
                 android:textSize="@dimen/font_normal"
                 android:text="@string/date_header"
                 />
 
             <TextView
-                android:id="@+id/dateText"
+                android:id="@+id/date_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_small"
@@ -121,13 +128,13 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryText"
+                android:textColor="@color/colorDarkGrey"
                 android:textSize="@dimen/font_normal"
                 android:text="@string/amount_header"
                 />
 
             <TextView
-                android:id="@+id/amountText"
+                android:id="@+id/amount_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_small"
@@ -146,17 +153,17 @@
         >
 
         <TextView
-            android:id="@+id/descriptionLabel"
+            android:id="@+id/object_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryText"
+            android:textColor="@color/colorDarkGrey"
             android:textSize="@dimen/font_normal"
             android:text="@string/description_header"
             />
 
         <TextView
-            android:id="@+id/descriptionText"
-            android:layout_below="@id/descriptionLabel"
+            android:id="@+id/object_value"
+            android:layout_below="@id/object_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/font_small"
@@ -173,91 +180,21 @@
         >
 
         <TextView
-            android:id="@+id/agencyLabel"
+            android:id="@+id/agency_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryText"
+            android:textColor="@color/colorDarkGrey"
             android:textSize="@dimen/font_normal"
             android:text="@string/agency_header"
             />
 
         <TextView
-            android:id="@+id/agencyText"
-            android:layout_below="@id/agencyLabel"
+            android:id="@+id/agency_value"
+            android:layout_below="@id/agency_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/font_small"
             />
-
-    </RelativeLayout>
-
-    <include layout="@layout/horizontal_divider"/>
-
-    <LinearLayout
-        android:id="@+id/infoLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
-        android:padding="@dimen/spacing_small"
-        >
-
-        <TextView
-            android:id="@+id/infoNewDate"
-            android:drawableTop="@drawable/ic_new_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/font_tiny"
-            android:layout_marginRight="@dimen/spacing_small"
-            android:text="@string/new_date_text"/>
-
-        <TextView
-            android:id="@+id/infoRectified"
-            android:drawableTop="@drawable/ic_rectified"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/font_tiny"
-            android:layout_marginRight="@dimen/spacing_small"
-            android:text="@string/rectified_text"/>
-
-        <TextView
-            android:id="@+id/infoExclusive"
-            android:drawableTop="@drawable/ic_exclusive_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/font_tiny"
-            android:text="@string/mpe_exclusive_text"/>
-
-    </LinearLayout>
-
-    <include
-        android:id="@+id/dividerInfo"
-        layout="@layout/horizontal_divider"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/spacing_small"
-        >
-
-        <TextView
-            android:id="@+id/attachmentsLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimaryText"
-            android:textSize="@dimen/font_normal"
-            android:text="@string/attachments_header"
-            />
-
-        <LinearLayout
-            android:id="@+id/attachmentsLayoutHolder"
-            android:layout_below="@id/attachmentsLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        </LinearLayout>
 
     </RelativeLayout>
 
@@ -268,7 +205,7 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/downloadButton"
+            android:id="@+id/download"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/notice_download"

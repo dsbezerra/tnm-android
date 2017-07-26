@@ -2,12 +2,15 @@ package com.tnmlicitacoes.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloClient;
+import com.apollographql.apollo.Logger;
 import com.apollographql.apollo.api.Field;
 import com.apollographql.apollo.api.Operation;
+import com.apollographql.apollo.api.internal.Optional;
 import com.apollographql.apollo.cache.normalized.CacheKey;
 import com.apollographql.apollo.cache.normalized.CacheKeyResolver;
 import com.apollographql.apollo.cache.normalized.NormalizedCacheFactory;
@@ -16,8 +19,11 @@ import com.apollographql.apollo.cache.normalized.lru.LruNormalizedCacheFactory;
 import com.apollographql.apollo.cache.normalized.sql.ApolloSqlHelper;
 import com.apollographql.apollo.cache.normalized.sql.SqlNormalizedCacheFactory;
 import com.crashlytics.android.Crashlytics;
+import com.facebook.stetho.Stetho;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.leakcanary.LeakCanary;
+import com.tnmlicitacoes.app.utils.ApiUtils;
 import com.tnmlicitacoes.app.utils.CryptoUtils;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 import com.tnmlicitacoes.app.utils.Utils;
@@ -41,7 +47,7 @@ import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
 public class TnmApplication extends Application {
 
-    private static final String TAG = "TNMApplication";
+    private static final String TAG = "TnmApplication";
 
     private static final String BASE_URL = "https://tnm-graph.herokuapp.com/graphql";
     private static final String SQL_CACHE_NAME = "tnmdb";
@@ -62,7 +68,6 @@ public class TnmApplication extends Application {
         LeakCanary.install(this);
         Realm.init(this);
 
-
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
                 .build();
@@ -73,6 +78,7 @@ public class TnmApplication extends Application {
         if (!BuildConfig.DEBUG) {
             Fabric.with(this, new Crashlytics());
         } else {
+            Stetho.initializeWithDefaults(this);
             FirebaseAnalytics.getInstance(this)
                     .setAnalyticsCollectionEnabled(false);
         }
@@ -83,6 +89,9 @@ public class TnmApplication extends Application {
         String authToken = SettingsUtils.getCurrentAccessToken(this);
         if (shouldRefreshToken(this)) {
             authToken = SettingsUtils.getRefreshToken(this);
+            if (TextUtils.isEmpty(authToken)) {
+                // TODO(diego): Logout user in this case
+            }
         }
 
         initApolloClient(authToken, true);
@@ -115,7 +124,7 @@ public class TnmApplication extends Application {
 
         builder.certificatePinner(pinner);
 
-        Interceptor interceptor = null;
+        Interceptor authHeaderInterceptor = null;
         if (authToken != null) {
             if (isTokenEncrypted) {
                 byte[] decoded = Base64.decode(authToken, Base64.DEFAULT);
@@ -134,17 +143,31 @@ public class TnmApplication extends Application {
             }
 
             if (mAuthToken != null) {
-                interceptor = new Interceptor() {
+                // Interceptor that constructs a new request with the given authentication token
+                authHeaderInterceptor = new Interceptor() {
                     @Override
                     public Response intercept(Chain chain) throws IOException {
-                        String bearer = "Bearer " + mAuthToken;
+
+                        // Get the original request
                         Request original = chain.request();
+
+                        // Construct Bearer token string
+                        String bearer = "Bearer " + mAuthToken;
+
+                        // New request with authorization token
                         Request.Builder builder = original.newBuilder().method(original.method(), original.body());
                         builder.header("Authorization", bearer);
-                        return chain.proceed(builder.build());
+
+                        Request newRequest = builder.build();
+                        return chain.proceed(newRequest);
                     }
                 };
-                builder.addInterceptor(interceptor);
+
+                builder.addInterceptor(authHeaderInterceptor);
+
+                if (BuildConfig.DEBUG) {
+                    builder.addNetworkInterceptor(new StethoInterceptor());
+                }
             }
 
         }

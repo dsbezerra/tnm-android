@@ -7,8 +7,19 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionModeOverlay">true</item>
-        <item name="android:actionModeBackground">@color/colorActionModePrimary</item>
+        <item name="actionModeBackground">@color/colorPrimary</item>
         <item name="android:actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
+    <style name="Theme.Registration" parent="Theme.DefaultTheme">
+        <item name="colorPrimaryDark">@color/background_grey</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="Theme.Search" parent="Theme.DefaultTheme">
+        <item name="colorPrimaryDark">@color/background_grey</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="SplashScreenTheme" parent="Theme.DefaultTheme">
@@ -19,6 +30,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="LightToolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorPrimaryDark">@color/background_grey</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="titleTextColor">@color/colorPrimary</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <!-- Widget styles -->

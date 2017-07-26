@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.tnmlicitacoes.app.ui.accountconfiguration.AccountConfigurationActivity;
-import com.tnmlicitacoes.app.ui.main.MainActivity;
-import com.tnmlicitacoes.app.ui.subscription.SubscriptionActivity;
+import com.tnmlicitacoes.app.accountconfiguration.AccountConfigurationActivity;
+import com.tnmlicitacoes.app.main.MainActivity;
+import com.tnmlicitacoes.app.registration.RegistrationActivity;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 import com.tnmlicitacoes.app.verifynumber.VerifyNumberActivity;
 
@@ -24,7 +24,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         } else if (SettingsUtils.isInitalConfigFinished(this)) {
             intent = new Intent(this, MainActivity.class);
         } else {
-            intent = new Intent(this, AccountConfigurationActivity.class);
+            intent = new Intent(this, RegistrationActivity.class);
         }
 
         startActivity(intent);

@@ -13,8 +13,9 @@ import android.widget.Toast;
 
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.mupdf.MuPDFActivity;
-import com.tnmlicitacoes.app.ui.main.MainActivity;
+import com.tnmlicitacoes.app.main.MainActivity;
 import com.tnmlicitacoes.app.utils.FileUtils;
+import com.tnmlicitacoes.app.utils.NoticeUtils;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 
 import java.io.File;
@@ -33,36 +34,49 @@ import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
 public class DownloadService extends IntentService {
 
+    /* The service and logging tag */
     private static final String TAG = "DownloadService";
 
+    /* Download event states */
     private static final int DOWNLOADED_FAILED = -1;
     private static final int DOWNLOAD_START    = 0;
     private static final int DOWNLOAD_ONGOING  = 1;
     private static final int DOWNLOAD_FINISHED = 2;
 
+    /* The buffer size */
     private static final int BUFFER_SIZE = 4096;
 
+    /* Minimum notification UI update interval */
     private static final long MIN_UPDATE_INTERVAL = 1000;
 
+    /* Decimal formatter */
     private static DecimalFormat mDecimalFormat = new DecimalFormat("#.##");
 
+    /* The notification manager */
     private NotificationManager mNotifyManager;
 
+    /* The notification builder */
     private NotificationCompat.Builder mBuilder;
 
+    /* Whether the external storage is available or not */
     private boolean mExternalStorageAvailable = false;
 
+    /* Whether the extenal storage is writeable or not */
     private boolean mExternalStorageWriteable = false;
 
-    public DownloadService() {super(TAG); }
-
+    /* Listeners for when the download starts, fails and finishes */
     public interface OnDownloadListener {
         void onDownloadStart();
         void onDownloadFailure(final String fileName);
         void onDownloadFinished(final File file);
     }
 
+    /* The listener instance */
     public static OnDownloadListener onDownloadListener;
+
+    public DownloadService() {
+        super(TAG);
+    }
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -73,17 +87,17 @@ public class DownloadService extends IntentService {
         LOG_DEBUG(TAG, "Handling intent...");
 
         final Bundle b = intent.getExtras();
-        if(b != null) {
+        if (b != null && !b.isEmpty()) {
 
-            final String url = b.getString("LINK");
-            final String fileName = b.getString("NAME");
-            final int notificationId = (int) b.getDouble("NOTIFICATION_ID");
+            final String url = b.getString(NoticeUtils.LINK_KEY);
+            final String fileName = b.getString(NoticeUtils.NAME_KEY);
+            final int notificationId = (int) b.getDouble(NoticeUtils.NOTIFICATION_KEY);
 
             LOG_DEBUG(TAG, "Preparing request...");
 
             OkHttpClient okHttpClient = new OkHttpClient();
 
-            if(url == null) {
+            if (url == null) {
                 return;
             }
 
@@ -110,7 +124,9 @@ public class DownloadService extends IntentService {
                         if (mExternalStorageWriteable && mExternalStorageAvailable) {
                             startDownload(response, notificationId, fileName);
                         } else {
-                            Toast.makeText(getApplicationContext(), getString(R.string.fail_download_storage_unavailable), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),
+                                    getString(R.string.fail_download_storage_unavailable),
+                                    Toast.LENGTH_SHORT).show();
                             LOG_DEBUG(TAG, "Armazenamento externo indisponível!");
                             mNotifyManager.cancel(notificationId);
                         }
@@ -137,7 +153,6 @@ public class DownloadService extends IntentService {
         try {
 
             LOG_DEBUG(TAG, "Getting file size...");
-
 
             long fileSize = response.body().contentLength();
             if (fileSize == -1) {
@@ -170,7 +185,7 @@ public class DownloadService extends IntentService {
 
             FileOutputStream fileOutputStream = new FileOutputStream(downloadedFile);
 
-            if(onDownloadListener != null) {
+            if (onDownloadListener != null) {
                 onDownloadListener.onDownloadStart();
             }
 
@@ -181,7 +196,7 @@ public class DownloadService extends IntentService {
                 fileOutputStream.write(buffer, 0, bufferLength);
 
                 // Update notification progress by after 1s
-                if(System.currentTimeMillis() - lastNotificationUpdatedTime > MIN_UPDATE_INTERVAL) {
+                if (System.currentTimeMillis() - lastNotificationUpdatedTime > MIN_UPDATE_INTERVAL) {
 
                     int progress = (int) ((totalDownloaded * 100) / fileSize);
 
@@ -194,7 +209,6 @@ public class DownloadService extends IntentService {
                     lastNotificationUpdatedTime = System.currentTimeMillis();
 
                     LOG_DEBUG(TAG, totalDownloaded + "/" + fileSize + " - " + progress + "%");
-
                 }
             }
 
@@ -208,12 +222,12 @@ public class DownloadService extends IntentService {
             updateNotification(notificationId,
                     DOWNLOAD_FINISHED, 0, fileName, downloadedFile);
 
-            if(onDownloadListener != null) {
+            if (onDownloadListener != null) {
                 onDownloadListener.onDownloadFinished(downloadedFile);
             }
 
         } catch (IOException e) {
-            if(onDownloadListener != null) {
+            if (onDownloadListener != null) {
                 onDownloadListener.onDownloadFailure(fileName);
             }
 
@@ -242,7 +256,7 @@ public class DownloadService extends IntentService {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent pendingIntent;
 
-        if(eventType == DOWNLOAD_START) {
+        if (eventType == DOWNLOAD_START) {
 
             pendingIntent = PendingIntent.getActivity(this, 454545, intent,
                     PendingIntent.FLAG_UPDATE_CURRENT);
@@ -270,7 +284,7 @@ public class DownloadService extends IntentService {
         } else if (eventType == DOWNLOAD_FINISHED) {
 
             Uri uri = Uri.fromFile(file);
-            if(SettingsUtils.isDefaultPdfViewer(getApplicationContext())) {
+            if (SettingsUtils.isDefaultPdfViewer(getApplicationContext())) {
                 intent = new Intent(getApplicationContext(), MuPDFActivity.class);
                 intent.setAction(Intent.ACTION_VIEW);
                 intent.setData(uri);
@@ -310,7 +324,7 @@ public class DownloadService extends IntentService {
         float kiloBytesPerSecond = bytesPerSecond / 1024;
         float megaBytesPerSecond = kiloBytesPerSecond / 1024;
 
-        if(megaBytesPerSecond > 1.0f) {
+        if (megaBytesPerSecond > 1.0f) {
             return mDecimalFormat.format(megaBytesPerSecond) + " MB/s";
         } else if (kiloBytesPerSecond > 1.0f) {
             return mDecimalFormat.format(kiloBytesPerSecond) + " KB/s";
@@ -328,7 +342,7 @@ public class DownloadService extends IntentService {
         int minutes = seconds / 60;
         int hours = minutes / 60;
 
-        if(hours > 0) {
+        if (hours > 0) {
             return hours + "h restantes";
         } else if (minutes > 0) {
             return minutes + "m restantes";

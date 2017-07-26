@@ -1,5 +1,5 @@
-query NoticesQuery($segId: OID, $first: Int, $after: Cursor, $orderBy: NoticeOrder, $active: Boolean) {
-  notices(segId: $segId, first: $first, after: $after, orderBy: $orderBy, active: $active) {
+query NoticesQuery($segId: OID, $modality: Modality, $cityId: [OID], $exclusive: Boolean, $first: Int, $after: Cursor, $orderBy: NoticeOrder, $active: Boolean) {
+  notices(segId: $segId, modality: $modality, cityId: $cityId, exclusive: $exclusive, first: $first, after: $after, orderBy: $orderBy, active: $active) {
     edges {
       node {
         id

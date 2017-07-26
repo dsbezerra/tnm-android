@@ -14,11 +14,8 @@ import com.tnmlicitacoes.app.interfaces.OnVerifyNumberListener;
 
 public abstract class VerifyNumberFragment extends Fragment {
 
+    /* The logging tag */
     private static final String TAG = "VerifyNumberFragment";
-
-    protected static final String PHONE = "phone";
-    protected static final String SECRET = "secret";
-    protected static final String DEVICE_ID = "deviceId";
 
     /* Listener for api calls */
     protected OnVerifyNumberListener mListener;

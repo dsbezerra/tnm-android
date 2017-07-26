@@ -24,15 +24,15 @@ public class SubscriptionPlan implements Parcelable {
     public static final String CUSTOM = "custom";
 
     /* Item price */
-    public static final float ITEM_PRICE = 2.50f;
+    public static final double ITEM_PRICE = 2.50;
 
     /* Minimum price for a plan */
-    private static final float MIN_PRICE = 2.50f;
+    private static final double MIN_PRICE = 2.50;
 
     /* Price for the basic plan */
-    private static final float BASIC_PRICE = 5.00f;
+    private static final double BASIC_PRICE = 5.00;
     /* Price for the default plan */
-    private static final float DEFAULT_PRICE = 15.00f;
+    private static final double DEFAULT_PRICE = 15.00;
 
     /* Minimum possible quantity */
     private static final int MIN_QUANTITY = 1;
@@ -54,7 +54,7 @@ public class SubscriptionPlan implements Parcelable {
     private String mDescription;
 
     /* The subscription plan price */
-    private float mPrice;
+    private double mPrice;
 
     /* The subscription plan segment quantity */
     private int mSegmentQuantity;
@@ -73,7 +73,7 @@ public class SubscriptionPlan implements Parcelable {
             String id,
             String name,
             String description,
-            float price,
+            double price,
             int segmentQuantity,
             int cityQuantity,
             boolean isCustom) {
@@ -104,7 +104,7 @@ public class SubscriptionPlan implements Parcelable {
             String id,
             String name,
             String description,
-            float price,
+            double price,
             int segmentQuantity,
             int cityQuantity) {
         this(
@@ -129,7 +129,7 @@ public class SubscriptionPlan implements Parcelable {
         return mDescription;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         if (mIsCustom) {
             return ITEM_PRICE * (mCityQuantity + mSegmentQuantity);
         }
@@ -235,7 +235,7 @@ public class SubscriptionPlan implements Parcelable {
         dest.writeString(mId);
         dest.writeString(mName);
         dest.writeString(mDescription);
-        dest.writeFloat(mPrice);
+        dest.writeDouble(mPrice);
         dest.writeInt(mSegmentQuantity);
         dest.writeInt(mCityQuantity);
         dest.writeByte((byte) (mIsCustom ? 0x01 : 0x00));

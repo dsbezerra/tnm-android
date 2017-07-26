@@ -112,9 +112,9 @@ public class Utils {
         Intent intent;
         final String appPackageName = context.getPackageName();
         try {
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName));
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://seeDetails?id=" + appPackageName));
         } catch (android.content.ActivityNotFoundException anfe) {
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName));
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/seeDetails?id=" + appPackageName));
         }
         return intent;
     }

@@ -11,4 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        style="@style/Widget.AppCompat.ProgressBar"
+        />
+
 </RelativeLayout>

@@ -2,6 +2,7 @@ package com.tnmlicitacoes.app.ui.adapter;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -9,20 +10,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.tnmlicitacoes.app.CitiesQuery;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
+import com.tnmlicitacoes.app.model.SubscriptionPlan;
 import com.tnmlicitacoes.app.type.State;
 import com.tnmlicitacoes.app.ui.view.NoItemViewHolder;
 import com.tnmlicitacoes.app.utils.BillingUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
     /* Tag for logging */
     private static final String TAG = "CityAdapter";
@@ -35,13 +40,18 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context mContext;
 
     /* Store the fetched cities */
-    private List<CitiesQuery.Edge> mCityEdges = new ArrayList<>();
+    private List<CitiesQuery.Edge> mCityEdges = Collections.emptyList();
+    private List<CitiesQuery.Edge> mCityFilterEdges = Collections.emptyList();
+    private CityFilter mCityFilter;
 
     /* Store the selected cities */
     private HashMap<String, CitiesQuery.Node> mSelectedCities = new HashMap<>();
 
     /* OnClick listener */
     private OnClickListenerRecyclerView mRecyclerViewOnClickListenerHack;
+
+    /* Max possible cities to pick */
+    private int mMax = SubscriptionPlan.BASIC_MAX_QUANTITY;
 
     public CityAdapter(Context context) {
         this.mContext = context;
@@ -78,7 +88,7 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 itemViewHolder.itemCheckBox.setChecked(isSelected);
                 if (isSelected) {
-                    itemViewHolder.itemView.setBackgroundColor(mContext.getResources().getColor(R.color.lightBackground));
+                    itemViewHolder.itemView.setBackgroundColor(Color.parseColor("#10ff6600"));
                 } else {
                     int[] attrs = new int[]{R.attr.selectableItemBackground};
                     TypedArray typedArray = mContext.obtainStyledAttributes(attrs);
@@ -91,7 +101,9 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 State state = city.state();
                 if (state != null) {
-                    itemViewHolder.stateName.setText(state.name());
+                    itemViewHolder.stateName.setText(
+                            com.tnmlicitacoes.app.model.State.valueOf(state.name()).toString()
+                    );
                 }
 
                 itemViewHolder.itemCheckBox.setOnClickListener(new View.OnClickListener() {
@@ -147,6 +159,7 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     public void setItems(List<CitiesQuery.Edge> list) {
         mCityEdges = list;
+        mCityFilterEdges = list;
         notifyDataSetChanged();
     }
 
@@ -196,7 +209,7 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 result = deselect(newCity.id());
             } else {
                 // TODO(diego): Check if the user can select
-                if (getSelectedCount() < BillingUtils.SUBSCRIPTION_MAX_ITEMS) {
+                if (getSelectedCount() < mMax) {
                     mSelectedCities.put(newCity.id(), newCity);
                     result = mSelectedCities.size();
                 }
@@ -247,6 +260,20 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     /**
+     * Sets the maximum possible to pick segments
+     */
+    public void setMax(int value) {
+        this.mMax = value;
+    }
+
+    /**
+     * Gets maximum possible to pick segments
+     */
+    public int getMax() {
+        return mMax;
+    }
+
+    /**
      * Returns the count of selected cities
      * @return count of selected cities
      */
@@ -260,6 +287,14 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     public void setListenerHack (OnClickListenerRecyclerView r) {
         mRecyclerViewOnClickListenerHack = r;
+    }
+
+    @Override
+    public Filter getFilter() {
+        if (mCityFilter == null) {
+            mCityFilter = new CityFilter();
+        }
+        return mCityFilter;
     }
 
     /**
@@ -286,6 +321,52 @@ public class CityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 v.requestFocus();
             }
             itemCheckBox.performClick();
+        }
+    }
+
+    private class CityFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+
+            if (constraint != null && constraint.length() > 0) {
+                List<CitiesQuery.Edge> filterList = new ArrayList<>();
+                for (int i = 0; i < mCityFilterEdges.size(); i++) {
+                    CitiesQuery.Edge edge = mCityFilterEdges.get(i);
+                    CitiesQuery.Node node = edge.node();
+
+                    String name = node.name().toLowerCase();
+                    String abbr = node.state().name().toLowerCase();
+                    String stateName = com.tnmlicitacoes.app.model.State.valueOf(
+                            node.state().name()
+                    ).toString().toLowerCase();
+
+                    String constraintLowercased = constraint.toString().toLowerCase();
+                    if (name.contains(constraintLowercased) ||
+                            abbr.contains(constraintLowercased) ||
+                            stateName.contains(constraintLowercased)) {
+
+                        filterList.add(edge);
+                    }
+                }
+                results.count = filterList.size();
+                results.values = filterList;
+            } else {
+                results.count = mCityFilterEdges.size();
+                results.values = mCityFilterEdges;
+            }
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            if (constraint != null && constraint.length() != 0) {
+                mCityEdges = (ArrayList< CitiesQuery.Edge>) results.values;
+            } else {
+                mCityEdges = mCityFilterEdges;
+            }
+            notifyDataSetChanged();
         }
     }
 }

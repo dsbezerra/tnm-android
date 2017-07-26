@@ -9,17 +9,28 @@
         android:id="@+id/segmentBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="matrix"
+        android:scaleType="centerCrop"
         />
 
     <View
-        android:id="@+id/segmentGradientEffect"
+        android:id="@+id/background_effect"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#22000000"
+        />
+
+    <ImageView
+        android:id="@+id/segmentIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/spacing_normal"
         />
 
     <TextView
         android:id="@+id/segmentName"
+        android:layout_toRightOf="@id/segmentIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:focusable="true"
@@ -32,16 +43,18 @@
         android:textSize="@dimen/font_large"
         android:layout_marginStart="@dimen/spacing_normal"
         android:layout_marginEnd="@dimen/spacing_huge"
-        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_centerVertical="true"
+        android:fontFamily="sans-serif-condensed"
         />
 
-    <ImageView
-        android:id="@+id/segmentIcon"
+    <CheckBox
+        android:id="@+id/check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/spacing_normal"
+        android:theme="@style/Widget.TNM.CheckBox.White"
         />
 
 </RelativeLayout>

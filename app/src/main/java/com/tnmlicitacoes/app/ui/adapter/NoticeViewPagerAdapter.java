@@ -7,7 +7,7 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import com.tnmlicitacoes.app.model.realm.PickedSegment;
-import com.tnmlicitacoes.app.ui.fragment.NoticeTabFragment;
+import com.tnmlicitacoes.app.main.home.NoticeTabFragment;
 
 import java.util.List;
 

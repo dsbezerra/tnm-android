@@ -21,26 +21,22 @@ import android.widget.TextView;
 import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.SegmentsQuery;
-import com.tnmlicitacoes.app.interfaces.AccountStateListener;
+import com.tnmlicitacoes.app.interfaces.AccountListener;
+import com.tnmlicitacoes.app.model.realm.LocalSupplier;
 import com.tnmlicitacoes.app.model.realm.PickedCity;
 import com.tnmlicitacoes.app.model.realm.PickedSegment;
 import com.tnmlicitacoes.app.model.SubscriptionPlan;
-import com.tnmlicitacoes.app.model.realm.Supplier;
-import com.tnmlicitacoes.app.ui.main.AccountFragment;
+import com.tnmlicitacoes.app.main.account.AccountFragment;
 import com.tnmlicitacoes.app.ui.widget.SimpleDividerItemDecoration;
-import com.tnmlicitacoes.app.utils.SettingsUtils;
 import com.tnmlicitacoes.app.verifynumber.InputNumberFragment;
 import com.transitionseverywhere.TransitionManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.RealmList;
-import io.realm.RealmResults;
-
 import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
-// TODO(diego): Replace these individual member variables with one single Supplier object
+// TODO(diego): Replace these individual member variables with one single LocalSupplier object
 public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements View.OnClickListener {
 
@@ -66,16 +62,16 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final int VIEW_TYPE_ABOUT                = VIEW_TYPE_COUNT++;
 
     /* Logout view type */
-    private static final int VIEW_TYPE_LOGOUT               = VIEW_TYPE_COUNT++;
+    // private static final int VIEW_TYPE_LOGOUT               = VIEW_TYPE_COUNT++;
 
     /* Max visible items in picked sections */
     private static final int MAX_VISIBLE_PICKED_ITEMS       = 3;
 
     /* Account state listener */
-    private AccountStateListener mAccountStateListener;
+    private AccountListener mAccountListener;
 
     /* The supplier model */
-    private Supplier mSupplier;
+    private LocalSupplier mLocalSupplier;
 
     /* Indicates whether the verification e-mail was sent or not */
     private boolean mVerificationEmailResent = false;
@@ -91,11 +87,11 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public AccountAdapter(Fragment fragment) {
         try {
             if(fragment instanceof AccountFragment) {
-                mAccountStateListener = (AccountStateListener) fragment;
+                mAccountListener = (AccountListener) fragment;
             }
         } catch (ClassCastException e) {
             throw new ClassCastException(fragment.toString()
-                    + " must implement AccountStateListener");
+                    + " must implement AccountListener");
         }
     }
 
@@ -147,7 +143,7 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        if (mSupplier == null) {
+        if (mLocalSupplier == null) {
             return;
         }
 
@@ -158,12 +154,12 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (holder instanceof SubscriptionViewHolder) {
             SubscriptionViewHolder subscriptionHolder = (SubscriptionViewHolder) holder;
 
-            String subscribeText = mSupplier.isActiveSub() ? "Cancelar" : "Assinar";
+            String subscribeText = getSubscribeButtonText(context);
             subscriptionHolder.mSubscribeButton.setText(subscribeText);
 
             String planName = null;
-            int segNum = mSupplier.getSegNum();
-            int cityNum = mSupplier.getCityNum();
+            int segNum = mLocalSupplier.getSegNum();
+            int cityNum = mLocalSupplier.getCityNum();
             if (segNum == SubscriptionPlan.BASIC_MAX_QUANTITY && cityNum ==
                     SubscriptionPlan.BASIC_MAX_QUANTITY) {
                 planName = context.getString(R.string.plan_basic_name);
@@ -174,13 +170,13 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 planName = context.getString(R.string.plan_custom_name);
             }
             subscriptionHolder.mSubscriptionName.setText(planName);
-            subscriptionHolder.mPhoneNumber.setText(InputNumberFragment.formatPhone(mSupplier.getPhone()));
+            subscriptionHolder.mPhoneNumber.setText(InputNumberFragment.formatPhone(mLocalSupplier.getPhone()));
         }
         else if (holder instanceof EmailViewHolder) {
             EmailViewHolder emailHolder = (EmailViewHolder) holder;
 
-            String email = mSupplier.getEmail();
-            boolean isActivated = mSupplier.isActivated();
+            String email = mLocalSupplier.getEmail();
+            boolean isActivated = mLocalSupplier.isActivated();
             if (email == null) {
                 emailHolder.mEmailText.setText(R.string.account_email_not_defined);
                 emailHolder.mResendButton.setVisibility(View.GONE);
@@ -190,6 +186,7 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 emailHolder.mVerifiedIcon.setImageResource(R.drawable.ic_info_outline);
                 emailHolder.mDefineEmail.setVisibility(View.VISIBLE);
             } else {
+                emailHolder.mDefineEmail.setVisibility(View.GONE);
                 emailHolder.mVerifiedText.setVisibility(View.VISIBLE);
                 if (isActivated) {
                     emailHolder.mResendButton.setVisibility(View.GONE);
@@ -249,8 +246,9 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 mSegmentAdapter.setIsHighlight(true);
             }
 
+            int size = Math.min(MAX_VISIBLE_PICKED_ITEMS, mPickedSegments.size());
             List<SegmentsQuery.Edge> segments = new ArrayList<>();
-            for (int i = 0; i < mPickedSegments.size(); i++) {
+            for (int i = 0; i < size; i++) {
                 PickedSegment segment = mPickedSegments.get(i);
                 SegmentsQuery.Node node = new SegmentsQuery.Node("Segment", segment.getId(),
                         segment.getName(), segment.getIcon(), segment.getDefaultImg(),
@@ -276,11 +274,12 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return VIEW_TYPE_PICKED_CITIES;
         } else if (position == 3) {
             return VIEW_TYPE_PICKED_SEGMENTS;
-        } else if (position == 4){
+        } else /* if (position == 4) */ {
             return VIEW_TYPE_ABOUT;
-        } else {
-            return VIEW_TYPE_LOGOUT;
         }
+        /* else {
+            return VIEW_TYPE_LOGOUT;
+        } */
     }
 
     @Override
@@ -290,7 +289,7 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onClick(View v) {
-        if (mAccountStateListener == null) {
+        if (mAccountListener == null) {
             return;
         }
 
@@ -298,37 +297,40 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         switch (id) {
             // Subscription
             case R.id.subscribeBtn:
-                mAccountStateListener.onSubscribeClick();
+                mAccountListener.onSubscribeClick(
+                        mLocalSupplier.isActiveSubscription(),
+                        mLocalSupplier.isCancelAtPeriodEnd()
+                );
                 break;
 
             // E-mail
             case R.id.defineEmail:
-                mAccountStateListener.onDefineEmailClick();
+                mAccountListener.onDefineEmailClick();
                 break;
             case R.id.resendButton:
-                mAccountStateListener.onResendEmailClick();
+                mAccountListener.onResendEmailClick();
                 break;
 
             // Picked cities
             case R.id.changeCitiesBtn:
-                mAccountStateListener.onChangePickedCitiesClick();
+                mAccountListener.onChangePickedCitiesClick();
                 break;
 
             // Picked segments
             case R.id.pickedSegments:
             case R.id.changeSegmentsBtn:
-                mAccountStateListener.onChangePickedSegmentsClick();
+                mAccountListener.onChangePickedSegmentsClick();
                 break;
 
             // About section items
             case R.id.terms:
             case R.id.openSource:
-                mAccountStateListener.onAboutItemClick(id);
+                mAccountListener.onAboutItemClick(id);
                 break;
 
             // Logout
             case R.id.logoutBtn:
-                mAccountStateListener.onLogoutClick();
+                mAccountListener.onLogoutClick();
                 break;
 
             default:
@@ -347,8 +349,8 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         notifyItemChanged(VIEW_TYPE_EMAIL);
     }
 
-    public void setSupplier(Supplier supplier) {
-        this.mSupplier = supplier;
+    public void setSupplier(LocalSupplier localSupplier) {
+        this.mLocalSupplier = localSupplier;
         notifyDataSetChanged();
     }
 
@@ -367,6 +369,19 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void setPickedSegments(ArrayList<PickedSegment> segments) {
         this.mPickedSegments = segments;
         notifyItemChanged(VIEW_TYPE_PICKED_SEGMENTS);
+    }
+
+    /**
+     * Gets the text for the subscribe button
+     */
+    private String getSubscribeButtonText(Context context) {
+        if (mLocalSupplier.isCancelAtPeriodEnd()) {
+            return context.getString(R.string.reactive_subscription_btn);
+        } else if (mLocalSupplier.isActiveSubscription()) {
+            return context.getString(R.string.cancel_subscription_btn);
+        } else {
+            return context.getString(R.string.subscribe_btn);
+        }
     }
 
     private class SubscriptionViewHolder extends RecyclerView.ViewHolder {
@@ -393,7 +408,7 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     if (position == 0) {
-                        mAccountStateListener.onPaymentClick();
+                        mAccountListener.onPaymentClick();
                     }
                 }
             });

@@ -7,9 +7,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionModeOverlay">true</item>
-        <item name="android:actionModeBackground">@color/colorActionModePrimary</item>
+        <item name="android:actionModeBackground">@color/colorPrimary</item>
         <item name="android:actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-
     </style>
 
     <style name="SplashScreenTheme" parent="Theme.DefaultTheme">

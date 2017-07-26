@@ -1,5 +1,6 @@
 package com.tnmlicitacoes.app.model.realm;
 
+import com.tnmlicitacoes.app.NoticeByIdQuery;
 import com.tnmlicitacoes.app.NoticesQuery;
 
 import io.realm.RealmObject;
@@ -88,6 +89,10 @@ public class Segment extends RealmObject {
     }
 
     public static Segment mapToRealmFromGraphQL(NoticesQuery.Segment segment) {
+        return new Segment(segment.id(), segment.name());
+    }
+
+    public static Segment mapToRealmFromGraphQL(NoticeByIdQuery.Segment segment) {
         return new Segment(segment.id(), segment.name());
     }
 }

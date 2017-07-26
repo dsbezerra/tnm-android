@@ -1,54 +1,46 @@
 package com.tnmlicitacoes.app.ui.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.tnmlicitacoes.app.Config;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.SegmentsQuery;
 import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
-import com.tnmlicitacoes.app.utils.BillingUtils;
+import com.tnmlicitacoes.app.model.SubscriptionPlan;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
+public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> implements Filterable {
 
-    /* Tag for logging */
+    /** Tag for logging */
     private static final String TAG = "SegmentAdapter";
 
-    /**
-     * Color matrix that flips the components (-1.0f * c + 255 = 255 - c)
-     * and keeps the alpha intact.
-     */
-    private static final float[] NEGATIVE = {
-            -1.0f,   0.0f,   0.0f,  0.0f,   255, // red
-             0.0f,  -1.0f,   0.0f,  0.0f,   255, // green
-             0.0f,   0.0f,  -1.0f,  0.0f,   255, // blue
-             0.0f,   0.0f,   0.0f,  1.0f,  0.0f  // alpha
-    };
+    /** The uris */
+    private static final String BACKGROUND = Config.TNM_URL_PREFIX + "/img/app/segments/${id}/background_";
+    private static final String LOW_MEDIUM_BACKGROUND = BACKGROUND + "1x.webp";
+    private static final String HIGH_BACKGROUND = BACKGROUND + "1.5x.webp";
+    private static final String XHIGH_BACKGROUND = BACKGROUND + "2x.webp";
+    private static final String XXHIGH_BACKGROUND = BACKGROUND + "3x.webp";
+    private static final String XXXHIGH_BACKGROUND = BACKGROUND + "4x.webp";
 
+    /** Placeholder colors */
     private static final ColorDrawable[] PLACEHOLDER_COLORS = {
             // Alimentação
             new ColorDrawable(Color.parseColor("#C66526")),
@@ -121,12 +113,12 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
 
     /* Store the fetched segments */
     private List<SegmentsQuery.Edge> mSegmentEdges = new ArrayList<>();
+    private List<SegmentsQuery.Edge> mSegmentFilterEdges = new ArrayList<>();
+
+    private SegmentFilter mSegmentFilter;
 
     /* Store the selected segments */
     private HashMap<String, SegmentsQuery.Node> mSelectedSegments = new HashMap<>();
-
-    /* Color matrix used to modify color of segment views */
-    private final ColorMatrix mColorMatrix = new ColorMatrix();
 
     /* Holds the dpi density of the device */
     private final int mDensityDpi;
@@ -134,11 +126,13 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
     /* OnClick listener */
     private OnClickListenerRecyclerView mRecyclerViewOnClickListenerHack;
 
+    /* Max possible segments to pick */
+    private int mMax = SubscriptionPlan.BASIC_MAX_QUANTITY;
+
     /**
-     * Indicate if we should highlight the segment row even when it is not in the selected HashMap
-     * Used only to show colors in AccountFragment PickedSegments
-     * */
-    private boolean mIsHighlight = false;
+     * Indicate we should hide checkbox or not
+     **/
+    private boolean mShouldHideCheckbox = false;
 
     public SegmentAdapter(Context context) {
         mContext = context;
@@ -153,7 +147,7 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
     }
 
     @Override
-    public void onBindViewHolder(final VH holder, int position) {
+    public void onBindViewHolder(final VH holder, final int position) {
         SegmentsQuery.Node segment = getItem(position);
         if (segment != null) {
 
@@ -161,55 +155,54 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
 
             holder.segmentName.setSelected(true);
 
-            Matrix bigMatrix = new Matrix();
-            bigMatrix.setScale(5, 5);
-            holder.segmentBackground.setImageMatrix(bigMatrix);
-
-            if (!isSelected && !mIsHighlight) {
-                mColorMatrix.setSaturation(0.0f);
-
-                // Invert icon colors
-                holder.segmentIcon.setColorFilter(new ColorMatrixColorFilter(NEGATIVE));
-                holder.segmentName.setTextColor(ContextCompat.getColor(mContext,
-                        android.R.color.black));
-                holder.segmentGradientEffect.setBackground(null);
-
-                // Display background with colors when selected and P&B with a low alpha if not selected
-                Paint paint = new Paint();
-                ColorMatrixColorFilter cmColorFilter = new ColorMatrixColorFilter(mColorMatrix);
-                paint.setColorFilter(cmColorFilter);
-                paint.setAlpha(100);
-
-                holder.segmentBackground.setLayerType(View.LAYER_TYPE_HARDWARE, paint);
-
+            if (mShouldHideCheckbox) {
+                holder.checkBox.setVisibility(View.GONE);
             } else {
-                holder.segmentBackground.setLayerType(View.LAYER_TYPE_HARDWARE, new Paint());
+                holder.checkBox.setVisibility(View.VISIBLE);
+                holder.checkBox.setChecked(true);
 
-                // Invert icon colors
-                holder.segmentIcon.setColorFilter(new ColorMatrixColorFilter(new ColorMatrix()));
-                holder.segmentName.setTextColor(ContextCompat.getColor(mContext, android.R.color.white));
-
-                holder.segmentGradientEffect.setBackground(ContextCompat.getDrawable(mContext,
-                        R.drawable.segment_gradient_effect));
+                holder.checkBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mRecyclerViewOnClickListenerHack.OnClickListener(v, position);
+                    }
+                });
             }
+
+            if (isSelected) {
+                holder.effect.setBackground(new ColorDrawable(Color.parseColor("#10ff6600")));
+                holder.checkBox.setChecked(true);
+            } else {
+                holder.effect.setBackground(new ColorDrawable(Color.parseColor("#10000000")));
+                holder.checkBox.setChecked(false);
+            }
+
 
             // Load background
             Picasso.with(mContext)
                     .load(getUriAccordingWithDpi(segment))
-                    .placeholder(PLACEHOLDER_COLORS[position])
+                    .placeholder(getPlaceholderColor(position))
                     .into(holder.segmentBackground);
             // Set text
             holder.segmentName.setText(segment.name());
 
             String icon = segment.icon();
             if (icon == null) {
-                icon = "/img/app/categories/${id}/icon_white.webp".replace("${id}", segment.id());
+                icon = "/img/app/segments/${id}/icon_white.webp".replace("${id}", segment.id());
             }
             // Load icon with picasso
             Picasso.with(mContext)
                     .load(Config.TNM_URL_PREFIX + icon)
                     .into(holder.segmentIcon);
         }
+    }
+
+    private ColorDrawable getPlaceholderColor(int position) {
+        if (position >= 0 && position < PLACEHOLDER_COLORS.length) {
+            return PLACEHOLDER_COLORS[position];
+        }
+
+        return new ColorDrawable(Color.parseColor("#FFFFFF"));
     }
 
     @Override
@@ -234,6 +227,7 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
      */
     public void setItems(List<SegmentsQuery.Edge> list) {
         mSegmentEdges = list;
+        mSegmentFilterEdges = list;
         notifyDataSetChanged();
     }
 
@@ -283,7 +277,7 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
                 result = deselect(newSegment.id());
             } else {
                 // TODO(diego): Check if the user can select
-                if (getSelectedCount() < BillingUtils.SUBSCRIPTION_MAX_ITEMS) {
+                if (getSelectedCount() < mMax) {
                     mSelectedSegments.put(newSegment.id(), newSegment);
                     result = mSelectedSegments.size();
                 }
@@ -334,6 +328,20 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
     }
 
     /**
+     * Sets the maximum possible to pick segments
+     */
+    public void setMax(int value) {
+        this.mMax = value;
+    }
+
+    /**
+     * Gets maximum possible to pick segments
+     */
+    public int getMax() {
+        return mMax;
+    }
+
+    /**
      * Returns the count of selected segments
      * @return count of selected segments
      */
@@ -353,7 +361,7 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
      * Sets the highlight new value
      */
     public void setIsHighlight(boolean value) {
-        this.mIsHighlight = value;
+        this.mShouldHideCheckbox = value;
     }
 
     /**
@@ -363,19 +371,47 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
      */
     private String getUriAccordingWithDpi(SegmentsQuery.Node segment) {
 
-        boolean hasNoUri = false;
-        if (segment.icon() == null) {
-            hasNoUri = true;
+        String result = null;
+
+        switch (mDensityDpi) {
+
+            case DisplayMetrics.DENSITY_LOW:
+            case DisplayMetrics.DENSITY_MEDIUM:
+                result = LOW_MEDIUM_BACKGROUND;
+                break;
+
+            case DisplayMetrics.DENSITY_HIGH:
+                result = HIGH_BACKGROUND;
+                break;
+
+            case DisplayMetrics.DENSITY_XHIGH:
+                result = XHIGH_BACKGROUND;
+                break;
+
+            case DisplayMetrics.DENSITY_XXHIGH:
+                result = XXHIGH_BACKGROUND;
+                break;
+
+            case DisplayMetrics.DENSITY_XXXHIGH:
+                result = XXXHIGH_BACKGROUND;
+                break;
+
+            default:
+                result = LOW_MEDIUM_BACKGROUND;
+                break;
         }
 
-        String result = Config.TNM_URL_PREFIX + (!hasNoUri ? segment.defaultImg() : "/img/app/categories/${id}/default.webp".replace("${id}", segment.id()));
-        if (mDensityDpi >= DisplayMetrics.DENSITY_HIGH && mDensityDpi <= DisplayMetrics.DENSITY_XHIGH) {
-            result = Config.TNM_URL_PREFIX + (!hasNoUri ? segment.mqdefault() : "/img/app/categories/${id}/mqdefault.webp".replace("${id}", segment.id()));
-        }
-        else if (mDensityDpi >= DisplayMetrics.DENSITY_XXHIGH && mDensityDpi <= DisplayMetrics.DENSITY_XXXHIGH) {
-            result = Config.TNM_URL_PREFIX + (!hasNoUri ? segment.hqdefault() : "/img/app/categories/${id}/hqdefault.webp".replace("${id}", segment.id()));
-        }
+        result = result.replace("${id}", segment.id());
+
         return result;
+    }
+
+    @Override
+    public Filter getFilter() {
+        if (mSegmentFilter == null) {
+            mSegmentFilter = new SegmentFilter();
+        }
+        return mSegmentFilter;
     }
 
     /**
@@ -383,17 +419,19 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
      */
     public class VH extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        private View effect;
+        private CheckBox checkBox;
         private TextView segmentName;
         private ImageView segmentIcon;
         private ImageView segmentBackground;
-        private View segmentGradientEffect;
 
         private VH(View itemView) {
             super(itemView);
+            this.effect = itemView.findViewById(R.id.background_effect);
+            this.checkBox = (CheckBox) itemView.findViewById(R.id.check_box);
             this.segmentName = (TextView) itemView.findViewById(R.id.segmentName);
             this.segmentIcon = (ImageView) itemView.findViewById(R.id.segmentIcon);
             this.segmentBackground = (ImageView) itemView.findViewById(R.id.segmentBackground);
-            this.segmentGradientEffect = itemView.findViewById(R.id.segmentGradientEffect);
             itemView.setClickable(true);
             itemView.setOnClickListener(this);
         }
@@ -402,8 +440,46 @@ public class SegmentAdapter extends RecyclerView.Adapter<SegmentAdapter.VH> {
         public void onClick(View v) {
             if (mRecyclerViewOnClickListenerHack != null) {
                 v.requestFocus();
-                mRecyclerViewOnClickListenerHack.OnClickListener(v, getAdapterPosition());
+                checkBox.performClick();
             }
+        }
+    }
+
+    private class SegmentFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+
+            if (constraint != null && constraint.length() > 0) {
+                List<SegmentsQuery.Edge> filterList = new ArrayList<>();
+                for (int i = 0; i < mSegmentFilterEdges.size(); i++) {
+                    SegmentsQuery.Edge edge = mSegmentFilterEdges.get(i);
+                    SegmentsQuery.Node node = edge.node();
+
+                    String name = node.name().toLowerCase();
+                    String constraintLowercased = constraint.toString().toLowerCase();
+                    if (name.contains(constraintLowercased)) {
+                        filterList.add(edge);
+                    }
+                }
+                results.count = filterList.size();
+                results.values = filterList;
+            } else {
+                results.count = mSegmentFilterEdges.size();
+                results.values = mSegmentFilterEdges;
+            }
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            if (constraint != null && constraint.length() != 0) {
+                mSegmentEdges = (ArrayList<SegmentsQuery.Edge>) results.values;
+            } else {
+                mSegmentEdges = mSegmentFilterEdges;
+            }
+            notifyDataSetChanged();
         }
     }
 }

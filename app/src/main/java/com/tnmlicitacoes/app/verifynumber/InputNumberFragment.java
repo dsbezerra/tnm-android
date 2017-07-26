@@ -15,7 +15,6 @@ import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
-import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.RequestCodeMutation;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
@@ -40,11 +39,11 @@ public class InputNumberFragment extends VerifyNumberFragment implements
     /* Make sure the phone has only numbers */
     private static final Pattern ONLY_NUMBERS = Pattern.compile("\\D");
 
-    /* Put the two first digits in parenteshes */
+    /* Put the two first digits in parenthesis */
     private static final Pattern BETWEEN_PARENTHESES = Pattern.compile("(\\d{2})(\\d)");
 
     /* Separate the digits */
-    private static final Pattern SEPARARE_DIGITS = Pattern.compile("(\\d)(\\d{4})$");
+    private static final Pattern SEPARATE_DIGITS = Pattern.compile("(\\d)(\\d{4})$");
 
     /* Expression that validates a phone number without the 55 (brazil contry code) prefix */
     private static final Pattern VALID_PHONE_EXP = Pattern.compile(
@@ -126,7 +125,7 @@ public class InputNumberFragment extends VerifyNumberFragment implements
                 String currentText = mPhoneField.getText().toString();
                 currentText = ONLY_NUMBERS.matcher(currentText).replaceAll("");
                 currentText = BETWEEN_PARENTHESES.matcher(currentText).replaceFirst("($1) $2");
-                currentText = SEPARARE_DIGITS.matcher(currentText).replaceAll("$1-$2");
+                currentText = SEPARATE_DIGITS.matcher(currentText).replaceAll("$1-$2");
 
                 if (currentText != null) {
                     mPhoneField.setText(currentText);
@@ -249,7 +248,7 @@ public class InputNumberFragment extends VerifyNumberFragment implements
 
         String formattedPhone = phone.substring(2);
         formattedPhone = BETWEEN_PARENTHESES.matcher(formattedPhone).replaceFirst("($1) $2");
-        formattedPhone = SEPARARE_DIGITS.matcher(formattedPhone).replaceAll("$1-$2");
+        formattedPhone = SEPARATE_DIGITS.matcher(formattedPhone).replaceAll("$1-$2");
         formattedPhone = "+55 " + formattedPhone;
         return formattedPhone;
     }

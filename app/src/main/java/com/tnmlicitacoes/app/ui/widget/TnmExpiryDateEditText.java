@@ -20,7 +20,7 @@ import com.stripe.android.view.StripeEditText;
  * date is valid or invalid right after the user type a character we need to make some
  * modifications to the ExpiryDateEditListener
  *
- * REMEMBER TO UPDATE EVERY TIME STRIPE CHANGES SOMETHING
+ * TODO(diego): REMEMBER TO UPDATE EVERY TIME STRIPE CHANGES SOMETHING
  */
 public class TnmExpiryDateEditText extends StripeEditText {
 

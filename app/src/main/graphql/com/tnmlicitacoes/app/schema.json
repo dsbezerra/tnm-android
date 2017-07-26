@@ -139,9 +139,13 @@
                   "name": "cityId",
                   "description": null,
                   "type": {
-                    "kind": "SCALAR",
-                    "name": "OID",
-                    "ofType": null
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "OID",
+                      "ofType": null
+                    }
                   },
                   "defaultValue": null
                 },
@@ -560,6 +564,18 @@
               "deprecationReason": null
             },
             {
+              "name": "cityId",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "OID",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "segment",
               "description": null,
               "args": [],
@@ -864,9 +880,13 @@
                   "name": "cityId",
                   "description": null,
                   "type": {
-                    "kind": "SCALAR",
-                    "name": "OID",
-                    "ofType": null
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "OID",
+                      "ofType": null
+                    }
                   },
                   "defaultValue": null
                 },
@@ -1058,9 +1078,13 @@
                   "name": "cityId",
                   "description": null,
                   "type": {
-                    "kind": "SCALAR",
-                    "name": "OID",
-                    "ofType": null
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "OID",
+                      "ofType": null
+                    }
                   },
                   "defaultValue": null
                 },
@@ -1780,9 +1804,13 @@
                   "name": "cityId",
                   "description": null,
                   "type": {
-                    "kind": "SCALAR",
-                    "name": "OID",
-                    "ofType": null
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "OID",
+                      "ofType": null
+                    }
                   },
                   "defaultValue": null
                 },
@@ -2403,7 +2431,7 @@
               "deprecationReason": null
             },
             {
-              "name": "activeSub",
+              "name": "activeSubscription",
               "description": null,
               "args": [],
               "type": {
@@ -2475,6 +2503,54 @@
               "deprecationReason": null
             },
             {
+              "name": "currentPeriodStart",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "currentPeriodEnd",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "DateTime",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "subscriptionStatus",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "cancelAtPeriodEnd",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "cards",
               "description": null,
               "args": [],
@@ -2486,6 +2562,142 @@
                   "name": "CardPayload",
                   "ofType": null
                 }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "segments",
+              "description": null,
+              "args": [
+                {
+                  "name": "first",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "last",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "after",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Cursor",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "before",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Cursor",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "orderBy",
+                  "description": null,
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "SegmentOrder",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "SegmentConnection",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "cities",
+              "description": null,
+              "args": [
+                {
+                  "name": "first",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "last",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "after",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Cursor",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "before",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Cursor",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "orderBy",
+                  "description": null,
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "CityOrder",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "state",
+                  "description": null,
+                  "type": {
+                    "kind": "ENUM",
+                    "name": "State",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "CityConnection",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -3083,7 +3295,7 @@
               "description": "Subscribes a existing user to a plan.",
               "args": [
                 {
-                  "name": "source",
+                  "name": "cardId",
                   "description": null,
                   "type": {
                     "kind": "SCALAR",
@@ -3427,6 +3639,16 @@
               "defaultValue": null
             },
             {
+              "name": "cityId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "OID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "url",
               "description": "Original source of the notice",
               "type": {
@@ -3710,6 +3932,34 @@
                 "ofType": null
               },
               "defaultValue": null
+            },
+            {
+              "name": "segments",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "OID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "cities",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "OID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
             }
           ],
           "interfaces": null,
@@ -3756,6 +4006,18 @@
               "type": {
                 "kind": "SCALAR",
                 "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "supplier",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Supplier",
                 "ofType": null
               },
               "isDeprecated": false,

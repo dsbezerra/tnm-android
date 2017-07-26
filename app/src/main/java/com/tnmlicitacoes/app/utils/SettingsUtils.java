@@ -26,6 +26,11 @@ public class SettingsUtils {
     public static final String PREF_USER_IS_LOGGED = "tnm_user_is_logged_in";
 
     /**
+     * String that contains the user's name
+     */
+    public static final String PREF_USER_NAME = "tnm_user_name";
+
+    /**
      * String that contains the user's phone number
      */
     public static final String PREF_USER_PHONE_NUMBER = "tnm_user_phone_number";
@@ -124,6 +129,11 @@ public class SettingsUtils {
     public static final String PREF_IS_FIRST_START = "tnm_is_first_start";
 
     /**
+     * Boolean indicating if is we added or not to default topics
+     */
+    public static final String PREF_IS_ADDED_TO_DEFAULT_TOPICS = "tnm_is_added_to_default_topics";
+
+    /**
      * Boolean indicating if already saw intro screen
      */
     public static final String PREF_INTRO_VIEWED = "tnm_intro_viewed";
@@ -187,6 +197,11 @@ public class SettingsUtils {
      * Boolean indicating if the user is waiting for a sms
      */
     public static final String PREF_IS_WAITING_FOR_SMS = "tnm_is_waiting_for_sms";
+
+    /**
+     * Waiting sms timestamp
+     */
+    public static final String PREF_IS_WAITING_FOR_SMS_TIMESTAMP = "tnm_is_waiting_for_sms_timestamp";
 
     /**
      * Long indicating the amount of time elapsed in waiting sms
@@ -319,6 +334,22 @@ public class SettingsUtils {
     }
 
     /**
+     * Return true if added to default topics or false if not
+     */
+    public static boolean isAddedToDefaultTopics(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getBoolean(PREF_IS_ADDED_TO_DEFAULT_TOPICS, false);
+    }
+
+    /**
+     * Get the waiting sms timestamp
+     */
+    public static long getWaitingForSmsTimestamp(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getLong(PREF_IS_WAITING_FOR_SMS_TIMESTAMP, LONG_DEFAULT);
+    }
+
+    /**
      * Return the sms waiting time
      */
     public static long getRemainingSmsWaitingTime(Context context) {
@@ -327,11 +358,19 @@ public class SettingsUtils {
     }
 
     /**
-     * Return the user phone number and STRING_DEFAULT when there is not stored
+     * Return the user phone number or null when there is not stored
      * */
     public static String getUserPhoneNumber(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(PREF_USER_PHONE_NUMBER, null);
+    }
+
+    /**
+     * Return the user name or null when there is not stored
+     * */
+    public static String getUserName(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(PREF_USER_NAME, null);
     }
 
     /**
@@ -355,7 +394,7 @@ public class SettingsUtils {
      */
     public static String getUserDefaultEmail(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(PREF_KEY_USER_DEFAULT_EMAIL, context.getString(R.string.pref_email_default));
+        return preferences.getString(PREF_KEY_USER_DEFAULT_EMAIL, null);
     }
 
     /**

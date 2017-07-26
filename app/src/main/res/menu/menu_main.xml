@@ -7,16 +7,15 @@
         android:id="@+id/action_search"
         android:title="@string/menu_search"
         android:icon="@drawable/ic_search"
-        android:orderInCategory="100"
-        app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="android.support.v7.widget.SearchView"
+        android:orderInCategory="1"
+        app:showAsAction="always"
         />
 
     <item
         android:id="@+id/action_filter"
         android:title="@string/menu_filter"
         android:icon="@drawable/ic_filter_list"
-        android:orderInCategory="101"
+        android:orderInCategory="2"
         app:showAsAction="ifRoom|collapseActionView"
         />
 
@@ -32,5 +31,6 @@
         android:title="Configurações"
         app:showAsAction="ifRoom|collapseActionView"
         />
+
 
 </menu>

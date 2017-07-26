@@ -3,5 +3,51 @@ mutation ConfirmCodeMutation($phone: String!, $code: String!, $deviceId: String!
     validCode
     accessToken
     refreshToken
+    supplier {
+        id
+        customerId
+        deviceId
+        subId
+        name
+        email
+        cityNum
+        segNum
+        activated
+        activeSubscription
+        phone
+        defaultCard
+        createdAt
+        updatedAt
+        activatedAt
+        currentPeriodStart
+        currentPeriodEnd
+        subscriptionStatus
+        cancelAtPeriodEnd
+        cards {
+            id
+            brand
+            last4
+            exp_month
+            exp_year
+        }
+        segments(first: 50) {
+            edges {
+                node {
+                    id
+                    name
+                    icon
+                }
+            }
+        }
+        cities(first: 50) {
+            edges {
+                node {
+                    id
+                    name
+                    state
+                }
+            }
+        }
+      }
   }
 }

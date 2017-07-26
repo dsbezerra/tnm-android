@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowActionModeOverlay">true</item>
-        <item name="actionModeBackground">@color/colorActionModePrimary</item>
+        <item name="actionModeBackground">@color/colorPrimary</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
@@ -16,6 +16,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">false</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">false</item>
     </style>
 
     <style name="Theme.VerifyNumber" parent="Theme.DefaultTheme">
@@ -34,6 +38,12 @@
 
     <style name="PdfTheme" parent="Theme.DefaultTheme">
         <item name="android:windowBackground">@color/background_grey</item>
+    </style>
+
+    <style name="LightToolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@color/white</item>
+        <item name="titleTextColor">@color/colorPrimary</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
     </style>
 
     <!-- Widget styles -->
@@ -105,6 +115,11 @@
         <item name="colorControlActivated">@color/colorAccent</item>
     </style>
 
+    <style name="Widget.TNM.CheckBox.White" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+    </style>
+
     <style name="Widget.TNM.DetailsCard">
         <item name="android:layout_margin">0dp</item>
     </style>
@@ -154,4 +169,22 @@
         <item name="android:layout_marginBottom">@dimen/spacing_normal</item>
     </style>
 
+    <style name="TextAppearance" parent="TextAppearance.AppCompat"/>
+    <style name="TextAppearance.TNM" parent="TextAppearance"/>
+    <style name="TextAppearance.TNM.RegistrationHeader">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+    <style name="TextAppearance.TNM.RegistrationHeaderCollapsed">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+    <style name="TextAppearance.TNM.RegistrationDescription">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorLightGrey</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:layout_marginBottom">@dimen/spacing_tiny</item>
+    </style>
 </resources>

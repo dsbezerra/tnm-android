@@ -16,15 +16,15 @@ import android.widget.Button;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.tnmlicitacoes.app.interfaces.OnUpdateListener;
+import com.tnmlicitacoes.app.main.mynotices.MyNoticesFragment;
 import com.tnmlicitacoes.app.settings.SettingsActivity;
-import com.tnmlicitacoes.app.ui.accountconfiguration.AccountConfigurationActivity;
-import com.tnmlicitacoes.app.ui.activity.DetailsActivity;
+import com.tnmlicitacoes.app.accountconfiguration.AccountConfigurationActivity;
+import com.tnmlicitacoes.app.details.DetailsActivity;
 import com.tnmlicitacoes.app.ui.activity.IntroActivity;
-import com.tnmlicitacoes.app.ui.main.MainActivity;
+import com.tnmlicitacoes.app.main.MainActivity;
 import com.tnmlicitacoes.app.ui.activity.SplashScreenActivity;
 import com.tnmlicitacoes.app.ui.activity.WebviewActivity;
-import com.tnmlicitacoes.app.ui.main.AccountFragment;
-import com.tnmlicitacoes.app.ui.main.MyNoticesFragment;
+import com.tnmlicitacoes.app.main.account.AccountFragment;
 import com.tnmlicitacoes.app.verifynumber.VerifyNumberActivity;
 
 //import com.tnmlicitacoes.app.ui.activity.VerifyNumberActivity;
@@ -52,8 +52,6 @@ public class AndroidUtilities {
     private static final short MY_BIDDINGS_ACTIVITY        = 1007;
     private static final short WEB_VIEW_ACTIVITY           = 1008;
     private static final short DETAILS_ACTIVITY            = 1009;
-
-    public static boolean sIsWaitingSms = false;
 
     // Classname = full package name + class name
     // ex: com.empresa.app.MainActivity
@@ -167,7 +165,7 @@ public class AndroidUtilities {
         return !TextUtils.isEmpty(id) && getDeviceToken().equals(id);
     }
 
-    public static boolean verifyConnection (Context context) {
+    public static boolean verifyConnection(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return (netInfo != null && netInfo.isConnected());

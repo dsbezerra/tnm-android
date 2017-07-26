@@ -1,0 +1,28 @@
+query NoticeByIdQuery($id: ID!) {
+    notice(id: $id) {
+        id
+        modality
+        number
+        object
+        disputeDate
+        amount
+        link
+        url
+        exclusive
+        agency {
+          id
+          name
+          abbr
+          city {
+            id
+            name
+            state
+          }
+        }
+        segment {
+          id
+          name
+          icon
+        }
+    }
+}

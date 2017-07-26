@@ -1,6 +1,7 @@
 package com.tnmlicitacoes.app.ui.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
 import com.tnmlicitacoes.app.model.realm.Agency;
 import com.tnmlicitacoes.app.model.realm.City;
 import com.tnmlicitacoes.app.model.realm.Notice;
+import com.tnmlicitacoes.app.utils.DateUtils;
 import com.tnmlicitacoes.app.utils.NoticeUtils;
 
 import java.text.SimpleDateFormat;
@@ -30,8 +32,8 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     /* Tag for logging */
     private static final String TAG = "NoticeAdapter";
 
-    /* Icon of segment TODO(diego): See if this is still relevant */
-    private static String sIconUrl = "https://tnmlicitacoes.com/img/app/categories/{segId}/icon.png";
+    /* Icon of segment uri */
+    private static String sIconUrl = "https://tnmlicitacoes.com/img/app/segments/{segId}/icon_white.webp";
 
     /* View type ids */
     private final int VIEW_LOADING_MORE = 0;
@@ -75,7 +77,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             final Notice notice = getItem(position);
             if (notice != null) {
-                Context context = noticeHolder.itemView.getContext();
+                final Context context = noticeHolder.itemView.getContext();
                 if (notice.getAgency() != null) {
                     Agency agency = notice.getAgency();
                     City city = agency.getCity();
@@ -94,10 +96,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
                 Date disputeDate = notice.getDisputeDate();
                 if (disputeDate != null) {
-                    boolean withTime = disputeDate.getHours() != 0;
-                    String pattern = withTime ? "dd/MM/yyyy HH:mm" : "dd/MM/yyyy";
-                    noticeHolder.noticeDisputeDate.setText(new SimpleDateFormat(pattern)
-                            .format(disputeDate));
+                    noticeHolder.noticeDisputeDate.setText(DateUtils.format(notice.getDisputeDate()));
                 }
 
                 if (notice.getSegment() == null) {
@@ -109,6 +108,8 @@ public class NoticeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     @Override
                     public void onSuccess() {
                         noticeHolder.noticeSegment.setVisibility(View.VISIBLE);
+                        noticeHolder.noticeSegment.setColorFilter(ContextCompat.getColor(context,
+                                R.color.colorLightGrey));
                     }
 
                     @Override

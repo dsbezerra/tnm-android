@@ -567,7 +567,7 @@ public class IabHelper {
      * information on additional skus, if specified. This method may block or take long to execute.
      * Do not call from a UI thread. For that, use the non-blocking version {@link #queryInventoryAsync}.
      *
-     * @param querySkuDetails if true, SKU details (price, description, etc) will be queried as well
+     * @param querySkuDetails if true, SKU seeDetails (price, description, etc) will be queried as well
      *     as purchase information.
      * @param moreItemSkus additional PRODUCT skus to query information on, regardless of ownership.
      *     Ignored if null or if querySkuDetails is false.
@@ -934,7 +934,7 @@ public class IabHelper {
 
     int querySkuDetails(String itemType, Inventory inv, List<String> moreSkus)
             throws RemoteException, JSONException {
-        logDebug("Querying SKU details.");
+        logDebug("Querying SKU seeDetails.");
         ArrayList<String> skuList = new ArrayList<String>();
         skuList.addAll(inv.getAllOwnedSkus(itemType));
         if (moreSkus != null) {
@@ -992,7 +992,7 @@ public class IabHelper {
 
             for (String thisResponse : responseList) {
                 SkuDetails d = new SkuDetails(itemType, thisResponse);
-                logDebug("Got sku details: " + d);
+                logDebug("Got sku seeDetails: " + d);
                 inv.addSkuDetails(d);
             }
         }

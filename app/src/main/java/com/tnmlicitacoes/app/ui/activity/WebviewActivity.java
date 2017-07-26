@@ -19,6 +19,8 @@ import com.tnmlicitacoes.app.ui.base.BaseActivity;
 
 public class WebviewActivity extends BaseActivity {
 
+    private static final String TAG = "WebviewActivity";
+
     private static final String GOOGLE_DOCS_VIEW_DOC_URI = "http://docs.google.com/gview?embedded=true&url=";
 
     public static final String PAGE_TITLE = "page_title";
@@ -43,6 +45,11 @@ public class WebviewActivity extends BaseActivity {
         setContentView(R.layout.activity_web_view);
         initViews();
         initListeners();
+    }
+
+    @Override
+    public String getLogTag() {
+        return TAG;
     }
 
     @Override

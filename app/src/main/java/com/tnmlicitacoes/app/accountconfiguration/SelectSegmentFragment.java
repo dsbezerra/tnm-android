@@ -332,4 +332,9 @@ public class SelectSegmentFragment extends AccountConfigurationFragment implemen
 
     @Override
     public void setError(String message) {}
+
+    @Override
+    public boolean shouldEnableAdvanceButton() {
+        return mSegmentAdapter != null && mSegmentAdapter.getSelectedCount() != 0;
+    }
 }

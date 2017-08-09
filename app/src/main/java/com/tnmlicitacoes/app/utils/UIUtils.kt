@@ -84,5 +84,28 @@ class UIUtils {
             snackbar.view.layoutParams = params
             return snackbar
         }
+
+        /**
+         * Helper method to set the light status bar color
+         */
+        fun setLightStatusBar(view: View, activity: Activity) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                var flags = view.systemUiVisibility
+                flags = flags or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                view.systemUiVisibility = flags
+                activity.getWindow().setStatusBarColor(Color.WHITE)
+            }
+        }
+
+        /**
+         * Helper method that clears the status bar
+         */
+        fun clearLightStatusBar(view: View) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                var flags = view.systemUiVisibility
+                flags = flags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+                view.systemUiVisibility = flags
+            }
+        }
     }
 }

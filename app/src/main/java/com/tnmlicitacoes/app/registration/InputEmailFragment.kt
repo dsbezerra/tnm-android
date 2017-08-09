@@ -5,6 +5,7 @@ import android.support.design.widget.TextInputLayout
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -17,7 +18,7 @@ import com.tnmlicitacoes.app.utils.UIUtils
 
 class InputEmailFragment : RegistrationFragment(), RegistrationActivity.RegistrationContent {
     override fun setError(message: String) {
-        mEmail.error = message
+        mEmail?.error = message
     }
 
     override fun getLogTag(): String {
@@ -28,7 +29,7 @@ class InputEmailFragment : RegistrationFragment(), RegistrationActivity.Registra
     private lateinit var mEmailLayout: TextInputLayout
 
     /* Display the input field for the email */
-    private lateinit var mEmail: EditText
+    private var mEmail: EditText? = null
 
     private var mListeningForChanges = false
 
@@ -38,10 +39,15 @@ class InputEmailFragment : RegistrationFragment(), RegistrationActivity.Registra
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        mListener?.onEmailChanged(mEmail?.text.toString().trim())
+    }
+
     private fun initViews(view: View?, savedInstanceState: Bundle?) {
         mEmailLayout = view?.findViewById(R.id.email_layout) as TextInputLayout
         mEmail = view.findViewById(R.id.email_value) as EditText
-        mEmail.addTextChangedListener(object : TextWatcher {
+        mEmail?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // No-op
             }
@@ -53,7 +59,7 @@ class InputEmailFragment : RegistrationFragment(), RegistrationActivity.Registra
             }
         })
 
-        mEmail.setOnFocusChangeListener {
+        mEmail?.setOnFocusChangeListener {
             _, hasFocus -> if (hasFocus) {
             mEmailLayout.hint = "E-mail"
         } else {
@@ -63,32 +69,32 @@ class InputEmailFragment : RegistrationFragment(), RegistrationActivity.Registra
         // Fill field if we have an email
         val email = SettingsUtils.getUserDefaultEmail(activity);
         if (!TextUtils.isEmpty(email) && savedInstanceState == null) {
-            mEmail.setText(email)
+            mEmail?.setText(email)
             mEmailLayout.hint = "E-mail"
-            mEmail.setSelection(email.length)
+            mEmail?.setSelection(email.length)
         }
 
         notifyChanges()
     }
 
     private fun notifyChanges() {
-        val text = mEmail.text.toString()
+        val text = mEmail?.text.toString()
 
-        if (mEmail.length() != 0 && !mListeningForChanges) {
+        if (mEmail?.length() != 0 && !mListeningForChanges) {
             mListeningForChanges = true
-            UIUtils.setRightDrawable(mEmail, R.drawable.ic_clear_select_search_field)
+            UIUtils.setRightDrawable(mEmail!!, R.drawable.ic_clear_select_search_field)
             // Listens for click on the clear drawable
-            mEmail.setOnTouchListener({ _, event ->
+            mEmail?.setOnTouchListener({ _, event ->
                 if (event.action == MotionEvent.ACTION_UP) {
-                    val drawableLeftX = mEmail.right - mEmail.compoundDrawables[2].bounds.width()
-                    if (event.x >= drawableLeftX && mEmail.length() != 0) {
+                    val drawableLeftX = mEmail!!.right - mEmail!!.compoundDrawables[2].bounds.width()
+                    if (event.x >= drawableLeftX && mEmail?.length() != 0) {
                         clearField()
                     }
                 }
 
                 false
             })
-        } else if (mEmail.length() == 0) {
+        } else if (mEmail?.length() == 0) {
             clearField()
         }
 
@@ -97,10 +103,16 @@ class InputEmailFragment : RegistrationFragment(), RegistrationActivity.Registra
 
     fun clearField() {
         mListeningForChanges = false
-        mEmail.text.clear()
-        mEmail.setOnTouchListener(null)
-        UIUtils.setRightDrawable(mEmail, UIUtils.NO_DRAWABLE)
+        mEmail?.text!!.clear()
+        mEmail?.setOnTouchListener(null)
+        UIUtils.setRightDrawable(mEmail!!, UIUtils.NO_DRAWABLE)
     }
+
+    override fun shouldEnableAdvanceButton(): Boolean {
+        return mEmail?.length() != 0 && Patterns.EMAIL_ADDRESS
+                .matcher(mEmail?.text.toString()).matches()
+    }
+
 
     override fun shouldDisplay(localSupplier: LocalSupplier?): Boolean {
         if (localSupplier == null) {
@@ -115,7 +127,7 @@ class InputEmailFragment : RegistrationFragment(), RegistrationActivity.Registra
     }
 
     override fun getFocusView(): View? {
-        if (mEmail.isFocusable && mEmail.hasFocus()) {
+        if (mEmail?.isFocusable!! && mEmail?.hasFocus()!!) {
             return mEmail
         }
         return super.getFocusView()

@@ -105,7 +105,6 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
                 mRealm.beginTransaction()
                 mRealm.copyToRealm(pickedCity)
                 mRealm.commitTransaction()
-                setNextButtonEnabled(true)
             } else {
                 mRealm.beginTransaction()
                 resultCity.deleteFromRealm()
@@ -243,12 +242,16 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
                             mFragmentsToDisplay = getFragmentsToDisplay(response.data()?.supplier());
                             if (mFragmentsToDisplay.isNotEmpty()) {
                                 mCurrent = mFragmentsToDisplay[mCurrentIndex]
+                                val fragment = getFragmentFromTag(mCurrent)
                                 supportFragmentManager
                                         .beginTransaction()
-                                        .add(R.id.container, getFragmentFromTag(mCurrent), mCurrent)
+                                        .add(R.id.container, fragment, mCurrent)
                                         .commit()
-                                updateUiAccordinglyWithFragment(getFragmentFromTag(mCurrent))
+                                updateUiAccordinglyWithFragment(fragment)
                             } else {
+                                SettingsUtils.putBoolean(this@RegistrationActivity,
+                                        SettingsUtils.PREF_INITIAL_CONFIG_IS_FINISHED,
+                                        true)
                                 val intent = Intent(this@RegistrationActivity, MainActivity::class.java)
                                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                                 startActivity(intent)
@@ -267,12 +270,15 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
                 mFragmentsToDisplay = getFragmentsToDisplay(mSupplier)
                 if (mFragmentsToDisplay.isNotEmpty()) {
                     mCurrent = mFragmentsToDisplay[mCurrentIndex]
+                    val fragment = getFragmentFromTag(mCurrent)
                     supportFragmentManager
                             .beginTransaction()
-                            .add(R.id.container, getFragmentFromTag(mCurrent), mCurrent)
+                            .add(R.id.container, fragment, mCurrent)
                             .commit()
-                    updateUiAccordinglyWithFragment(getFragmentFromTag(mCurrent))
+                    updateUiAccordinglyWithFragment(fragment)
                 } else {
+                    SettingsUtils.putBoolean(this, SettingsUtils.PREF_INITIAL_CONFIG_IS_FINISHED,
+                            true)
                     val intent = Intent(this, MainActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                     startActivity(intent)
@@ -566,10 +572,6 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
         mRealm.commitTransaction()
     }
 
-    // Go to next fragment
-    private fun advance() {
-    }
-
     /**
      * Sets the enabled state of the next button
      */
@@ -645,6 +647,7 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
         mCoordinatorLayout?.post { mCoordinatorLayout?.requestLayout() }
 
         updateBottomText(content)
+        setNextButtonEnabled(content.shouldEnableAdvanceButton())
     }
 
     /**
@@ -755,6 +758,13 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
 
 
     interface RegistrationContent {
+
+        /**
+         * Whether advance button should be enabled or not
+         */
+        fun shouldEnableAdvanceButton(): Boolean {
+            return false
+        }
 
         /**
          * Whether this fragment should be displayed or not

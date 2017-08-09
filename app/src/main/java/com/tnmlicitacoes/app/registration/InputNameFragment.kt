@@ -22,7 +22,7 @@ class InputNameFragment : RegistrationFragment(), RegistrationActivity.Registrat
     }
 
     /* Display the input field for the name */
-    private lateinit var mName: EditText
+    private var mName: EditText? = null
 
     private var mListeningForChanges = false
 
@@ -32,14 +32,9 @@ class InputNameFragment : RegistrationFragment(), RegistrationActivity.Registrat
         return view
     }
 
-    override fun onStart() {
-        super.onStart()
-        LogUtils.LOG_DEBUG(TAG, "onStart " + this.toString());
-    }
-
     private fun initViews(view: View?, savedInstanceState: Bundle?) {
         mName = view?.findViewById(R.id.name_value) as EditText
-        mName.addTextChangedListener(object : TextWatcher {
+        mName?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 // No-op
             }
@@ -54,31 +49,31 @@ class InputNameFragment : RegistrationFragment(), RegistrationActivity.Registrat
         // Fill field if we have a name
         val name = SettingsUtils.getUserName(activity);
         if (!TextUtils.isEmpty(name) && savedInstanceState == null) {
-            mName.setText(name)
-            mName.setSelection(name.length)
+            mName?.setText(name)
+            mName?.setSelection(name.length)
         }
 
         notifyChanges()
     }
 
     private fun notifyChanges() {
-        val text = mName.text.toString()
+        val text = mName?.text.toString()
 
-        if (mName.length() != 0 && !mListeningForChanges) {
+        if (mName?.length() != 0 && !mListeningForChanges) {
             mListeningForChanges = true
-            UIUtils.setRightDrawable(mName, R.drawable.ic_clear_select_search_field)
+            UIUtils.setRightDrawable(mName!!, R.drawable.ic_clear_select_search_field)
             // Listens for click on the clear drawable
-            mName.setOnTouchListener({ _, event ->
+            mName?.setOnTouchListener({ _, event ->
                 if (event.action == MotionEvent.ACTION_UP) {
-                    val drawableLeftX = mName.right - mName.compoundDrawables[2].bounds.width()
-                    if (event.x >= drawableLeftX && mName.length() != 0) {
+                    val drawableLeftX = mName?.right!! - mName?.compoundDrawables!![2].bounds.width()
+                    if (event.x >= drawableLeftX && mName?.length() != 0) {
                         clearField()
                     }
                 }
 
                 false
             })
-        } else if (mName.length() == 0) {
+        } else if (mName?.length() == 0) {
             clearField()
         }
 
@@ -87,17 +82,21 @@ class InputNameFragment : RegistrationFragment(), RegistrationActivity.Registrat
 
     fun clearField() {
         mListeningForChanges = false
-        mName.text.clear()
-        mName.setOnTouchListener(null)
-        UIUtils.setRightDrawable(mName, UIUtils.NO_DRAWABLE)
+        mName?.text!!.clear()
+        mName?.setOnTouchListener(null)
+        UIUtils.setRightDrawable(mName!!, UIUtils.NO_DRAWABLE)
+    }
+
+    override fun shouldEnableAdvanceButton(): Boolean {
+        return mName?.length() != 0
     }
 
     override fun setError(message: String) {
-        mName.error = message
+        mName?.error = message
     }
 
     override fun getFocusView(): View? {
-        if (mName.isFocusable && mName.hasFocus()) {
+        if (mName?.isFocusable!! && mName?.hasFocus()!!) {
             return mName
         }
         return super.getFocusView()

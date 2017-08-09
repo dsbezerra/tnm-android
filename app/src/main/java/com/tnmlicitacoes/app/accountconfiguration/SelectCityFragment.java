@@ -336,4 +336,9 @@ public class SelectCityFragment extends AccountConfigurationFragment
 
     @Override
     public void setError(String message) {}
+
+    @Override
+    public boolean shouldEnableAdvanceButton() {
+        return mCityAdapter != null && mCityAdapter.getSelectedCount() != 0;
+    }
 }

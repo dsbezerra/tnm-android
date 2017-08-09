@@ -1,6 +1,7 @@
 package com.tnmlicitacoes.app.registration
 
 import android.content.Context
+import android.os.Bundle
 import com.tnmlicitacoes.app.ui.base.BaseFragment
 
 abstract class RegistrationFragment : BaseFragment() {

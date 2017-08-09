@@ -2,13 +2,18 @@ package com.tnmlicitacoes.app.verifynumber;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -16,14 +21,16 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.RequestCodeMutation;
+import com.tnmlicitacoes.app.apollo.RequestCodeMutation;
 import com.tnmlicitacoes.app.TnmApplication;
+import com.tnmlicitacoes.app.registration.InputNameFragment;
 import com.tnmlicitacoes.app.registration.RegistrationActivity;
 import com.tnmlicitacoes.app.interfaces.OnVerifyNumberListener;
 import com.tnmlicitacoes.app.ui.base.BaseActivity;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
 import com.tnmlicitacoes.app.utils.CryptoUtils;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
+import com.tnmlicitacoes.app.utils.UIUtils;
 import com.tnmlicitacoes.app.utils.Utils;
 import com.transitionseverywhere.ChangeBounds;
 import com.transitionseverywhere.Transition;
@@ -52,13 +59,6 @@ public class VerifyNumberActivity extends BaseActivity implements OnVerifyNumber
 
     /* Realm instance */
     private Realm mRealm;
-
-    /* The logo */
-    private ImageView mLogo;
-
-    /* Whether we need to show the up animation or not */
-    boolean mToUpAnimation;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +106,7 @@ public class VerifyNumberActivity extends BaseActivity implements OnVerifyNumber
         if (SettingsUtils.isWaitingForSms(this)) {
             return;
         }
+
         super.onBackPressed();
     }
 
@@ -119,7 +120,6 @@ public class VerifyNumberActivity extends BaseActivity implements OnVerifyNumber
      */
     private void initViews() {
         mTransitionContainer = (ViewGroup) findViewById(R.id.root);
-        mLogo = (ImageView) findViewById(R.id.logo);
     }
 
     /**
@@ -127,31 +127,21 @@ public class VerifyNumberActivity extends BaseActivity implements OnVerifyNumber
      */
     private void showFragment() {
         mCurrentFragment = (VerifyNumberFragment) getCurrentFragment();
-        mToUpAnimation = mCurrentFragment instanceof WaitingSmsFragment;
-
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-        Transition transition = new ChangeBounds();
-        transition.setDuration(mToUpAnimation ? 700 : 300);
-        transition.setInterpolator(mToUpAnimation ? new FastOutSlowInInterpolator() : new AccelerateInterpolator());
-        transition.setStartDelay(mToUpAnimation ? 0 : 500);
-        TransitionManager.beginDelayedTransition(mTransitionContainer, transition);
-
-        // Running in UI thread because some functions that call this function is in another thread
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mLogo.getLayoutParams();
-                params.topMargin = mToUpAnimation ? AndroidUtilities.dp(VerifyNumberActivity.this, 20)
-                                                  : AndroidUtilities.dp(VerifyNumberActivity.this, 80);
-                mLogo.setLayoutParams(params);
-            }
-        });
-
-        fragmentTransaction
-                .setCustomAnimations(R.anim.fragment_enter_from_bottom, R.anim.fragment_exit_to_bottom,
-                        R.anim.fragment_enter_from_bottom, R.anim.fragment_exit_to_bottom)
-                .replace(R.id.verify_number_content, mCurrentFragment)
+        if (mCurrentFragment instanceof WaitingSmsFragment) {
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.setCustomAnimations(
+                    R.anim.activity_fade_enter, R.anim.activity_fade_exit,
+                    R.anim.activity_fade_enter, R.anim.activity_fade_exit
+            );
+        } else {
+            fragmentTransaction.setCustomAnimations(
+                    R.anim.fragment_enter_from_bottom, 0,
+                    R.anim.fragment_enter_from_bottom, 0
+            );
+        }
+        TransitionManager.beginDelayedTransition(mTransitionContainer);
+        fragmentTransaction.replace(R.id.verify_number_content, mCurrentFragment)
                 .commit();
     }
 
@@ -191,24 +181,30 @@ public class VerifyNumberActivity extends BaseActivity implements OnVerifyNumber
         if (response != null && !response.hasErrors()) {
             SettingsUtils.putBoolean(this, SettingsUtils.PREF_IS_WAITING_FOR_SMS, true);
             SettingsUtils.putLong(this, SettingsUtils.PREF_IS_WAITING_FOR_SMS_TIMESTAMP,
-                    new Date().getTime());
+                    System.currentTimeMillis());
             // Setup trial variables here
             showFragment();
         } else {
-            if (BuildConfig.DEBUG) {
-                SettingsUtils.putBoolean(this, SettingsUtils.PREF_IS_WAITING_FOR_SMS, true);
-                showFragment();
-            } else {
-
-            }
+            // TODO(diego): Remove this in Production
+            // TODO: FIX ME FIX ME FIX ME FIX ME
+            // TODO: FIX ME FIX ME FIX ME FIX ME
+            // TODO: FIX ME FIX ME FIX ME FIX ME
+            // TODO: FIX ME FIX ME FIX ME FIX ME
+            // TODO: FIX ME FIX ME FIX ME FIX ME
+            // TODO: FIX ME FIX ME FIX ME FIX ME
+            // TODO: FIX ME FIX ME FIX ME FIX ME
+            // TODO: FIX ME FIX ME FIX ME FIX ME
+            // TODO: FIX ME FIX ME FIX ME FIX ME
+            SettingsUtils.putLong(this, SettingsUtils.PREF_IS_WAITING_FOR_SMS_TIMESTAMP,
+                    System.currentTimeMillis());
+            SettingsUtils.putBoolean(this, SettingsUtils.PREF_IS_WAITING_FOR_SMS, true);
+            showFragment();
         }
     }
 
     @Override
     public void onRegisterFinished(String refreshToken, String accessToken) {
         SettingsUtils.putBoolean(this, SettingsUtils.PREF_IS_WAITING_FOR_SMS, false);
-        // Store these tokens in a secure way
-        // @see https://nelenkov.blogspot.com.br/2012/05/storing-application-secrets-in-androids.html
         if (!TextUtils.isEmpty(refreshToken) && !TextUtils.isEmpty(accessToken)) {
             final String fAccessToken = accessToken;
             final String fRefreshToken = refreshToken;

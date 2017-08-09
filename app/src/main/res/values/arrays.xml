@@ -4,7 +4,7 @@
         <item>@color/white</item>
         <item>@color/colorPrimary</item>
     </integer-array>
-    <string-array name="filter_modalities">
+    <string-array name="filter_modalities" translatable="false">
         <item>Todas as modalidades</item>
         <item>Pregão Presencial</item>
         <item>Pregão Eletrônico</item>

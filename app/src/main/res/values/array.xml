@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="open_date_array">
+    <string-array name="open_date_array" translatable="false">
         <item>Todas as datas</item>
         <item>Hoje</item>
         <item>Esta semana</item>

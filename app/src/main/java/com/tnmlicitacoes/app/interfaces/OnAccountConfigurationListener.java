@@ -1,9 +1,7 @@
 package com.tnmlicitacoes.app.interfaces;
 
-import com.tnmlicitacoes.app.CitiesQuery;
-import com.tnmlicitacoes.app.SegmentsQuery;
-import com.tnmlicitacoes.app.fragment.CityFragment;
-import com.tnmlicitacoes.app.fragment.SegmentFragment;
+import com.tnmlicitacoes.app.apollo.CitiesQuery;
+import com.tnmlicitacoes.app.apollo.SegmentsQuery;
 
 public interface OnAccountConfigurationListener {
 

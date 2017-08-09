@@ -39,33 +39,33 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/openSource"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/spacing_normal"
-        android:paddingRight="@dimen/spacing_normal"
-        android:paddingBottom="@dimen/spacing_normal"
-        android:background="?attr/selectableItemBackground">
+    <!--<LinearLayout-->
+        <!--android:id="@+id/openSource"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--android:paddingTop="@dimen/spacing_normal"-->
+        <!--android:paddingRight="@dimen/spacing_normal"-->
+        <!--android:paddingBottom="@dimen/spacing_normal"-->
+        <!--android:background="?attr/selectableItemBackground">-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Licenças de código aberto"
-            android:textColor="@color/colorDarkGrey"
-            android:layout_marginBottom="@dimen/spacing_tiny"
-            />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Licenças de código aberto"-->
+            <!--android:textColor="@color/colorDarkGrey"-->
+            <!--android:layout_marginBottom="@dimen/spacing_tiny"-->
+            <!--/>-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Detalhes da licença de código aberto"
-            android:textColor="@color/colorGrey"
-            android:textSize="12sp"
-            />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Detalhes da licença de código aberto"-->
+            <!--android:textColor="@color/colorGrey"-->
+            <!--android:textSize="12sp"-->
+            <!--/>-->
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
     <LinearLayout
         android:id="@+id/terms"

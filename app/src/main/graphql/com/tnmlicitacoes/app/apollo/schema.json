@@ -268,6 +268,16 @@
                     "ofType": null
                   },
                   "defaultValue": null
+                },
+                {
+                  "name": "active",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": null
                 }
               ],
               "type": {
@@ -465,6 +475,16 @@
                   "type": {
                     "kind": "INPUT_OBJECT",
                     "name": "SegmentOrder",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "active",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -981,6 +1001,18 @@
               "deprecationReason": null
             },
             {
+              "name": "active",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "notices",
               "description": null,
               "args": [
@@ -1133,167 +1165,177 @@
           "enumValues": [
             {
               "name": "AC",
-              "description": null,
+              "description": "Acre",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "AL",
-              "description": null,
+              "description": "Alagoas",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "AP",
-              "description": null,
+              "description": "Amapá",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "AM",
-              "description": null,
+              "description": "Amazonas",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "BA",
-              "description": null,
+              "description": "Bahia",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "CE",
-              "description": null,
+              "description": "Ceará",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "DF",
-              "description": null,
+              "description": "Distrito Federal",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "ES",
-              "description": null,
+              "description": "Espírito Santo",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "GO",
-              "description": null,
+              "description": "Goiás",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "MA",
-              "description": null,
+              "description": "Maranhão",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "MS",
-              "description": null,
+              "description": "Mato Grosso do Sul",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "MT",
-              "description": null,
+              "description": "Mato Grosso",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "MG",
-              "description": null,
+              "description": "Minas Gerais",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "PA",
-              "description": null,
+              "description": "Pará",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "PB",
-              "description": null,
+              "description": "Paraíba",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "PR",
-              "description": null,
+              "description": "Paraná",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "PE",
-              "description": null,
+              "description": "Pernambuco",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "PI",
-              "description": null,
+              "description": "Piauí",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "RJ",
-              "description": null,
+              "description": "Rio de Janeiro",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "RN",
-              "description": null,
+              "description": "Rio Grande do Norte",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "RS",
-              "description": null,
+              "description": "Rio Grande do Sul",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "RO",
-              "description": null,
+              "description": "Roraima",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "RR",
-              "description": null,
+              "description": "Rondônia",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "SC",
-              "description": null,
+              "description": "Santa Catarina",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "SP",
-              "description": null,
+              "description": "São Paulo",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "SE",
-              "description": null,
+              "description": "Sergipe",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "TO",
-              "description": null,
+              "description": "Tocantins",
               "isDeprecated": false,
               "deprecationReason": null
             }
           ],
+          "possibleTypes": null
+        },
+        {
+          "kind": "SCALAR",
+          "name": "Boolean",
+          "description": "The `Boolean` scalar type represents `true` or `false`.",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": null,
           "possibleTypes": null
         },
         {
@@ -1417,45 +1459,35 @@
             },
             {
               "name": "CONCORRENCIA",
-              "description": null,
+              "description": "Concorrência",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "CONVITE",
-              "description": null,
+              "description": "Convite",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "CONCURSO",
-              "description": null,
+              "description": "Concurso",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "LEILAO",
-              "description": null,
+              "description": "Leilão",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "TOMADA_DE_PRECO",
-              "description": null,
+              "description": "Tomada de preço",
               "isDeprecated": false,
               "deprecationReason": null
             }
           ],
-          "possibleTypes": null
-        },
-        {
-          "kind": "SCALAR",
-          "name": "Boolean",
-          "description": "The `Boolean` scalar type represents `true` or `false`.",
-          "fields": null,
-          "inputFields": null,
-          "interfaces": null,
-          "enumValues": null,
           "possibleTypes": null
         },
         {
@@ -1838,6 +1870,18 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "NoticeConnection",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "active",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -2619,6 +2663,16 @@
                     "ofType": null
                   },
                   "defaultValue": null
+                },
+                {
+                  "name": "active",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
+                    "ofType": null
+                  },
+                  "defaultValue": null
                 }
               ],
               "type": {
@@ -2689,6 +2743,16 @@
                   "type": {
                     "kind": "ENUM",
                     "name": "State",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "active",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Boolean",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -3560,6 +3624,29 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "ConfirmCodeResponse",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "sendNoticeEmail",
+              "description": "Sends the requested notice to user email",
+              "args": [
+                {
+                  "name": "noticeId",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
                 "ofType": null
               },
               "isDeprecated": false,

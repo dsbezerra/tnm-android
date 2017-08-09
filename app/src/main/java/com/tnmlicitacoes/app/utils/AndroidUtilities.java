@@ -20,7 +20,6 @@ import com.tnmlicitacoes.app.main.mynotices.MyNoticesFragment;
 import com.tnmlicitacoes.app.settings.SettingsActivity;
 import com.tnmlicitacoes.app.accountconfiguration.AccountConfigurationActivity;
 import com.tnmlicitacoes.app.details.DetailsActivity;
-import com.tnmlicitacoes.app.ui.activity.IntroActivity;
 import com.tnmlicitacoes.app.main.MainActivity;
 import com.tnmlicitacoes.app.ui.activity.SplashScreenActivity;
 import com.tnmlicitacoes.app.ui.activity.WebviewActivity;
@@ -77,10 +76,6 @@ public class AndroidUtilities {
             case SPLASH_ACTIVITY:
             {
                 clazz = SplashScreenActivity.class;
-            } break;
-            case INTRO_ACTIVITY:
-            {
-                clazz = IntroActivity.class;
             } break;
             case VERIFY_NUMBER_ACTIVITY:
             {

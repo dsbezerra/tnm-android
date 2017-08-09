@@ -16,18 +16,17 @@ import android.widget.ProgressBar;
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Error;
 import com.apollographql.apollo.api.Response;
-import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.SegmentsQuery;
 import com.tnmlicitacoes.app.TnmApplication;
+import com.tnmlicitacoes.app.apollo.SegmentsQuery;
+import com.tnmlicitacoes.app.apollo.type.OrderDirection;
+import com.tnmlicitacoes.app.apollo.type.SegmentOrder;
+import com.tnmlicitacoes.app.apollo.type.SegmentOrderField;
 import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
-import com.tnmlicitacoes.app.model.realm.PickedSegment;
 import com.tnmlicitacoes.app.model.realm.LocalSupplier;
+import com.tnmlicitacoes.app.model.realm.PickedSegment;
 import com.tnmlicitacoes.app.registration.RegistrationActivity;
-import com.tnmlicitacoes.app.type.OrderDirection;
-import com.tnmlicitacoes.app.type.SegmentOrder;
-import com.tnmlicitacoes.app.type.SegmentOrderField;
 import com.tnmlicitacoes.app.ui.adapter.SegmentAdapter;
 import com.tnmlicitacoes.app.ui.widget.SimpleDividerItemDecoration;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
@@ -115,12 +114,12 @@ public class SelectSegmentFragment extends AccountConfigurationFragment implemen
 
         final SegmentsQuery segmentsQuery = SegmentsQuery.builder()
                 .first(100)
+                .active(true)
                 .orderBy(segmentOrder)
                 .build();
 
         mSegmentsCall = mApplication.getApolloClient()
-                .query(segmentsQuery)
-                .cacheControl(CacheControl.NETWORK_FIRST);
+                .query(segmentsQuery);
         mSegmentsCall.enqueue(dataCallback);
     }
 

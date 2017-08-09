@@ -19,7 +19,6 @@ import com.tnmlicitacoes.app.utils.StringUtils;
 import com.transitionseverywhere.Rotate;
 import com.transitionseverywhere.TransitionManager;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 

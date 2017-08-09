@@ -17,6 +17,9 @@
 #}
 
 
+# Avoid 400 Bad Request
+-keep class com.tnmlicitacoes.app.apollo.** {*;}
+
 # Fix SearchView crash with proguard
 -keep class android.support.v7.widget.SearchView { *; }
 
@@ -27,12 +30,6 @@
 -keep @io.realm.internal.Keep class * { *; }
 -dontwarn javax.**
 -dontwarn io.realm.**
-
-# Retrofit 2.X
--dontwarn retrofit2.**
--keep class retrofit2.** { *; }
--keepattributes Signature
--keepattributes Exceptions
 
 # Remove warnings okhttp/okio
 -dontwarn com.squareup.okhttp.**

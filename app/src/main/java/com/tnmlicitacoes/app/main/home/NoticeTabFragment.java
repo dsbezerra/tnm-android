@@ -23,11 +23,15 @@ import android.widget.Toast;
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Error;
 import com.apollographql.apollo.api.Response;
-import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
-import com.tnmlicitacoes.app.NoticesQuery;
+import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.TnmApplication;
+import com.tnmlicitacoes.app.apollo.NoticesQuery;
+import com.tnmlicitacoes.app.apollo.type.Modality;
+import com.tnmlicitacoes.app.apollo.type.NoticeOrder;
+import com.tnmlicitacoes.app.apollo.type.NoticeOrderField;
+import com.tnmlicitacoes.app.apollo.type.OrderDirection;
 import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
 import com.tnmlicitacoes.app.interfaces.OnNoticeActionsDialogListener;
 import com.tnmlicitacoes.app.main.MainActivity;
@@ -38,10 +42,6 @@ import com.tnmlicitacoes.app.model.realm.PickedCity;
 import com.tnmlicitacoes.app.model.realm.PickedSegment;
 import com.tnmlicitacoes.app.model.realm.Segment;
 import com.tnmlicitacoes.app.service.DownloadService;
-import com.tnmlicitacoes.app.type.Modality;
-import com.tnmlicitacoes.app.type.NoticeOrder;
-import com.tnmlicitacoes.app.type.NoticeOrderField;
-import com.tnmlicitacoes.app.type.OrderDirection;
 import com.tnmlicitacoes.app.ui.adapter.NoticeAdapter;
 import com.tnmlicitacoes.app.ui.base.BaseFragment;
 import com.tnmlicitacoes.app.ui.widget.SimpleDividerItemDecoration;
@@ -178,8 +178,6 @@ public class NoticeTabFragment extends BaseFragment implements OnClickListenerRe
 
         if (!TnmApplication.IsRefreshingToken) {
             fetchNotices(null);
-        } else {
-            mSwipeRefreshLayout.setRefreshing(true);
         }
 
         return v;
@@ -325,8 +323,7 @@ public class NoticeTabFragment extends BaseFragment implements OnClickListenerRe
                 .build();
 
         mNoticesCall = mApplication.getApolloClient()
-                .query(citiesQuery)
-                .cacheControl(CacheControl.NETWORK_FIRST);
+                .query(citiesQuery);
         mNoticesCall.enqueue(dataCallback);
     }
 
@@ -559,8 +556,7 @@ public class NoticeTabFragment extends BaseFragment implements OnClickListenerRe
         final NoticesQuery citiesQuery = builder.build();
 
         mNoticesCall = mApplication.getApolloClient()
-                .query(citiesQuery)
-                .cacheControl(CacheControl.NETWORK_FIRST);
+                .query(citiesQuery);
         mNoticesCall.enqueue(dataCallback);
     }
 
@@ -586,8 +582,10 @@ public class NoticeTabFragment extends BaseFragment implements OnClickListenerRe
 
         int size = mCityResults.size();
         if (size == 0) {
-            Toast.makeText(getContext(), "Ir para tela de escolher cidades.",
-                    Toast.LENGTH_SHORT).show();
+            if (BuildConfig.DEBUG) {
+                Toast.makeText(getContext(), "Ir para tela de escolher cidades.",
+                        Toast.LENGTH_SHORT).show();
+            }
             return result;
         }
 
@@ -720,7 +718,9 @@ public class NoticeTabFragment extends BaseFragment implements OnClickListenerRe
 
     @Override
     public void onSendToEmailClicked() {
-        Toast.makeText(mActivity, "onSendToEmailClicked", Toast.LENGTH_SHORT).show();
+        if (mLastTouchedNotice != null) {
+            NoticeUtils.sendToEmail(mApplication, getActivity(), mLastTouchedNotice.getId());
+        }
     }
 
     @Override

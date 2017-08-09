@@ -1,6 +1,6 @@
 package com.tnmlicitacoes.app.model.realm;
 
-import com.tnmlicitacoes.app.SegmentsQuery;
+import com.tnmlicitacoes.app.apollo.SegmentsQuery;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;

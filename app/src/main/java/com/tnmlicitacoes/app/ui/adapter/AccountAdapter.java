@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.SegmentsQuery;
+import com.tnmlicitacoes.app.apollo.SegmentsQuery;
 import com.tnmlicitacoes.app.interfaces.AccountListener;
 import com.tnmlicitacoes.app.model.realm.LocalSupplier;
 import com.tnmlicitacoes.app.model.realm.PickedCity;
@@ -203,6 +203,7 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     emailHolder.mVerifiedText.setTextColor(Color.argb(255, 255, 0, 0));
                     emailHolder.mVerifiedIcon.setColorFilter(Color.argb(255, 255, 0, 0));
                     emailHolder.mVerifiedIcon.setImageResource(R.drawable.ic_info_outline);
+                    emailHolder.mResendButton.setVisibility(View.VISIBLE);
                 }
                 emailHolder.mEmailText.setText(email);
             }
@@ -324,9 +325,9 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             // About section items
             case R.id.terms:
-            case R.id.openSource:
                 mAccountListener.onAboutItemClick(id);
                 break;
+            // case R.id.openSource:
 
             // Logout
             case R.id.logoutBtn:
@@ -480,19 +481,19 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private class AboutViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mVersion;
-        private LinearLayout mOpenSourceLicenses;
+        // private LinearLayout mOpenSourceLicenses;
         private LinearLayout mTermsAndPolicies;
 
         public AboutViewHolder(View itemView) {
             super(itemView);
             mVersion = (TextView) itemView.findViewById(R.id.version);
-            mOpenSourceLicenses = (LinearLayout) itemView.findViewById(R.id.openSource);
+            // mOpenSourceLicenses = (LinearLayout) itemView.findViewById(R.id.openSource);
             mTermsAndPolicies = (LinearLayout) itemView.findViewById(R.id.terms);
 
-            mOpenSourceLicenses.setClickable(true);
+            // mOpenSourceLicenses.setClickable(true);
             mTermsAndPolicies.setClickable(true);
 
-            mOpenSourceLicenses.setOnClickListener(AccountAdapter.this);
+            // mOpenSourceLicenses.setOnClickListener(AccountAdapter.this);
             mTermsAndPolicies.setOnClickListener(AccountAdapter.this);
         }
     }
@@ -510,6 +511,4 @@ public class AccountAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mLogoutButton.setOnClickListener(AccountAdapter.this);
         }
     }
-
-
 }

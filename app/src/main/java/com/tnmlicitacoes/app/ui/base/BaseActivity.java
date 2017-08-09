@@ -1,16 +1,11 @@
 package com.tnmlicitacoes.app.ui.base;
 
-import android.app.ActivityManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.evernote.android.state.StateSaver;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.TnmApplication;
 

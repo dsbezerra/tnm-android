@@ -5,12 +5,44 @@
     <string name="title_activity_main_account">Conta</string>
     <string name="title_activity_settings">Configurações</string>
 
+    <string name="title_activity_save_card">Adicionar cartão</string>
+    <string name="title_activity_save_card_edit_mode">Editar cartão</string>
+    <string name="title_activity_card_details">Detalhes do cartão</string>
+
+    <string name="title_activity_subscription_select_plan">Selecionar plano</string>
+    <string name="title_activity_subscription_select_card">Selecionar cartão</string>
+    <string name="title_activity_subscription_confirm">Confirmar assinatura</string>
+
     <!-- API Error -->
-    <string name="error_api_unknown">Ocorreu um erro desconhecido. Por favor, tente novamente.</string>
-    <string name="error_api_not_authorized">Sem permissão para realizar esta ação.</string>
-    <string name="error_api_limit_exceeded">Limite de requisições excedido! Aguarde um momento e  tente novamente.</string>
-    <string name="error_api_send_sms_failed">Falha ao enviar mensagem SMS.</string>
-    <string name="error_api_email_activated">Este e-mail já está confirmado.</string>
+    <string name="error_api_unknown">Ocorreu um erro desconhecido</string>
+    <string name="error_api_not_authorized">Sem permissão para realizar esta ação</string>
+    <string name="error_api_limit_exceeded">Limite de requisições excedido</string>
+    <string name="error_api_send_sms_failed">Falha ao enviar mensagem SMS</string>
+    <string name="error_api_email_activated">Este e-mail já está confirmado</string>
+
+    <string name="error_api_unknown_message">Ocorreu um erro desconhecido. Por favor, tente novamente.</string>
+
+
+    <string name="error_stripe_invalid_number">Número do cartão inválido</string>
+    <string name="error_stripe_invalid_expiry_month">Mês inválido</string>
+    <string name="error_stripe_invalid_expiry_year">Ano inválido</string>
+    <string name="error_stripe_invalid_cvc">Código de segurança inválido</string>
+    <string name="error_stripe_incorrect_number">Número incorreto</string>
+    <string name="error_stripe_expired_card">Cartão expirado</string>
+    <string name="error_stripe_incorrect_cvc">Código de segurança incorreto</string>
+    <string name="error_stripe_incorrect_zip">CEP incorreto</string>
+    <string name="error_stripe_card_declined">Cartão recusado</string>
+    <string name="error_stripe_processing_error">Erro ao processar cartão</string>
+    <string name="error_stripe_invalid_number_message">O número do cartão de crédito inserido é inválido</string>
+    <string name="error_stripe_invalid_expiry_month_message">O mês da data de vencimento do cartão de crédito é inválido</string>
+    <string name="error_stripe_invalid_expiry_year_message">O ano da data de vencimento do cartão de crédito é inválido</string>
+    <string name="error_stripe_invalid_cvc_message">O código de segurança do cartão de crédito é inválido</string>
+    <string name="error_stripe_incorrect_number_message">O número do cartão de crédito está incorreto</string>
+    <string name="error_stripe_expired_card_message">Este cartão de crédito expirou</string>
+    <string name="error_stripe_incorrect_cvc_message">O código de segurança do cartão de crédito está incorreto</string>
+    <string name="error_stripe_incorrect_zip_message">O CEP informado está incorreto</string>
+    <string name="error_stripe_card_declined_message">Este cartão de crédito foi recusado pela operadora do cartão</string>
+    <string name="error_stripe_processing_error_message">Ocorreu um erro desconhecido durante o processamento do cartão de crédito</string>
 
     <!-- Notifications strings -->
     <string name="notification_news_title">TáNaMão Informa</string>
@@ -47,25 +79,9 @@
 
     <!-- Activity strings -->
 
-    <string name="title_activity_files">Minhas licitações</string>
+    <string name="title_activity_files">My biddings</string>
+    <string name="title_activity_about">About</string>
 
-    <string name="title_activity_about">Sobre</string>
-
-    <!-- Intro Activity -->
-    <string name="introHeader0">TáNaMão Licitações</string>
-    <string name="introHeader1">Encaminhe</string>
-    <string name="introHeader2">Receba</string>
-    <string name="introHeader3">Pesquise</string>
-    <string name="introHeader4">Selecione</string>
-
-    <string name="introText0">Bem-vindo ao nosso aplicativo!</string>
-    <string name="introText1">Envie para seus emails pessoais\nos editais que lhe interessar!</string>
-    <string name="introText2">Seja notificado por novas\nlicitações, dicas e notícias!</string>
-    <string name="introText3">Encontre facilmente\nlicitações por palavras-chave!</string>
-    <string name="introText4">Escolha os segmentos\nimportantes para sua empresa!</string>
-
-    <!-- Edital Activity -->
-    <string name="buscarHint">Buscar&#8230;</string>
 
     <!-- Details Activity -->
     <string name="fileFormat">Formato: %1$s</string>
@@ -75,56 +91,60 @@
     <string name="menu_details_download">Baixar edital</string>
     <string name="menu_details_see_online">Visualizar edital</string>
 
-    <!-- Settings Strings -->
-
-    <!-- Navigation Drawer Items -->
-    <string name="drawer_home">Início</string>
-    <string name="drawer_notices">Minhas licitações</string>
-    <string name="drawer_settings">Configurações</string>
-    <string name="drawer_contact">Fale conosco</string>
-    <string name="drawer_about">Sobre</string>
-
     <!-- Bottom Sheet Menu Items -->
     <string name="see_details">Ver detalhes</string>
     <string name="view_online">Visualizar online</string>
-    <string name="send_to_email">Enviar para email</string>
-    <string name="make_download">Baixar</string>
+    <string name="send_to_email">Enviar para e-mail</string>
+    <string name="make_download">Baixar edital</string>
     <string name="close_menu">Fechar</string>
 
 
     <!-- Dialog strings -->
-
     <string name="dialog_close_button">Fechar</string>
     <string name="dialog_confirm_button">Confirmar</string>
     <string name="dialog_edit_button">Editar</string>
 
     <!-- Phone Confirmation Dialog -->
-    <string name="invalid_phone_number">Número de telefone inválido!</string>
-    <string name="invalid_state_code">DDD inválido! Por favor tente novamente.</string>
-
-    <!-- Crash/Errors messages -->
-
-    <!-- Settings strings -->
-    <string name="pref_email_label">E-mail padrão</string>
-    <string name="pref_email_key">email</string>
-    <string name="pref_email_default">seuemail@exemplo.com</string>
+    <string name="invalid_phone_number">Número inválido!</string>
+    <string name="invalid_state_code">DDD inválido!</string>
 
     <!-- Notifications -->
+    <string name="notices_item_header">%1$s • %2$s • %3$s</string>
+    <string name="notices_not_found_category">Não encontramos nenhum edital para o segmento %1$s!</string>
 
     <!-- Folders -->
 
+    <string name="no_email_clients_installed">There is no email client installed!</string>
+    <string name="send_email_contact">Send email via&#8230;</string>
 
-    <string name="no_email_clients_installed">Não há nenhum cliente de email instalado.</string>
-    <string name="send_email_contact">Enviar email via&#8230;</string>
 
-    <string name="about_text">O TáNaMão Licitações surgiu com o propósito de facilitar/agilizar/otimizar o acesso da classe empresarial aos editais e demais informações relevantes aos mesmos, no que se refere a Compras/Licitações Públicas.\n\nTrazendo informações de forma clara e objetiva, alertando sobre novos editais publicados através de notificações, possibilitando o filtro por segmento econômico, “através” de uma interface intuitiva e aproveitando a portabilidade dos aparelhos móveis, com um custo acessível.</string>
-    <string name="about_subtext">Faça do governo o seu melhor cliente!</string>
-    <string name="about_subtext2">A ponte entre você e as compras públicas!</string>
-    <string name="more_information">Mais informações:</string>
+    <!-- Details Activity -->
+    <string name="modality_header">MODALIDADE</string>
 
-    <!-- GCM Stuff -->
+    <string name="number_header">NÚMERO</string>
 
-    <!-- Subs -->
+    <string name="date_header">DATA DE ABERTURA</string>
+
+    <string name="amount_header">VALOR ESTIMADO</string>
+
+    <string name="description_header">OBJETO</string>
+
+    <string name="attachments_header">ANEXOS PUBLICADOS</string>
+
+    <string name="agency_header">ÓRGÃO</string>
+
+    <string name="save_text">Salvar</string>
+
+    <string name="new_date_text">Nova data</string>
+
+    <string name="rectified_text">Retificado</string>
+
+    <string name="mpe_exclusive_text">Exclusivo MPE</string>
+
+    <string name="notice_download">Baixar edital</string>
+
+
+    <!-- Billing Activity -->
     <string name="sub_basic_name">Básico</string>
     <string name="sub_basic_description">Segmento e capital</string>
 
@@ -140,14 +160,50 @@
     <string name="sub_feature_three">Envie para seus emails pessoais os editais que lhe interessar</string>
     <string name="sub_feature_four">Encontre facilmente licitações por palavras-chave</string>
 
-    <string name="accountconfiguration_sub_max_selected">Selecionados: %1$d/%2$d</string>
+    <string name="sub_button">ASSINAR</string>
+
+    <string name="sub_monthly">por Mês</string>
+
+    <string name="sub_top_info_text"><![CDATA[<p><b>Assine AGORA</b> e experimente <b>GRÁTIS</b> por 30 dias!* As <b>melhores oportunidades</b> do mercado de Licitações na palma da sua mão!</p>]]></string>
+
+    <string name="sub_bottom_info_text"><![CDATA[<p> * Após este período, será cobrado apenas o valor do plano escolhido</p><p> * O cancelamento da assinatura poderá ser realizado a qualquer momento sem nenhum custo</p>]]></string>
+
+    <!-- [ START ] Settings Activity [ START ]-->
+
+    <!-- General Section -->
+
+    <!-- Notifications Section -->
+
+    <!-- [ END ] Settings Activity [ END ]-->
+
+    <string name="sub_max_selected">Selecionados: %1$d/%2$s</string>
+
+    <!-- Context Menu Strings -->
+    <string name="action_contact">Contato</string>
+
+
+    <!-- Public Notice Activity -->
+    <string name="buscarHint">Buscar&#8230;</string>
+
+
+    <string name="snackbar_action_open">Abrir</string>
+
+    <string name="snackbar_action_try_again">Tentar novamente</string>
+
+
+    <string name='tab_biddings'>Licitações Salvas</string>
+    <string name='tab_files'>Arquivos Baixados</string>
     <string name="accountconfiguration_advance_btn">AVANÇAR</string>
     <string name="intro_start_using_text">COMECE A UTILIZAR</string>
     <string name="dialog_default_email">Email padrão</string>
+    <string name="dialog_text_one">Você não definiu um email padrão para receber os editais.</string>
+    <string name="dialog_text_two">Para receber defina agora:</string>
     <string name="dialog_filter_modality">Modalidade</string>
     <string name="dialog_filter_city">Cidade</string>
     <string name="dialog_filter_open_date">Data de abertura</string>
+    <string name="dialog_filter_exclusive_mpe">Exclusivo MPE</string>
     <string name="btn_cancel">Cancelar</string>
+    <string name="btn_ok">OK</string>
     <string name="verify_number_email_below">Vamos verificar o email e número abaixo:</string>
     <string name="is_correct_or_edit">Está correto ou gostaria de editar?</string>
     <string name="action_delete">Delete</string>
@@ -157,7 +213,8 @@
     <string name="current_subscription_text">Plano atual</string>
     <string name="chosen_cities_text">Cidades escolhidas</string>
     <string name="chosen_categories_text">Segmentos escolhidos</string>
-    <string name="subscription_cancelation_text">Você pode cancelar a sua assinatura a qualquer momento através do aplicativo Google Play.\nNo aplicativo Google Play basta ir na opção <b>Minhas assinaturas</b>, onde terá a listagem de todas as assinaturas feitas na loja, e selecionar a assinatura correspondente ao <b>TáNaMão Licitações</b>.\nTambém é possível cancelar através da página do aplicativo na loja.</string>
+    <string name="subscription_cancelation_text">Você pode cancelar a sua assinatura a qualquer momento através do aplicativo Google Play.\n\nNo aplicativo Google Play basta ir na opção <b>Minhas assinaturas</b>, onde terá a listagem de todas as assinaturas feitas na loja, e selecionar a assinatura correspondente ao <b>TáNaMão Licitações</b>. Também é possível cancelar através da página do aplicativo na loja.</string>
+    <string name="header_sub_text">Plano %1$s (Toque para mais detalhes)</string>
     <string name="menu_refresh">Atualizar</string>
     <string name="menu_filter">Filtrar</string>
     <string name="menu_search">Buscar</string>
@@ -170,6 +227,8 @@
     <string name="internet_issue_text">Problema na conexão\n Toque para tentar novamente</string>
     <string name="email_input_hint">E-mail</string>
     <string name="phone_input_hint">Telefone</string>
+
+    <string name="invalid_email">E-mail inválido!</string>
     <string name="input_email_phone">Entre com o seu e-mail e número de telefone abaixo:</string>
     <string name="send_sms_text">Vamos enviar uma mensagem SMS para verificar o seu número.</string>
 
@@ -232,7 +291,6 @@
     <string name="deleting_file_from_total">Deletando arquivo %1$d de %2$d</string>
     <string name="deleted_files_message">%1$d arquivo(s) deletado(s) com sucesso!</string>
 
-
     <!-- [START] MuPDF Strings [START] -->
     <string name="cancel">Cancelar</string>
     <string name="cannot_open_buffer">Não é possível abrir a memória intermédia</string>
@@ -255,6 +313,10 @@
     <string name="searching_">A pesquisar&amp;#8230;</string>
     <string name="text_not_found">Texto não encontrado</string>
     <string name="yes">Sim</string>
+    <!-- [END] MuPDF Strings [END] -->
+
+
+    <string name="drawer_account">Conta</string>
     <string name="waiting_sms_toolbar_title">Confirmação de número</string>
     <string name="input_number_toolbar_title">Verificação de número</string>
     <string name="mandatory_fields_title">Campos obrigatórios</string>
@@ -276,19 +338,81 @@
     <string name="action_close">Fechar</string>
     <string name="action_remove">Excluir</string>
     <string name="server_communication_error">Houve um problema na comunicação com nossos servidores. Por favor, tente novamente mais tarde.</string>
+
+
+    <string name="accountconfiguration_sub_max_selected">Selecionados: %1$d/%2$d</string>
+
+    <string name="card_number_last_digits">•••• •••• •••• %1$s</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notificações</string>
+
+    <string name="pref_title_new_message_notifications">Notificar por novas licitações</string>
+
+    <string name="pref_title_ringtone">Toque</string>
+    <string name="pref_ringtone_silent">Silencioso</string>
+
+    <string name="pref_title_vibrate">Vibrar</string>
     <string name="edit">Editar</string>
     <string name="delete">Excluir</string>
+    <string name="card_help_expiry_date_title">Data de vencimento</string>
+    <string name="card_help_expiry_date_message">A data de vencimento do seu cartão encontra-se na parte da frente, logo abaixo do número</string>
+    <string name="card_help_cvc_title">CSC</string>
+    <string name="card_help_cvc_message">O código de segurança do seu cartão de crédito encontra-se no verso do cartão e possui três dígitos</string>
+    <string name="card_set_as_default">Definir como padrão</string>
+    <string name="card_remove_dialog_title">Excluir forma de pagamento</string>
+    <string name="card_remove_dialog_message">Você tem certeza que quer excluir esta forma de pagamento?</string>
+    <string name="card_remove_progress_message">Removendo cartão...</string>
+    <string name="card_fail_to_remove">Falha ao remover cartão</string>
+    <string name="card_removed">Cartão removido</string>
+    <string name="card_defined_as_default">Cartão definido como padrão</string>
+    <string name="card_fail_to_set_as_default">Falha ao definir cartão como padrão</string>
+    <string name="card_make_default_dialog_title">Definir como padrão</string>
+    <string name="card_make_default_dialog_message">Você tem certeza de que quer definir este cartão como o cartão padrão?</string>
+    <string name="card_make_default_progress_message">Definindo como padrão...</string>
+    <string name="card_add_new">Adicionar novo cartão de crédito</string>
+    <string name="account_email_not_defined">E-mail não definido</string>
+    <string name="account_email_required_message">É necessário um e-mail para utilizar todas as funções do aplicativo!</string>
+    <string name="account_email_verified">E-mail verificado.</string>
+    <string name="account_email_not_verified">E-mail não verificado. Algumas funcionalidades do aplicativo dependem de um e-mail verificado!</string>
+    <string name="plan_basic_name">Básico</string>
+    <string name="plan_basic_description">1 segmento e cidade</string>
+    <string name="plan_default_name">Padrão</string>
+    <string name="plan_default_description">3 segmentos e cidades</string>
+    <string name="plan_custom_description">Construa um plano que seja adequado para as suas necessidades</string>
+    <string name="plan_custom_name">Personalizado</string>
+    <string name="plan_price">R$ %1$s</string>
+    <string name="add_card_dialog_progress_message">Adicionando cartão...</string>
+    <string name="add_card_fail">Falha ao adicionar cartão</string>
+
+    <string name="plan_custom_both_plural_description">%1$d segmentos e %2$d cidades</string>
+    <string name="plan_custom_segment_plural_description">%1$d segmentos e 1 cidade</string>
+    <string name="plan_custom_city_plural_description">1 segmento e %1$d cidades</string>
+    <string name="plan_custom_both_singular_description">%1$d segmento e cidade</string>
+
+    <string name="advance_button_text">Avançar</string>
+    <string name="confirm_button_text">Confirmar</string>
+
+    <string name="item_price_x_total">R$ %1$s x %2$d</string>
     <string name="confirm_subscription_chosen_plan_header">Plano escolhido</string>
     <string name="confirm_subscription_payment_method_header">Forma de pagamento</string>
     <string name="confirm_subscription_total_header">Total</string>
+
+    <string name="modality_estimated_amount_value">R$ %1$s</string>
+    <string name="name_input_label">Como gostaria de ser chamado?</string>
+    <string name="name_input_hint">Nome</string>
+    <string name="input_email_info_message">Um e-mail válido é necessário para utilizar todas as funcionalidades do aplicativo.</string>
     <string name="bottom_nav_home_title">Início</string>
     <string name="bottom_nav_my_notices_title">Minhas licitações</string>
     <string name="bottom_nav_account_title">Conta</string>
+    <string name="dispute_date_search_result"><b>Abertura:</b> %1$s</string>
     <string name="cancel_subscription_progress_message">Cancelando assinatura...</string>
     <string name="cancel_subscription_success_message">Assinatura cancelada</string>
     <string name="reactive_subscription_btn">REATIVAR ASSINATURA</string>
     <string name="cancel_subscription_btn">CANCELAR ASSINATURA</string>
     <string name="subscribe_btn">ASSINAR</string>
-    <!-- [END] MuPDF Strings [END] -->
+
 
 </resources>

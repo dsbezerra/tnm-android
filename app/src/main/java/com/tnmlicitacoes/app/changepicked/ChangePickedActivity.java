@@ -14,17 +14,17 @@ import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloCallback;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
-import com.tnmlicitacoes.app.CitiesQuery;
+import com.tnmlicitacoes.app.apollo.CitiesQuery;
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.SegmentsQuery;
-import com.tnmlicitacoes.app.UpdateSupplierMutation;
+import com.tnmlicitacoes.app.apollo.SegmentsQuery;
+import com.tnmlicitacoes.app.apollo.UpdateSupplierMutation;
 import com.tnmlicitacoes.app.accountconfiguration.SelectCityFragment;
 import com.tnmlicitacoes.app.interfaces.OnAccountConfigurationListener;
 import com.tnmlicitacoes.app.model.realm.LocalSupplier;
 import com.tnmlicitacoes.app.model.realm.PickedCity;
 import com.tnmlicitacoes.app.model.realm.PickedSegment;
 import com.tnmlicitacoes.app.accountconfiguration.SelectSegmentFragment;
-import com.tnmlicitacoes.app.type.SupplierInput;
+import com.tnmlicitacoes.app.apollo.type.SupplierInput;
 import com.tnmlicitacoes.app.ui.base.BaseAuthenticatedActivity;
 import com.tnmlicitacoes.app.utils.ApiUtils;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
@@ -302,15 +302,14 @@ public class ChangePickedActivity extends BaseAuthenticatedActivity implements O
     public void onCompleteInitialisation(String tag) {}
 
     private void updateSelectedText(int selectedSize) {
-        if (selectedSize > 0) {
+        if (selectedSize >= 0) {
             int max = mCurrentView == CITIES ? mRealm.where(LocalSupplier.class).findFirst().getCityNum() :
                     mRealm.where(LocalSupplier.class).findFirst().getSegNum();
             mSelectedText.setText(getString(R.string.accountconfiguration_sub_max_selected,
                     selectedSize, max));
             mConfirmButton.setEnabled(true);
         } else {
-            mSelectedText.setText("");
-            mConfirmButton.setEnabled(false);
+            // TODO(diego): Show dialog to update plan etc...
         }
     }
 }

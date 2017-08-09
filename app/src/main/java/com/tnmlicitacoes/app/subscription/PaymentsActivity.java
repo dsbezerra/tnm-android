@@ -10,12 +10,11 @@ import android.widget.ProgressBar;
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloQueryCall;
 import com.apollographql.apollo.api.Response;
-import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
 import com.stripe.android.model.Card;
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.SupplierCardsQuery;
 import com.tnmlicitacoes.app.TnmApplication;
+import com.tnmlicitacoes.app.apollo.SupplierCardsQuery;
 import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
 import com.tnmlicitacoes.app.ui.adapter.PaymentAdapter;
 import com.tnmlicitacoes.app.ui.base.BaseAuthenticatedActivity;
@@ -25,8 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-
-import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 import static com.tnmlicitacoes.app.subscription.SaveCardActivity.CARD_BRAND;
 import static com.tnmlicitacoes.app.subscription.SaveCardActivity.CARD_EXPIRY_MONTH;
@@ -105,8 +102,7 @@ public class PaymentsActivity extends BaseAuthenticatedActivity implements OnCli
         setIsLoading(true);
         SupplierCardsQuery supplierCards = SupplierCardsQuery.builder().build();
         mSupplierCardsCall = mApplication.getApolloClient()
-                .query(supplierCards)
-                .cacheControl(CacheControl.NETWORK_FIRST);
+                .query(supplierCards);
         mSupplierCardsCall.enqueue(cardsDataCallback);
     }
 

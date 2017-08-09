@@ -2,9 +2,7 @@ package com.tnmlicitacoes.app.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -19,7 +17,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.tnmlicitacoes.app.Config;
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.SegmentsQuery;
+import com.tnmlicitacoes.app.apollo.SegmentsQuery;
 import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
 import com.tnmlicitacoes.app.model.SubscriptionPlan;
 

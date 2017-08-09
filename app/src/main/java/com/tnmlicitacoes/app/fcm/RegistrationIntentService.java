@@ -1,7 +1,6 @@
 package com.tnmlicitacoes.app.fcm;
 
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -10,16 +9,14 @@ import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.TnmApplication;
-import com.tnmlicitacoes.app.UpdateSupplierMutation;
+import com.tnmlicitacoes.app.apollo.UpdateSupplierMutation;
+import com.tnmlicitacoes.app.apollo.type.SupplierInput;
 import com.tnmlicitacoes.app.model.realm.PickedSegment;
-import com.tnmlicitacoes.app.type.SupplierInput;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

@@ -1,36 +1,36 @@
 package com.tnmlicitacoes.app.utils;
 
-import android.Manifest;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.customtabs.CustomTabsIntent;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.tnmlicitacoes.app.NoticeByIdQuery;
-import com.tnmlicitacoes.app.NoticesQuery;
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
 import com.tnmlicitacoes.app.R;
+import com.tnmlicitacoes.app.TnmApplication;
+import com.tnmlicitacoes.app.apollo.NoticeByIdQuery;
+import com.tnmlicitacoes.app.apollo.NoticesQuery;
+import com.tnmlicitacoes.app.apollo.SendNoticeEmailMutation;
+import com.tnmlicitacoes.app.apollo.type.Modality;
 import com.tnmlicitacoes.app.details.DetailsActivity;
 import com.tnmlicitacoes.app.details.DetailsFragment;
 import com.tnmlicitacoes.app.model.realm.Agency;
 import com.tnmlicitacoes.app.model.realm.Notice;
 import com.tnmlicitacoes.app.model.realm.Segment;
 import com.tnmlicitacoes.app.service.DownloadService;
-import com.tnmlicitacoes.app.type.Modality;
 
-import java.text.ParseException;
-import java.text.ParsePosition;
-import java.util.Date;
+import javax.annotation.Nonnull;
 
-import io.realm.internal.android.ISO8601Utils;
 import okhttp3.HttpUrl;
 
-import static com.tnmlicitacoes.app.utils.AndroidUtilities.PERMISSION_REQUEST_WRITE_EXT_STORAGE;
 import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
 
 public class NoticeUtils {
@@ -224,6 +224,60 @@ public class NoticeUtils {
         }
 
         return true;
+    }
+
+    /**
+     * Send to email
+     */
+    public static void sendToEmail(TnmApplication application, final Activity activity, String noticeId) {
+        if (TextUtils.isEmpty(noticeId)) {
+            Toast.makeText(activity, "Não foi possível enviar esta licitação", Toast.LENGTH_SHORT)
+                    .show();
+        }
+
+        SendNoticeEmailMutation mutation = SendNoticeEmailMutation.builder()
+                .noticeId(noticeId)
+                .build();
+
+        final ProgressDialog progress = AndroidUtilities.createProgressDialog(activity,
+                "Enviando licitação...", true, false);
+
+        progress.show();
+        application.getApolloClient()
+                .mutate(mutation)
+                .enqueue(new ApolloCall.Callback<SendNoticeEmailMutation.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull final Response<SendNoticeEmailMutation.Data> response) {
+                        progress.dismiss();
+                        if (!response.hasErrors()) {
+                            LOG_DEBUG(TAG, response.data().sendNoticeEmail().toString());
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (response.data().sendNoticeEmail()) {
+                                        Toast.makeText(activity, "Licitação enviada", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(activity, "Não foi possível enviar esta licitação", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        } else {
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(activity, "Não foi possível enviar esta licitação", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                        LOG_DEBUG(TAG, e.getMessage());
+                        Toast.makeText(activity, "Não foi possível enviar esta licitação", Toast.LENGTH_SHORT).show();
+                        progress.dismiss();
+                    }
+                });
     }
 
     private NoticeUtils() {}

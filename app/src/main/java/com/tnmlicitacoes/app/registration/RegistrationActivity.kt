@@ -14,26 +14,30 @@ import android.util.Patterns
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import com.apollographql.apollo.ApolloCall
 import com.apollographql.apollo.ApolloCallback
 import com.apollographql.apollo.ApolloQueryCall
 import com.apollographql.apollo.api.Response
-import com.apollographql.apollo.cache.normalized.CacheControl
 import com.apollographql.apollo.exception.ApolloException
 import com.evernote.android.state.StateSaver
-import com.tnmlicitacoes.app.*
+import com.squareup.haha.perflib.Main
+import com.tnmlicitacoes.app.R
 import com.tnmlicitacoes.app.accountconfiguration.SelectCityFragment
 import com.tnmlicitacoes.app.accountconfiguration.SelectSegmentFragment
+import com.tnmlicitacoes.app.apollo.*
+import com.tnmlicitacoes.app.apollo.type.SupplierInput
 import com.tnmlicitacoes.app.interfaces.OnAccountConfigurationListener
 import com.tnmlicitacoes.app.main.MainActivity
 import com.tnmlicitacoes.app.model.SubscriptionPlan
+import com.tnmlicitacoes.app.model.realm.LocalSupplier
 import com.tnmlicitacoes.app.model.realm.PickedCity
 import com.tnmlicitacoes.app.model.realm.PickedSegment
 import com.tnmlicitacoes.app.registration.RegistrationFragment.OnRegistrationListener
-import com.tnmlicitacoes.app.model.realm.LocalSupplier
 import com.tnmlicitacoes.app.search.SearchActivity
-import com.tnmlicitacoes.app.type.SupplierInput
 import com.tnmlicitacoes.app.ui.base.BaseAuthenticatedActivity
 import com.tnmlicitacoes.app.utils.*
 import com.transitionseverywhere.Slide
@@ -61,9 +65,12 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
         setNextButtonEnabled(false)
 
         // Start request
+        val supplier = SupplierInput.builder()
+        if (mUserName != null) {
+            supplier.name(mUserName)
+        }
         val updateSupplier = UpdateSupplierMutation.builder()
-                .supplier(SupplierInput.builder()
-                        .name(mUserName)
+                .supplier(supplier
                         .deviceId(AndroidUtilities.getDeviceToken())
                         .build())
                 .build()
@@ -98,6 +105,7 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
                 mRealm.beginTransaction()
                 mRealm.copyToRealm(pickedCity)
                 mRealm.commitTransaction()
+                setNextButtonEnabled(true)
             } else {
                 mRealm.beginTransaction()
                 resultCity.deleteFromRealm()
@@ -109,6 +117,8 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
             // TODO(diego): Explaining dialog
             Toast.makeText(this, "Limite excedido!", Toast.LENGTH_SHORT).show()
         }
+
+        setNextButtonEnabled(newCount > 0)
 
         val fragment = getFragmentFromTag(SelectCityFragment.TAG)
         if (fragment != null) {
@@ -147,6 +157,8 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
             Toast.makeText(this, "Limite excedido!", Toast.LENGTH_SHORT).show()
         }
 
+        setNextButtonEnabled(newCount > 0)
+
         val fragment = getFragmentFromTag(SelectSegmentFragment.TAG)
         if (fragment != null) {
             updateBottomText(fragment as RegistrationContent)
@@ -161,8 +173,10 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
 
     /** Current fragment indicator */
     private var mCurrent: String? = null
+    private var mCurrentIndex: Int = 0;
     /** List of fragments */
     private var mFragments: List<RegistrationContent>? = null;
+    private var mFragmentsToDisplay: List<String> = ArrayList<String>();
 
     /** The bottom container views */
     private var mBottomContainer: LinearLayout? = null
@@ -179,8 +193,8 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
     private var mDescription: TextView? = null
 
     /** Data */
-    private lateinit var mUserName: String
-    private lateinit var mUserEmail: String
+    private var mUserName: String? = null
+    private var mUserEmail: String? = null
 
     private var mSupplier: LocalSupplier? = null
     private var mSupplierCall: ApolloQueryCall<SupplierQuery.Data>? = null
@@ -212,36 +226,64 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
             setNextButtonEnabled(false)
 
             //
-            // Fetch supplier remote information so we can know which views we should display
-            // or not.
+            // Fetch supplier remote information if we don't have one in database
+            // so we can know which views we should display or not.
             //
-            val supplierQuery = SupplierQuery.builder()
-                    .build()
+            if (mSupplier == null) {
+                val supplierQuery = SupplierQuery.builder()
+                        .build()
 
-            mSupplierCall = mApplication.apolloClient
-                    .query(supplierQuery)
-                    .cacheControl(CacheControl.CACHE_FIRST)
+                mSupplierCall = mApplication.apolloClient
+                        .query(supplierQuery)
 
-            mSupplierCall!!.enqueue(ApolloCallback(object:ApolloCall.Callback<SupplierQuery.Data>() {
-                override fun onResponse(response: Response<SupplierQuery.Data>) {
-                    if (!response.hasErrors()) {
-                        updateLocalSupplier(response.data()?.supplier())
-                        mCurrent = InputNameFragment.TAG
-                        supportFragmentManager
-                                .beginTransaction()
-                                .add(R.id.container, InputNameFragment(), InputNameFragment.TAG)
-                                .commit()
-                    } else {
-                        finish()
+                mSupplierCall!!.enqueue(ApolloCallback(object:ApolloCall.Callback<SupplierQuery.Data>() {
+                    override fun onResponse(response: Response<SupplierQuery.Data>) {
+                        if (!response.hasErrors()) {
+                            updateLocalSupplier(response.data()?.supplier())
+                            mFragmentsToDisplay = getFragmentsToDisplay(response.data()?.supplier());
+                            if (mFragmentsToDisplay.isNotEmpty()) {
+                                mCurrent = mFragmentsToDisplay[mCurrentIndex]
+                                supportFragmentManager
+                                        .beginTransaction()
+                                        .add(R.id.container, getFragmentFromTag(mCurrent), mCurrent)
+                                        .commit()
+                                updateUiAccordinglyWithFragment(getFragmentFromTag(mCurrent))
+                            } else {
+                                val intent = Intent(this@RegistrationActivity, MainActivity::class.java)
+                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                startActivity(intent)
+                                finish()
+                            }
+
+                        } else {
+                            finish()
+                        }
                     }
-                }
-                override fun onFailure(@Nonnull e:ApolloException) {
-                }
+                    override fun onFailure(@Nonnull e:ApolloException) {
+                    }
 
-            }, mUiHandler))
+                }, mUiHandler))
+            } else {
+                mFragmentsToDisplay = getFragmentsToDisplay(mSupplier)
+                if (mFragmentsToDisplay.isNotEmpty()) {
+                    mCurrent = mFragmentsToDisplay[mCurrentIndex]
+                    supportFragmentManager
+                            .beginTransaction()
+                            .add(R.id.container, getFragmentFromTag(mCurrent), mCurrent)
+                            .commit()
+                    updateUiAccordinglyWithFragment(getFragmentFromTag(mCurrent))
+                } else {
+                    val intent = Intent(this, MainActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    startActivity(intent)
+                    finish()
+                }
+            }
 
         } else {
             mCurrent = savedInstanceState.getString(CURRENT)
+            mCurrentIndex = getIndexFromTag(mCurrent)
+
             updateUiAccordinglyWithFragment(getFragmentFromTag(mCurrent))
         }
     }
@@ -252,28 +294,13 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
     }
 
     override fun onBackPressed() {
-
-        when(mCurrent) {
-
-            InputEmailFragment.TAG -> {
-                showPreviousFragment(InputNameFragment.TAG)
-            }
-
-            SelectCityFragment.TAG -> {
-                showPreviousFragment(InputEmailFragment.TAG)
-            }
-
-            SelectSegmentFragment.TAG -> {
-                showPreviousFragment(SelectCityFragment.TAG)
-            }
-
-            ConclusionFragment.TAG -> {
-                // No-op for now. User is not allowed to go back when this fragment is active.
-            }
-
-            else -> {
-                super.onBackPressed()
-            }
+        val previous = getPreviousFragment()
+        if (previous != null && mCurrent != ConclusionFragment.TAG) {
+            showPreviousFragment(previous)
+        } else if (mCurrent == ConclusionFragment.TAG){
+            // Do nothing
+        } else {
+            super.onBackPressed()
         }
     }
 
@@ -288,6 +315,52 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.putString(CURRENT, mCurrent)
+    }
+
+    private fun getFragmentsToDisplay(supplier: Any?): List<String> {
+        val result = ArrayList<String>();
+        // This order here doesn't really matter, but let's keep
+        // the registration process as Name -> Email -> Pick Cities -> Pick Segments
+        if (supplier is LocalSupplier) {
+            if (supplier.name == null) {
+                result.add(InputNameFragment.TAG)
+            }
+
+            if (supplier.email == null) {
+                result.add(InputEmailFragment.TAG)
+            }
+
+            if (supplier.cities == null || supplier.cities.isEmpty()) {
+                result.add(SelectCityFragment.TAG)
+            }
+
+            if (supplier.segments == null || supplier.segments.isEmpty()) {
+                result.add(SelectSegmentFragment.TAG)
+            }
+        } else if (supplier is ConfirmCodeMutation.Supplier) {
+            if (supplier.name() == null) {
+                result.add(InputNameFragment.TAG)
+            }
+
+            if (supplier.email() == null) {
+                result.add(InputEmailFragment.TAG)
+            }
+
+            if (supplier.cities() == null || supplier.cities()?.edges()?.size == 0) {
+                result.add(SelectCityFragment.TAG)
+            }
+
+            if (supplier.segments() == null || supplier.segments()?.edges()?.size == 0) {
+                result.add(SelectSegmentFragment.TAG)
+            }
+        }
+
+        // If we show at least one fragment let's show the conclusion fragment...
+        if (result.size != 0) {
+            result.add(ConclusionFragment.TAG)
+        }
+
+        return result;
     }
 
     private fun initViews() {
@@ -313,31 +386,32 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
 
             InputNameFragment.TAG -> {
                 SettingsUtils.putString(this, SettingsUtils.PREF_USER_NAME, mUserName)
-                mCurrent = InputEmailFragment.TAG
+                mCurrent = getNextFragment()
             }
 
             InputEmailFragment.TAG -> {
                 if (mSupplier?.email != mUserEmail) {
+                    setNextButtonEnabled(false)
                     val updateSupplierEmail = UpdateSupplierEmailMutation.builder()
-                            .email(mUserEmail)
+                            .email(mUserEmail!!)
                             .build()
                     mUpdateSupplierEmailCall = mApplication.apolloClient
                             .mutate(updateSupplierEmail)
                     mUpdateSupplierEmailCall.enqueue(updateSupplierEmailCallback)
                 } else {
                     SettingsUtils.putString(this, SettingsUtils.PREF_KEY_USER_DEFAULT_EMAIL, mUserEmail)
-                    mCurrent = SelectCityFragment.TAG
+                    mCurrent = getNextFragment()
                 }
             }
 
             SelectCityFragment.TAG -> {
                 // TODO(diego): Save picked cities
-                mCurrent = SelectSegmentFragment.TAG
+                mCurrent = getNextFragment()
             }
 
             SelectSegmentFragment.TAG -> {
                 // TODO(diego): Save picked segments
-                mCurrent = ConclusionFragment.TAG
+                mCurrent = getNextFragment()
             }
 
             ConclusionFragment.TAG -> {
@@ -357,17 +431,50 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
 
     private fun getCurrentFragment(): RegistrationContent? {
         if (mFragments == null) {
-            mFragments = getFragments();
+            mFragments = getFragments()
         }
 
         for (i in 0..mFragments!!.size - 1) {
             val fragment = mFragments!![i]
             if (fragment.shouldDisplay(mSupplier)) {
-                return fragment;
+                return fragment
             }
         }
 
         return null;
+    }
+
+    private fun getNextFragment(): String? {
+        val next = mCurrentIndex + 1;
+        if (next >= 0 && next < mFragmentsToDisplay.size) {
+            mCurrentIndex += 1
+            return mFragmentsToDisplay[next]
+        }
+
+        return null
+    }
+
+    private fun getPreviousFragment(): String? {
+        val previous = mCurrentIndex - 1;
+        if (previous >= 0 && previous < mFragmentsToDisplay.size) {
+            mCurrentIndex -= 1
+            return mFragmentsToDisplay[previous]
+        }
+        return null
+    }
+
+    private fun getIndexFromTag(tag: String?): Int {
+        if (tag == null) {
+            return -1
+        }
+
+        for ((index, value) in mFragmentsToDisplay.withIndex()) {
+            if (value == tag) {
+                return index
+            }
+        }
+
+        return -1
     }
 
     private fun getFragments(): List<RegistrationContent> {
@@ -386,18 +493,8 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
         override fun onResponse(@Nonnull response:Response<UpdateSupplierMutation.Data>) {
             val fragment = getFragmentFromTag(ConclusionFragment.TAG) as ConclusionFragment
             if (!response.hasErrors()) {
-                val supplierEmail = response.data()?.updateSupplier()?.email()
-                if (TextUtils.isEmpty(supplierEmail) || supplierEmail != mUserEmail) {
-                    val updateSupplierEmail = UpdateSupplierEmailMutation.builder()
-                            .email(mUserEmail)
-                            .build()
-                    mUpdateSupplierEmailCall = mApplication.apolloClient
-                            .mutate(updateSupplierEmail)
-                    mUpdateSupplierEmailCall.enqueue(updateSupplierEmailCallback)
-                } else {
-                    updateSupplier(response.data()?.updateSupplier())
-                    fragment.setIsPreparing(false, true)
-                }
+                updateSupplier(response.data()?.updateSupplier())
+                fragment.setIsPreparing(false, true)
             } else {
                 // TODO(diego): Handle errors
                 LogUtils.LOG_DEBUG(TAG, ApiUtils.getFirstValidError(this@RegistrationActivity,
@@ -419,7 +516,10 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
             var currentFragment = supportFragmentManager.findFragmentByTag(mCurrent)
             if (!response.hasErrors()) {
                 mSupplier?.email = mUserEmail
-                advance()
+                SettingsUtils.putString(this@RegistrationActivity, SettingsUtils.PREF_KEY_USER_DEFAULT_EMAIL, mUserEmail)
+                val previous = mCurrent
+                mCurrent = SelectCityFragment.TAG
+                showNextFragment(previous, mCurrent, false)
             } else {
                 val error = ApiUtils.getFirstValidError(this@RegistrationActivity, response.errors())
                 when (error.code) {
@@ -525,7 +625,7 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
         TransitionManager.beginDelayedTransition(mToolbar, Slide(Gravity.LEFT))
 
         // Display back arrow if needed
-        supportActionBar?.setDisplayHomeAsUpEnabled(content.shouldDisplayBackArrow())
+        supportActionBar?.setDisplayHomeAsUpEnabled(content.shouldDisplayBackArrow() && mCurrentIndex != 0)
         mAppBar?.setExpanded(true, true)
         if (content.shouldCollapseToolbarOnScroll()) {
             (mCollapsibleToolbar?.layoutParams as AppBarLayout.LayoutParams)
@@ -611,18 +711,43 @@ class RegistrationActivity : BaseAuthenticatedActivity(), OnRegistrationListener
 
         if (mSupplier?.id == supplier?.id()) {
             mRealm.beginTransaction()
+            mSupplier?.createdAt = DateUtils.parse(supplier?.createdAt().toString())
             mSupplier?.name = supplier?.name()
             mSupplier?.email = supplier?.email()
-            mSupplier?.cityNum = supplier?.cityNum()!!
-            mSupplier?.segNum = supplier.segNum()!!
-            mSupplier?.isActivated = supplier.activated()!!
+
+            if (supplier?.cityNum() != null) {
+                mSupplier?.cityNum = supplier.cityNum()!!
+            } else {
+                mSupplier?.cityNum = 1
+            }
+
+            if (supplier?.segNum() != null) {
+                mSupplier?.segNum = supplier.segNum()!!
+            } else {
+                mSupplier?.segNum = 1
+            }
+
+            mSupplier?.isActivated = supplier?.activated()!!
             mSupplier?.isActiveSubscription = supplier.activeSubscription()!!
             mSupplier?.phone = supplier.phone()
             mSupplier?.defaultCard = supplier.defaultCard()
-            mSupplier?.currentPeriodStart = DateUtils.parse(supplier.currentPeriodStart()!!.toString())
-            mSupplier?.currentPeriodEnd = DateUtils.parse(supplier.currentPeriodEnd()!!.toString())
-            mSupplier?.subscriptionStatus = supplier.subscriptionStatus()
-            mSupplier?.isCancelAtPeriodEnd = supplier.cancelAtPeriodEnd()!!
+
+            if (supplier.currentPeriodStart() != null) {
+                mSupplier?.currentPeriodStart = DateUtils.parse(supplier.currentPeriodStart()!!.toString())
+            }
+
+            if (supplier.currentPeriodEnd() != null) {
+                mSupplier?.currentPeriodEnd = DateUtils.parse(supplier.currentPeriodEnd()!!.toString())
+            }
+
+            if (supplier.subscriptionStatus() != null) {
+                mSupplier?.subscriptionStatus = supplier.subscriptionStatus()
+            }
+
+            if (supplier.cancelAtPeriodEnd() != null) {
+                mSupplier?.isCancelAtPeriodEnd = supplier.cancelAtPeriodEnd()!!
+            }
+
             mRealm.copyToRealmOrUpdate(mSupplier)
             mRealm.commitTransaction()
         }

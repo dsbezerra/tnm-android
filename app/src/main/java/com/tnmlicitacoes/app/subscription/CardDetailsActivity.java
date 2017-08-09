@@ -21,9 +21,9 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.stripe.android.util.DateUtils;
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.RemoveCardMutation;
 import com.tnmlicitacoes.app.TnmApplication;
-import com.tnmlicitacoes.app.UpdateDefaultCardMutation;
+import com.tnmlicitacoes.app.apollo.RemoveCardMutation;
+import com.tnmlicitacoes.app.apollo.UpdateDefaultCardMutation;
 import com.tnmlicitacoes.app.ui.base.BaseAuthenticatedActivity;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
 

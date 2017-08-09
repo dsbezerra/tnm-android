@@ -108,7 +108,9 @@ public class MyFcmListenerService extends FirebaseMessagingService {
         LOG_DEBUG(TAG, "Handling dev topic...");
 
         try {
-            handleNewBiddingsTopic(context, data);
+            if (SettingsUtils.isBiddingsNotificationsEnabled(context)) {
+                handleNewBiddingsTopic(context, data);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

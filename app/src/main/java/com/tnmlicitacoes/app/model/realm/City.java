@@ -1,7 +1,7 @@
 package com.tnmlicitacoes.app.model.realm;
 
-import com.tnmlicitacoes.app.NoticeByIdQuery;
-import com.tnmlicitacoes.app.NoticesQuery;
+import com.tnmlicitacoes.app.apollo.NoticeByIdQuery;
+import com.tnmlicitacoes.app.apollo.NoticesQuery;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

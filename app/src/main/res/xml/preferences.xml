@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Notificações"
+        android:key="pref_key_notification_settings">
+
+        <SwitchPreferenceCompat
+            android:key="pref_key_tnm_notifications_enabled"
+            android:title="Ativar notificações"
+            android:defaultValue="false" />
+
+        <CheckBoxPreference
+            android:key="pref_key_tnm_notifications_news"
+            android:dependency="pref_key_tnm_notifications_enabled"
+            android:summary="Receber notificações sobre novidades do aplicativo"
+            android:title="Novidades"
+            />
+
+        <CheckBoxPreference
+            android:key="pref_key_tnm_notifications_biddings"
+            android:dependency="pref_key_tnm_notifications_enabled"
+            android:summary="Receber notificações de novas licitações publicadas"
+            android:title="Licitações" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

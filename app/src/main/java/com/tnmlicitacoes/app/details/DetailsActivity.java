@@ -98,6 +98,9 @@ public class DetailsActivity extends BaseActivity {
                 mDetailsFragment.seeOnline();
                 break;
 
+            case R.id.action_send_to_email:
+                mDetailsFragment.sendToEmail();
+
             case R.id.action_see_in_website:
                 mDetailsFragment.seeInWebsite();
                 break;

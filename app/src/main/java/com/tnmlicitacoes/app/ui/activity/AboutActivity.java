@@ -62,7 +62,7 @@ public class AboutActivity extends BaseActivity implements View.OnClickListener 
 
         final int viewId = v.getId();
         if(viewId == R.id.websiteIv) {
-            String uri = "http://tnmlicitacoes.com";
+            String uri = "https://tnmlicitacoes.com";
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
             startActivity(intent);
         } else if (viewId == R.id.emailIv) {

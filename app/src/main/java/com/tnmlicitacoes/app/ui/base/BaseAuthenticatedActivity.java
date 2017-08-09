@@ -4,9 +4,8 @@ import android.util.Base64;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
-import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
-import com.tnmlicitacoes.app.RefreshSupplierTokenMutation;
+import com.tnmlicitacoes.app.apollo.RefreshSupplierTokenMutation;
 import com.tnmlicitacoes.app.TnmApplication;
 import com.tnmlicitacoes.app.interfaces.AuthStateListener;
 import com.tnmlicitacoes.app.utils.ApiUtils;
@@ -61,8 +60,7 @@ public abstract class BaseAuthenticatedActivity extends BaseActivity {
 
         RefreshSupplierTokenMutation mutation = new RefreshSupplierTokenMutation();
         ApolloCall<RefreshSupplierTokenMutation.Data> call = application.getApolloClient()
-                .mutate(mutation)
-                .cacheControl(CacheControl.NETWORK_ONLY);
+                .mutate(mutation);
 
         call.enqueue(dataCallback);
     }

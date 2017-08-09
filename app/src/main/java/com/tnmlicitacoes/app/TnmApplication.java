@@ -4,18 +4,14 @@ import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloClient;
-import com.apollographql.apollo.Logger;
-import com.apollographql.apollo.api.Field;
 import com.apollographql.apollo.api.Operation;
-import com.apollographql.apollo.api.internal.Optional;
+import com.apollographql.apollo.api.ResponseField;
+import com.apollographql.apollo.cache.http.HttpCachePolicy;
 import com.apollographql.apollo.cache.normalized.CacheKey;
 import com.apollographql.apollo.cache.normalized.CacheKeyResolver;
 import com.apollographql.apollo.cache.normalized.NormalizedCacheFactory;
-import com.apollographql.apollo.cache.normalized.lru.EvictionPolicy;
-import com.apollographql.apollo.cache.normalized.lru.LruNormalizedCacheFactory;
 import com.apollographql.apollo.cache.normalized.sql.ApolloSqlHelper;
 import com.apollographql.apollo.cache.normalized.sql.SqlNormalizedCacheFactory;
 import com.crashlytics.android.Crashlytics;
@@ -23,7 +19,6 @@ import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.squareup.leakcanary.LeakCanary;
-import com.tnmlicitacoes.app.utils.ApiUtils;
 import com.tnmlicitacoes.app.utils.CryptoUtils;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
 import com.tnmlicitacoes.app.utils.Utils;
@@ -43,7 +38,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
+import static com.apollographql.apollo.fetcher.ApolloResponseFetchers.NETWORK_ONLY;
 
 public class TnmApplication extends Application {
 
@@ -176,13 +171,12 @@ public class TnmApplication extends Application {
         OkHttpClient okHttpClient = builder.build();
 
         ApolloSqlHelper apolloSqlHelper = new ApolloSqlHelper(this, SQL_CACHE_NAME);
-        NormalizedCacheFactory normalizedCacheFactory = new LruNormalizedCacheFactory(EvictionPolicy.NO_EVICTION,
-                new SqlNormalizedCacheFactory(apolloSqlHelper));
+        NormalizedCacheFactory normalizedCacheFactory = new SqlNormalizedCacheFactory(apolloSqlHelper);
 
         CacheKeyResolver cacheKeyResolver = new CacheKeyResolver() {
             @Nonnull
             @Override
-            public CacheKey fromFieldRecordSet(@Nonnull Field field, @Nonnull Map<String, Object> map) {
+            public CacheKey fromFieldRecordSet(@Nonnull ResponseField field, @Nonnull Map<String, Object> map) {
                 if (map.containsKey("id")) {
                     String typeNameAndIDKey = map.get("__typename") + "." + map.get("id");
                     return CacheKey.from(typeNameAndIDKey);
@@ -192,15 +186,18 @@ public class TnmApplication extends Application {
 
             @Nonnull
             @Override
-            public CacheKey fromFieldArguments(@Nonnull Field field, @Nonnull Operation.Variables variables) {
+            public CacheKey fromFieldArguments(@Nonnull ResponseField field, @Nonnull Operation.Variables variables) {
                 return CacheKey.NO_KEY;
             }
+
         };
 
         mApolloClient = ApolloClient.builder()
                 .serverUrl(BASE_URL)
                 .okHttpClient(okHttpClient)
                 .normalizedCache(normalizedCacheFactory, cacheKeyResolver)
+                .defaultHttpCachePolicy(HttpCachePolicy.CACHE_ONLY)
+                .defaultResponseFetcher(NETWORK_ONLY)
                 .build();
     }
 

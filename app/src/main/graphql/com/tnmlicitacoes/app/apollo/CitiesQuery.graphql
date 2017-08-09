@@ -1,0 +1,16 @@
+query CitiesQuery($state: State, $first: Int, $after: Cursor, $active: Boolean, $orderBy: CityOrder) {
+  cities(state: $state, first: $first, after: $after, active: $active, orderBy: $orderBy) {
+    edges {
+      node {
+        id
+        name
+        state
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}

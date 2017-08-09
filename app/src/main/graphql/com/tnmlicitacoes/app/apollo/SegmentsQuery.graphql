@@ -1,5 +1,5 @@
-query SegmentsQuery($first: Int, $after: Cursor, $orderBy: SegmentOrder) {
-  segments(first: $first, after: $after, orderBy: $orderBy) {
+query SegmentsQuery($first: Int, $after: Cursor, $active: Boolean, $orderBy: SegmentOrder) {
+  segments(first: $first, after: $after, active: $active, orderBy: $orderBy) {
     edges {
       node {
         id

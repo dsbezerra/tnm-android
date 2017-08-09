@@ -13,12 +13,11 @@ import android.view.ViewGroup;
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloQueryCall;
 import com.apollographql.apollo.api.Response;
-import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
 import com.stripe.android.model.Card;
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.SupplierCardsQuery;
 import com.tnmlicitacoes.app.TnmApplication;
+import com.tnmlicitacoes.app.apollo.SupplierCardsQuery;
 import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
 import com.tnmlicitacoes.app.ui.adapter.PaymentAdapter;
 import com.tnmlicitacoes.app.ui.widget.SimpleDividerItemDecoration;
@@ -89,8 +88,7 @@ public class SelectCardFragment extends SubscriptionFragment implements
     private void fetchCards() {
         SupplierCardsQuery supplierCards = SupplierCardsQuery.builder().build();
         mSupplierCardsCall = mApplication.getApolloClient()
-                .query(supplierCards)
-                .cacheControl(CacheControl.CACHE_FIRST);
+                .query(supplierCards);
         mSupplierCardsCall.enqueue(cardsDataCallback);
     }
 

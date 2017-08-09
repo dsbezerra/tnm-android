@@ -40,10 +40,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.IntroActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".verifynumber.VerifyNumberActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.VerifyNumber"
@@ -119,8 +115,7 @@
         <activity
             android:name=".settings.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".main.MainActivity"
-            android:theme="@style/PreferenceTheme">
+            android:parentActivityName=".main.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".main.MainActivity" />

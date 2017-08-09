@@ -2,6 +2,7 @@ package com.tnmlicitacoes.app.main.account;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -19,21 +20,20 @@ import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloMutationCall;
 import com.apollographql.apollo.ApolloQueryCall;
 import com.apollographql.apollo.api.Response;
-import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
-import com.tnmlicitacoes.app.CancelSubscriptionMutation;
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.RequestSupplierVerificationMutation;
-import com.tnmlicitacoes.app.SupplierQuery;
 import com.tnmlicitacoes.app.TnmApplication;
-import com.tnmlicitacoes.app.UpdateSupplierEmailMutation;
+import com.tnmlicitacoes.app.apollo.CancelSubscriptionMutation;
+import com.tnmlicitacoes.app.apollo.RequestSupplierVerificationMutation;
+import com.tnmlicitacoes.app.apollo.SupplierQuery;
+import com.tnmlicitacoes.app.apollo.UpdateSupplierEmailMutation;
 import com.tnmlicitacoes.app.changepicked.ChangePickedActivity;
 import com.tnmlicitacoes.app.interfaces.AccountListener;
 import com.tnmlicitacoes.app.interfaces.AuthStateListener;
 import com.tnmlicitacoes.app.main.MainActivity;
+import com.tnmlicitacoes.app.model.realm.LocalSupplier;
 import com.tnmlicitacoes.app.model.realm.PickedCity;
 import com.tnmlicitacoes.app.model.realm.PickedSegment;
-import com.tnmlicitacoes.app.model.realm.LocalSupplier;
 import com.tnmlicitacoes.app.subscription.PaymentsActivity;
 import com.tnmlicitacoes.app.subscription.SubscriptionActivity;
 import com.tnmlicitacoes.app.ui.adapter.AccountAdapter;
@@ -82,6 +82,9 @@ public class AccountFragment extends BaseFragment implements AccountListener, Au
     /** Picked segments */
     private RealmResults<PickedSegment> mPickedSegments;
 
+    // TODO(diego): Temp hack, figure a better way to do this, maybe use startActivityForResult instead of startActivity
+    public static boolean sShouldUpdate = false;
+
     /** Realm listener */
     private RealmChangeListener mRealmListener = new RealmChangeListener() {
         @Override
@@ -109,6 +112,14 @@ public class AccountFragment extends BaseFragment implements AccountListener, Au
         loadPicked();
         fetchSupplier();
         return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (sShouldUpdate) {
+            fetchSupplier();
+        }
     }
 
     private void loadPicked() {
@@ -139,8 +150,7 @@ public class AccountFragment extends BaseFragment implements AccountListener, Au
                 .build();
 
         mSupplierCall = mApplication.getApolloClient()
-                .query(supplierQuery)
-                .cacheControl(CacheControl.CACHE_FIRST);
+                .query(supplierQuery);
         mSupplierCall.enqueue(dataCallback);
     }
 
@@ -177,11 +187,8 @@ public class AccountFragment extends BaseFragment implements AccountListener, Au
     private ApolloCall.Callback<SupplierQuery.Data> dataCallback = new ApolloCall.Callback<SupplierQuery.Data>() {
         @Override
         public void onResponse(@Nonnull final Response<SupplierQuery.Data> response) {
-
-
             if (!response.hasErrors()) {
                 if (response.data() != null && response.data().supplier() != null) {
-
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -189,13 +196,13 @@ public class AccountFragment extends BaseFragment implements AccountListener, Au
                                 mProgressBar.setVisibility(View.GONE);
                                 updateLocalDatabase(response.data().supplier());
                                 mAdapter.notifyDataSetChanged();
+                                sShouldUpdate = false;
                             }
                         });
                     }
                 }
-
             } else {
-
+                // TODO(diego): Handle this
             }
         }
 
@@ -246,13 +253,13 @@ public class AccountFragment extends BaseFragment implements AccountListener, Au
                             });
                         }
                     } else {
-
+                        // TODO(diego): Handle this
                     }
                 }
 
                 @Override
                 public void onFailure(@Nonnull ApolloException e) {
-
+                    // TODO(diego): Handle this
                 }
             });
         }
@@ -271,8 +278,7 @@ public class AccountFragment extends BaseFragment implements AccountListener, Au
                 .build();
 
         ApolloCall<RequestSupplierVerificationMutation.Data> call = mApplication.getApolloClient()
-                .mutate(mutation)
-                .cacheControl(CacheControl.NETWORK_ONLY);
+                .mutate(mutation);
 
         call.enqueue(new ApolloCall.Callback<RequestSupplierVerificationMutation.Data>() {
             @Override
@@ -330,9 +336,11 @@ public class AccountFragment extends BaseFragment implements AccountListener, Au
     @Override
     public void onAboutItemClick(int itemId) {
         if (itemId == R.id.terms) {
-            Toast.makeText(getActivity(), "Show terms.", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://tnmlicitacoes.com/politica-de-privacidade.html"))
+            );
         } else {
-            Toast.makeText(getActivity(), "Show licenses.", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getActivity(), "Show licenses.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -362,8 +370,7 @@ public class AccountFragment extends BaseFragment implements AccountListener, Au
                         .build();
 
                 ApolloCall<UpdateSupplierEmailMutation.Data> call = mApplication.getApolloClient()
-                        .mutate(mutation)
-                        .cacheControl(CacheControl.NETWORK_ONLY);
+                        .mutate(mutation);
 
                 call.enqueue(new ApolloCall.Callback<UpdateSupplierEmailMutation.Data>() {
                     @Override

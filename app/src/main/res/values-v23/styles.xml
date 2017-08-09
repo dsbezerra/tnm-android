@@ -23,13 +23,13 @@
     </style>
 
     <style name="SplashScreenTheme" parent="Theme.DefaultTheme">
-        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="colorPrimaryDark">@color/background_grey</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
-    <style name="PreferenceTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="SettingsTheme" parent="Theme.DefaultTheme">
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
     <style name="LightToolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">

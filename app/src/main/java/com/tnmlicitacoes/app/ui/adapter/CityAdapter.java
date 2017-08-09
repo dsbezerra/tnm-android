@@ -14,13 +14,12 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.tnmlicitacoes.app.CitiesQuery;
 import com.tnmlicitacoes.app.R;
+import com.tnmlicitacoes.app.apollo.CitiesQuery;
+import com.tnmlicitacoes.app.apollo.type.State;
 import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
 import com.tnmlicitacoes.app.model.SubscriptionPlan;
-import com.tnmlicitacoes.app.type.State;
 import com.tnmlicitacoes.app.ui.view.NoItemViewHolder;
-import com.tnmlicitacoes.app.utils.BillingUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

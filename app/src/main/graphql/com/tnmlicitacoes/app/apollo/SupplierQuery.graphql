@@ -19,13 +19,6 @@ query SupplierQuery {
     currentPeriodEnd
     subscriptionStatus
     cancelAtPeriodEnd
-    cards {
-        id
-        brand
-        last4
-        exp_month
-        exp_year
-    }
     segments(first: 50) {
         edges {
             node {

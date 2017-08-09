@@ -17,9 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.tnmlicitacoes.app.CitiesQuery;
+import com.tnmlicitacoes.app.apollo.CitiesQuery;
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.SegmentsQuery;
+import com.tnmlicitacoes.app.apollo.SegmentsQuery;
 import com.tnmlicitacoes.app.interfaces.OnAccountConfigurationListener;
 import com.tnmlicitacoes.app.model.realm.PickedCity;
 import com.tnmlicitacoes.app.model.realm.PickedSegment;

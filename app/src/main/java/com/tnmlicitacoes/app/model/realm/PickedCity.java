@@ -1,6 +1,6 @@
 package com.tnmlicitacoes.app.model.realm;
 
-import com.tnmlicitacoes.app.CitiesQuery;
+import com.tnmlicitacoes.app.apollo.CitiesQuery;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

@@ -16,11 +16,11 @@ public class MyNoticesViewPagerAdapter extends FragmentStatePagerAdapter {
     private final Context mContext;
 
     /** Number of tabs */
-    private static final int TAB_COUNT = 2;
+    private static final int TAB_COUNT = 1;
 
     /** Tab titles */
     private final int[] mTabTitles = {
-            R.string.tab_biddings,
+            //R.string.tab_biddings,
             R.string.tab_files
     };
 
@@ -34,10 +34,14 @@ public class MyNoticesViewPagerAdapter extends FragmentStatePagerAdapter {
 
         Fragment fragment = null;
 
+//        if (position == 0) {
+//            fragment = new BiddingsTabFragment();
+//        }
+//        else if (position == 1) {
+//            fragment = new DownloadedFragment();
+//        }
+
         if (position == 0) {
-            fragment = new BiddingsTabFragment();
-        }
-        else if (position == 1) {
             fragment = new DownloadedFragment();
         }
 

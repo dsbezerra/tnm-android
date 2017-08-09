@@ -5,21 +5,30 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
-import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
+import com.tnmlicitacoes.app.BuildConfig;
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.RequestCodeMutation;
+import com.tnmlicitacoes.app.apollo.RequestCodeMutation;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
+import com.transitionseverywhere.ChangeBounds;
+import com.transitionseverywhere.Crossfade;
+import com.transitionseverywhere.Fade;
+import com.transitionseverywhere.Transition;
 import com.transitionseverywhere.TransitionManager;
+import com.transitionseverywhere.TransitionSet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -68,6 +77,40 @@ public class InputNumberFragment extends VerifyNumberFragment implements
 
     /* API Apollo requestCode call */
     private ApolloCall<RequestCodeMutation.Data> mRequestCodeCall;
+    /**
+     * Callback for the requestCode mutation API call
+     */
+    private ApolloCall.Callback<RequestCodeMutation.Data> dataCallback = new ApolloCall.Callback<RequestCodeMutation.Data>() {
+        @Override
+        public void onResponse(Response<RequestCodeMutation.Data> response) {
+            handleRequestCodeResponse(response);
+        }
+
+        @Override
+        public void onFailure(ApolloException e) {
+            if (mListener != null) {
+                mListener.onRequestCodeResponse(null, e);
+                LOG_DEBUG(TAG, e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    };
+
+    /**
+     * Formats a phone from 55XXXXXXXXXXX to +55 (XX) XXXXX-XXXX
+     * @param phone The phone to be formatted
+     */
+    public static String formatPhone(String phone) {
+        if (phone.length() > 13) {
+            throw new RuntimeException("Phone length invalid!");
+        }
+
+        String formattedPhone = phone.substring(2);
+        formattedPhone = BETWEEN_PARENTHESES.matcher(formattedPhone).replaceFirst("($1) $2");
+        formattedPhone = SEPARATE_DIGITS.matcher(formattedPhone).replaceAll("$1-$2");
+        formattedPhone = "+55 " + formattedPhone;
+        return formattedPhone;
+    }
 
     @Nullable
     @Override
@@ -136,6 +179,48 @@ public class InputNumberFragment extends VerifyNumberFragment implements
         });
     }
 
+    public void testAnimation(final boolean reverse) {
+        TransitionManager.beginDelayedTransition(mTransitionContainer, new TransitionSet()
+                .addTransition(new ChangeBounds())
+                .addListener(new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                TransitionManager.beginDelayedTransition(mTransitionContainer);
+                mPhoneContainer.setVisibility(reverse ? View.VISIBLE : View.INVISIBLE);
+                if (!reverse) {
+                    mListener.onRequestCodeResponse(null, null);
+                }
+            }
+
+            @Override
+            public void onTransitionCancel(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionPause(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionResume(Transition transition) {
+
+            }
+        }));
+
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                reverse ? ViewGroup.LayoutParams.WRAP_CONTENT : ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        layoutParams.gravity = Gravity.BOTTOM;
+        mTransitionContainer.setLayoutParams(layoutParams);
+    }
+
     /**
      * Handles the click on advance button
      */
@@ -171,6 +256,7 @@ public class InputNumberFragment extends VerifyNumberFragment implements
             // Make the call
             //makeRequestCodeCall(phoneWithCountryCode);
             mListener.onRequestCodeResponse(null, null);
+            //testAnimation(false);
         }
     }
 
@@ -184,30 +270,10 @@ public class InputNumberFragment extends VerifyNumberFragment implements
                 .build();
 
         mRequestCodeCall = mApplication.getApolloClient()
-                .mutate(requestCode)
-                .cacheControl(CacheControl.NETWORK_ONLY);
+                .mutate(requestCode);
 
         mRequestCodeCall.enqueue(dataCallback);
     }
-
-    /**
-     * Callback for the requestCode mutation API call
-     */
-    private ApolloCall.Callback<RequestCodeMutation.Data> dataCallback = new ApolloCall.Callback<RequestCodeMutation.Data>() {
-        @Override
-        public void onResponse(Response<RequestCodeMutation.Data> response) {
-            handleRequestCodeResponse(response);
-        }
-
-        @Override
-        public void onFailure(ApolloException e) {
-            if (mListener != null) {
-                mListener.onRequestCodeResponse(null, e);
-                LOG_DEBUG(TAG, e.getMessage());
-                e.printStackTrace();
-            }
-        }
-    };
 
     /**
      * Handles the requestCode mutation response
@@ -235,22 +301,6 @@ public class InputNumberFragment extends VerifyNumberFragment implements
      */
     private boolean isPhoneNumberValid(String phone) {
         return VALID_PHONE_EXP.matcher(phone).matches();
-    }
-
-    /**
-     * Formats a phone from 55XXXXXXXXXXX to +55 (XX) XXXXX-XXXX
-     * @param phone The phone to be formatted
-     */
-    public static String formatPhone(String phone) {
-        if (phone.length() > 13) {
-            throw new RuntimeException("Phone length invalid!");
-        }
-
-        String formattedPhone = phone.substring(2);
-        formattedPhone = BETWEEN_PARENTHESES.matcher(formattedPhone).replaceFirst("($1) $2");
-        formattedPhone = SEPARATE_DIGITS.matcher(formattedPhone).replaceAll("$1-$2");
-        formattedPhone = "+55 " + formattedPhone;
-        return formattedPhone;
     }
 
     /**

@@ -6,7 +6,6 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
-import android.widget.Toast;
 
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.interfaces.OnNoticeActionsDialogListener;

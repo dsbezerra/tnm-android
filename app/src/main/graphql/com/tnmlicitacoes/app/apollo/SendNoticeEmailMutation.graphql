@@ -1,0 +1,3 @@
+mutation SendNoticeEmailMutation($noticeId: String) {
+    sendNoticeEmail(noticeId: $noticeId)
+}

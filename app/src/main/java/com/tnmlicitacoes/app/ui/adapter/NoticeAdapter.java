@@ -20,7 +20,6 @@ import com.tnmlicitacoes.app.model.realm.Notice;
 import com.tnmlicitacoes.app.utils.DateUtils;
 import com.tnmlicitacoes.app.utils.NoticeUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

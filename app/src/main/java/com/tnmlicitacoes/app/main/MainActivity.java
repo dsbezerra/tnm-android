@@ -1,6 +1,5 @@
 package com.tnmlicitacoes.app.main;
 
-import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -8,14 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ActionMode;
-import android.transition.Explode;
 import android.transition.Slide;
 import android.view.Gravity;
 import android.view.Menu;
@@ -27,13 +24,13 @@ import com.tnmlicitacoes.app.interfaces.AuthStateListener;
 import com.tnmlicitacoes.app.interfaces.FilterListener;
 import com.tnmlicitacoes.app.interfaces.OnUpdateListener;
 import com.tnmlicitacoes.app.main.account.AccountFragment;
+import com.tnmlicitacoes.app.main.home.NoticeTabFragment;
 import com.tnmlicitacoes.app.main.home.NoticesFragment;
 import com.tnmlicitacoes.app.main.mynotices.DownloadedFragment;
 import com.tnmlicitacoes.app.main.mynotices.MyNoticesFragment;
 import com.tnmlicitacoes.app.search.SearchActivity;
 import com.tnmlicitacoes.app.settings.SettingsActivity;
 import com.tnmlicitacoes.app.ui.base.BaseAuthenticatedActivity;
-import com.tnmlicitacoes.app.main.home.NoticeTabFragment;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
 import com.tnmlicitacoes.app.utils.BillingUtils;
 import com.tnmlicitacoes.app.utils.SettingsUtils;
@@ -158,12 +155,12 @@ public class MainActivity extends BaseAuthenticatedActivity implements FragmentM
         boolean isAccountFragment   = mFragment instanceof AccountFragment;
 
         MenuItem searchItem   = menu.findItem(R.id.action_search);
-        MenuItem filterItem   = menu.findItem(R.id.action_filter);
+        //MenuItem filterItem   = menu.findItem(R.id.action_filter);
         MenuItem refreshItem  = menu.findItem(R.id.action_refresh);
         MenuItem settingsItem = menu.findItem(R.id.action_settings);
 
         refreshItem.setVisible(isMainFragment);
-        filterItem.setVisible(isMainFragment);
+        // filterItem.setVisible(isMainFragment);
         searchItem.setVisible(isMainFragment);
         settingsItem.setVisible(isAccountFragment);
 

@@ -2,15 +2,14 @@ package com.tnmlicitacoes.app.interfaces;
 
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
-import com.tnmlicitacoes.app.ConfirmCodeMutation;
-import com.tnmlicitacoes.app.RequestCodeMutation;
+import com.tnmlicitacoes.app.apollo.RequestCodeMutation;
 
 public interface OnVerifyNumberListener {
 
     /**
      * Handles the response for the requestCode mutation
      * @param response Apollo response
-     * @param e Apollo exeception in failure
+     * @param e Apollo exception in failure
      */
     void onRequestCodeResponse(Response<RequestCodeMutation.Data> response, ApolloException e);
 

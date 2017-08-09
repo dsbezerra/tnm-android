@@ -21,11 +21,10 @@ import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
-import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
-import com.tnmlicitacoes.app.NoticeByIdQuery;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.TnmApplication;
+import com.tnmlicitacoes.app.apollo.NoticeByIdQuery;
 import com.tnmlicitacoes.app.model.realm.Notice;
 import com.tnmlicitacoes.app.service.DownloadService;
 import com.tnmlicitacoes.app.ui.base.BaseFragment;
@@ -35,7 +34,6 @@ import com.tnmlicitacoes.app.utils.NoticeUtils;
 import com.tnmlicitacoes.app.utils.StringUtils;
 
 import java.io.File;
-import java.util.Date;
 
 import javax.annotation.Nonnull;
 
@@ -190,8 +188,7 @@ public class DetailsFragment extends BaseFragment implements DownloadService.OnD
                             .build();
 
                     mNoticeByIdCall = mApplication.getApolloClient()
-                            .query(query)
-                            .cacheControl(CacheControl.NETWORK_ONLY);
+                            .query(query);
 
                     mNoticeByIdCall.enqueue(new ApolloCall.Callback<NoticeByIdQuery.Data>() {
                         @Override
@@ -425,6 +422,12 @@ public class DetailsFragment extends BaseFragment implements DownloadService.OnD
         if (mParentActivity != null) {
             mParentActivity.getProgressBar().setVisibility(View.GONE);
             mParentActivity.getContentView().setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void sendToEmail() {
+        if (mLocalNotice != null) {
+            NoticeUtils.sendToEmail(mApplication, getActivity(), mLocalNotice.getId());
         }
     }
 }

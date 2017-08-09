@@ -1,7 +1,5 @@
 package com.tnmlicitacoes.app.interfaces;
 
-import com.tnmlicitacoes.app.NoticesQuery;
-
 public interface OnNoticeActionsDialogListener {
     /**
      * Called when the user clicks on the see details action in the bottom sheet

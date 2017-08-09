@@ -2,7 +2,7 @@ package com.tnmlicitacoes.app.model.realm;
 
 import android.text.TextUtils;
 
-import com.tnmlicitacoes.app.SupplierQuery;
+import com.tnmlicitacoes.app.apollo.SupplierQuery;
 import com.tnmlicitacoes.app.utils.DateUtils;
 
 import java.util.ArrayList;
@@ -18,6 +18,9 @@ public class LocalSupplier extends RealmObject {
 
     @PrimaryKey
     private String id;
+
+    /** The supplier registration date */
+    private Date createdAt;
 
     /* The supplier phone number */
     private String phone;
@@ -75,6 +78,14 @@ public class LocalSupplier extends RealmObject {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getPhone() {

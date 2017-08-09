@@ -15,8 +15,8 @@ import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.tnmlicitacoes.app.R;
-import com.tnmlicitacoes.app.SubscribeMutation;
 import com.tnmlicitacoes.app.TnmApplication;
+import com.tnmlicitacoes.app.apollo.SubscribeMutation;
 import com.tnmlicitacoes.app.model.SubscriptionPlan;
 import com.tnmlicitacoes.app.ui.widget.TnmCardInputWidget;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
@@ -25,6 +25,7 @@ import com.tnmlicitacoes.app.utils.StringUtils;
 
 import javax.annotation.Nonnull;
 
+import static com.tnmlicitacoes.app.main.account.AccountFragment.sShouldUpdate;
 import static com.tnmlicitacoes.app.model.SubscriptionPlan.ITEM_PRICE;
 import static com.tnmlicitacoes.app.subscription.SubscriptionActivity.sSubscriptionProcess;
 import static com.tnmlicitacoes.app.utils.LogUtils.LOG_DEBUG;
@@ -181,6 +182,7 @@ public class ConfirmFragment extends SubscriptionFragment implements
                             @Override
                             public void run() {
                                 Toast.makeText(getActivity(), "Assinatura efetuada com sucesso!", Toast.LENGTH_SHORT).show();
+                                sShouldUpdate = true;
                                 getActivity().finish();
                             }
                         });

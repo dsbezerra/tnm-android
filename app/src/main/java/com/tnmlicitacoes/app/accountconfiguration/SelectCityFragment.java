@@ -16,19 +16,18 @@ import android.widget.ProgressBar;
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Error;
 import com.apollographql.apollo.api.Response;
-import com.apollographql.apollo.cache.normalized.CacheControl;
 import com.apollographql.apollo.exception.ApolloException;
-import com.tnmlicitacoes.app.CitiesQuery;
+import com.tnmlicitacoes.app.apollo.CitiesQuery;
 import com.tnmlicitacoes.app.R;
 import com.tnmlicitacoes.app.TnmApplication;
 import com.tnmlicitacoes.app.interfaces.OnClickListenerRecyclerView;
 import com.tnmlicitacoes.app.model.realm.LocalSupplier;
 import com.tnmlicitacoes.app.model.realm.PickedCity;
 import com.tnmlicitacoes.app.registration.RegistrationActivity;
-import com.tnmlicitacoes.app.type.CityOrder;
-import com.tnmlicitacoes.app.type.CityOrderField;
-import com.tnmlicitacoes.app.type.OrderDirection;
-import com.tnmlicitacoes.app.type.State;
+import com.tnmlicitacoes.app.apollo.type.CityOrder;
+import com.tnmlicitacoes.app.apollo.type.CityOrderField;
+import com.tnmlicitacoes.app.apollo.type.OrderDirection;
+import com.tnmlicitacoes.app.apollo.type.State;
 import com.tnmlicitacoes.app.ui.adapter.CityAdapter;
 import com.tnmlicitacoes.app.utils.AndroidUtilities;
 import com.tnmlicitacoes.app.utils.UIUtils;
@@ -117,13 +116,13 @@ public class SelectCityFragment extends AccountConfigurationFragment
                 .build();
 
         final CitiesQuery citiesQuery = CitiesQuery.builder()
-                .first(10)
+                .first(100)
+                .active(true)
                 .orderBy(cityOrder)
                 .build();
 
         mCitiesCall = mApplication.getApolloClient()
-                .query(citiesQuery)
-                .cacheControl(CacheControl.NETWORK_FIRST);
+                .query(citiesQuery);
         mCitiesCall.enqueue(dataCallback);
     }
 

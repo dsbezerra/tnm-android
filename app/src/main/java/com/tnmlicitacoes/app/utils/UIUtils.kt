@@ -3,6 +3,7 @@ package com.tnmlicitacoes.app.utils
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.AttrRes
@@ -13,6 +14,9 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.EditText
 import android.support.design.widget.CoordinatorLayout
+import android.support.annotation.NonNull
+
+
 
 
 

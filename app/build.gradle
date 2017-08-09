@@ -12,8 +12,8 @@ repositories {
     mavenCentral()
 }
 
-def tnmVersionCode = 27
-def tnmVersionName = '2.05.01'
+def tnmVersionCode = 29
+def tnmVersionName = '2.6'
 
 android {
     compileSdkVersion 25

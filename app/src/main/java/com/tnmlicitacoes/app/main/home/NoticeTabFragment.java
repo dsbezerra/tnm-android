@@ -635,6 +635,10 @@ public class NoticeTabFragment extends BaseFragment implements OnClickListenerRe
         });
     }
 
+    public RecyclerView getList() {
+        return mNoticesRecyclerView;
+    }
+
     @Override
     public void onDownloadFailure(final String fileName) {
         Activity activity = getActivity();

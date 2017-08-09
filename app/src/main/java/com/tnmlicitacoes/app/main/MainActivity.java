@@ -352,6 +352,9 @@ public class MainActivity extends BaseAuthenticatedActivity implements FragmentM
         // If we already are in the view, ignore the execution of this method
         int id = item.getItemId();
         if (id == mBottomNavigationView.getSelectedItemId()) {
+            if (mFragment.canScrollToTop()) {
+                mFragment.scrollToTop();
+            }
             return false;
         }
 
@@ -569,5 +572,15 @@ public class MainActivity extends BaseAuthenticatedActivity implements FragmentM
          * Whether the fragment requires collapsible AppBar or not
          */
         boolean shouldCollapseAppBarOnScroll();
+
+        /**
+         * Whether the fragment can be scrolled to top or not
+         */
+        boolean canScrollToTop();
+
+        /**
+         * Scroll to top function
+         */
+        void scrollToTop();
     }
 }

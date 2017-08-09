@@ -212,4 +212,14 @@ public class NoticesFragment extends BaseFragment implements AuthStateListener, 
     public boolean shouldCollapseAppBarOnScroll() {
         return true;
     }
+
+    @Override
+    public boolean canScrollToTop() {
+        return true;
+    }
+
+    @Override
+    public void scrollToTop() {
+        getCurrentTabFragment().getList().smoothScrollToPosition(0);
+    }
 }

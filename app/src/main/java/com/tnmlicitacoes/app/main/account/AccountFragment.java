@@ -410,6 +410,7 @@ public class AccountFragment extends BaseFragment implements AccountListener, Au
         newFragment.show(ft, InputEmailDialog.TAG);
     }
 
+
     private void updateLocalDatabase(SupplierQuery.Supplier supplier) {
 
         if (supplier == null) {
@@ -446,6 +447,18 @@ public class AccountFragment extends BaseFragment implements AccountListener, Au
     @Override
     public boolean shouldCollapseAppBarOnScroll() {
         return false;
+    }
+
+    @Override
+    public boolean canScrollToTop() {
+        return true;
+    }
+
+    @Override
+    public void scrollToTop() {
+        if (mRecyclerView != null) {
+            mRecyclerView.smoothScrollToPosition(0);
+        }
     }
 
     @Override

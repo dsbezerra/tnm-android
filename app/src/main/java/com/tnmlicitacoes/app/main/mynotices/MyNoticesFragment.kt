@@ -15,6 +15,14 @@ import com.tnmlicitacoes.app.main.MainActivity
 import com.tnmlicitacoes.app.ui.base.BaseFragment
 
 class MyNoticesFragment : BaseFragment(), MainActivity.MainContent {
+    override fun canScrollToTop(): Boolean {
+        return false
+    }
+
+    override fun scrollToTop() {
+        // TODO(diego): Get the current tab fragment list item and scroll to 0 position
+    }
+
     override fun getLogTag(): String {
         return TAG
     }
